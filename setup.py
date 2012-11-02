@@ -48,7 +48,7 @@ packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-package_dir = 'tsj-gemstone'
+package_dir = 'tsj_gemstone'
 
 for dirpath, dirnames, filenames in os.walk(package_dir):
     # Ignore dirnames that start with '.'
@@ -65,7 +65,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
     for file_info in data_files:
         file_info[0] = '\\PURELIB\\%s' % file_info[0]
 
-version = __import__('tsj-gemstone').get_version()
+version = __import__('tsj_gemstone').get_version()
 
 setup(
     name = "TSJ Gemstone",

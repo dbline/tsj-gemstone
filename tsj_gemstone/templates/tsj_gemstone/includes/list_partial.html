@@ -1,0 +1,33 @@
+<table id="diamond_results" class="table table-condensed table-striped">
+    <thead>
+        <tr class="diamond_listings_header">
+            <th>Shape</th>
+            <th>Carats</th>
+            <th>Color</th>
+            <th>Clarity</th>
+            <th>Cut</th>
+            <th>Polish</th>
+            <th>Symmetry</th>
+            <th>Certifier</th>
+            <th>Price</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for diamond in page.object_list %}
+        <tr id="{{ diamond.pk }}" class="diamond_listings">
+            <td>{{ diamond.cut }}</td>
+            <td>{{ diamond.carat_weight }}</td>
+            <td>{{ diamond.color }}</td>
+            <td>{{ diamond.clarity }}</td>
+            <td>{{ diamond.cut_grade.name|default:"----" }}</td>
+            <td>{{ diamond.polish.name|default:"----" }}</td>
+            <td>{{ diamond.symmetry.name|default:"----" }}</td>
+            <td>{{ diamond.certifier|default:"----" }}</td>
+            <td>{{ diamond.formatted_price }}</td>
+            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-normal"><span>View</span> <i class="icon-chevron-right"></i></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+

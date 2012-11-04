@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load thinkspace_pages %}
+
+{% block title %}Diamonds{% endblock title %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+        .smooth_zoom_preloader {
+            background-image: url({{ STATIC_URL }}gemstone/images/preloader.gif);
+        }
+        .smooth_zoom_icons {
+            background-image: url({{ STATIC_URL }}gemstone/images/icons.png);
+        }
+    </style>
+{% endblock css %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}gemstone/js/jquery.smoothZoom.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#cert_image').smoothZoom({
+                width: 620,
+                height: 620
+            });
+        });
+    </script>
+{% endblock js %}
+
+{% block bodyclass %}diamond-detail{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block wrapper %}
+<div class="row">
+    <div class="span12">
+        <div class="title-page">
+            <h1>
+                {#<a href="">{{ tspages_page.title }}:</a>#}
+                <span>{{ diamond.carat_weight }}-Carat {{ diamond.cut }} Shaped Diamond</span>
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="diamond-details span4">
+        <div class="group">
+            <h3>The 4 C's</h3>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Cut / Shape:</th>
+                    <td>{{ diamond.cut }}</td>
+                </tr>
+                <tr>
+                    <th>Clarity:</th>
+                    <td>{{ diamond.clarity }}</td>
+                </tr>
+                <tr>
+                    <th>Color:</th>
+                    <td>{{ diamond.color }}</td>
+                </tr>
+                <tr>
+                    <th>Carat Weight:</th>
+                    <td>{{ diamond.carat_weight }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="group">
+            <h3>Details</h3>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Price:</th>
+                    <td>{{ diamond.formatted_price }}</td>
+                </tr>
+                <tr>
+                    <th>Stock #:</th>
+                    <td>{{ diamond.stock_number }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="group">
+            <h3>Measurements</h3>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Cut Grade</th>
+                    <td>{{ diamond.cut_grade }}</td>
+                </tr>
+                <tr>
+                    <th>Depth %:</th>
+                    <td>{{ diamond.depth_percent }}</td>
+                </tr>
+                <tr>
+                    <th>Table %:</th>
+                    <td>{{ diamond.table_percent }}</td>
+                </tr>
+                <tr>
+                    <th>Girdle:</th>
+                    <td>{{ diamond.girdle }}</td>
+                </tr>
+                <tr>
+                    <th>Culet:</th>
+                    <td>{{ diamond.culet }}</td>
+                </tr>
+                <tr>
+                    <th>Polish:</th>
+                    <td>{{ diamond.potdsh }}</td>
+                </tr>
+                <tr>
+                    <th>Symmetry:</th>
+                    <td>{{ diamond.symmetry }}</td>
+                </tr>
+                <tr>
+                    <th>Fluorescence:</th>
+                    <td>{{ diamond.fluorescence }}</td>
+                </tr>
+                <tr>
+                    <th>Fluorescence Color:</th>
+                    <td>{{ diamond.fluorescence_color }}</td>
+                </tr>
+                <tr>
+                    <th>Length:</th>
+                    <td>{{ diamond.length }}</td>
+                </tr>
+                <tr>
+                    <th>Width:</th>
+                    <td>{{ diamond.width }}</td>
+                </tr>
+                <tr>
+                    <th>Depth:</th>
+                    <td>{{ diamond.depth }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="group">
+            <h3>Certification</h3>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Certifier:</th>
+                    <td>{{ diamond.certifier }}</td>
+                </tr>
+                <tr>
+                    <th>Certificate #:</th>
+                    <td>{{ diamond.cert_num }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="certificate span8">
+        <h3>Certificate</h3>
+        <img id="cert_image" src="{{ diamond.cert_image }}" alt="Certification" />
+    </div>
+</div>
+{% endblock wrapper %}

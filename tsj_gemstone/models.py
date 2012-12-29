@@ -98,6 +98,7 @@ class Certifier(models.Model):
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
     url = models.URLField('URL', blank=True)
     desc = models.TextField('Description', blank=True)
+    disabled = models.BooleanField(default=False)
     objects = DictManager()
 
     def __unicode__(self):

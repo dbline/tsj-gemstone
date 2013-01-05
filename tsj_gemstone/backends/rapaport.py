@@ -103,7 +103,7 @@ def main():
     grading_aliases = models.Grading.objects.as_dict()
     fluorescence_aliases = models.Fluorescence.objects.as_dict()
     fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
-    certifier_aliases = models.Certifier.objects.as_dict()
+    certifier_aliases = models.Certifier.objects.as_dict_disabled()
 
     # Prepare the markup list so that we don't have to make a DB query each time
     markup_list = []
@@ -161,6 +161,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
 
     # Setup the diamond import requirements
     minimum_carat_weight = Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2'))
+    maximum_carat_weight = Decimal(prefs.get('rapaport_maximum_carat_weight', '5'))
+    minimum_price = Decimal(prefs.get('rapaport_minimum_price', '1500'))
+    maximum_price = Decimal(prefs.get('rapaport_maximum_price', '200000'))
     must_be_certified = prefs.get('rapaport_must_be_certified', True)
     verify_cert_images = prefs.get('rapaport_verify_cert_images', False)
 
@@ -179,6 +182,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     carat_weight = Decimal(str(clean(carat_weight)))
     if carat_weight < minimum_carat_weight:
         raise ValueError, "Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight)
+    elif maximum_carat_weight and carat_weight > maximum_carat_weight:
+        raise ValueError, "Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight)
 
     color = color_aliases[clean(color, upper=True)]
 
@@ -187,10 +192,14 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if must_be_certified:
         if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
             raise ValueError, "No valid Certifier was specified."
-    certifier_id = certifier_aliases.get(certifier)
+    certifier_id, certifier_disabled = certifier_aliases.get(certifier)
+
+    if certifier_disabled:
+        raise ValueError, "Certifier disabled"
+
     if certifier and not certifier_id:
         new_certifier = models.Certifier.objects.create(name=certifier, abbr=certifier)
-        certifier_aliases.update({certifier: int(new_certifier.id)})
+        certifier_aliases.update({certifier: (int(new_certifier.id), new_certifier.disabled)})
         certifier = new_certifier.pk
     else:
         certifier = certifier_id
@@ -269,6 +278,12 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
 
     # Initialize these after all other data has been initialized
     price_before_markup = carat_price * carat_weight
+
+    if minimum_price and price_before_markup < minimum_price:
+        raise ValueError, "Price before markup '%s' is less than the minimum of %s." % (price_before_markup, minimum_price)
+    if maximum_price and price_before_markup > maximum_price:
+        raise ValueError, "Price before markup '%s' is greater than the maximum of %s." % (price_before_markup, maximum_price)
+
     price = None
     for markup in markup_list:
         if markup[0] <= price_before_markup and markup[1] >= price_before_markup:

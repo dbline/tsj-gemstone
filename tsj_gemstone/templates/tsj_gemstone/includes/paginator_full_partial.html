@@ -1,40 +1,27 @@
 {% load thinkspace_pages %}
 
-<div class="row">
-    <div class="total span2">
-        {% if page.has_other_pages %}
-            <span>{{ page.start_index }} of {{ page.end_index }} &middot; {{ paginator.count }}</span>
-        {% else %}
-            <span>{{ paginator.count }}</span>
-        {% endif %}  
-    </div>
-    <div class="span7">
-        <div class="pull-right">
-            <div class="pagination">
-                {% if page.has_other_pages %}
-                    <ul>
-                        {% if page.has_previous %}
-                            <li><a class="paginator_link" href="{% page diamond-list %}?page={{ page.previous_page_number }}">&laquo;  Previous</a></li>
-                        {% endif %}
+<div class="pagination">
+    {% if page.has_other_pages %}
+        <ul>
+            {% if page.has_previous %}
+                <li><a class="paginator_link" href="{% page diamond-list %}?page={{ page.previous_page_number }}">&laquo;  Previous</a></li>
+            {% endif %}
 
-                        {% for num in page.page_range %}
-                            {% if not num %}
-                                <li class="disabled"><a href="#">...</a></li>
-                            {% else %}
-                                {% ifequal num page.number %}
-                                    <li class="active"><a href="#">{{ num }}</a></li>
-                                {% else %}
-                                    <li><a class="paginator_link" href="{% page diamond-list %}?page={{ num }}">{{ num }}</a></li>
-                                {% endifequal %}
-                            {% endif %}
-                         {% endfor %}
-
-                        {% if page.has_next %}
-                            <li><a class="paginator_link" href="{% page diamond-list %}?page={{ page.next_page_number }}">Next &raquo;</a></li>
-                        {% endif %}
-                    </ul>
+            {% for num in page.page_range %}
+                {% if not num %}
+                    <li class="disabled"><a href="#">...</a></li>
+                {% else %}
+                    {% ifequal num page.number %}
+                        <li class="active"><a href="#">{{ num }}</a></li>
+                    {% else %}
+                        <li><a class="paginator_link" href="{% page diamond-list %}?page={{ num }}">{{ num }}</a></li>
+                    {% endifequal %}
                 {% endif %}
-            </div>
-        </div>
-    </div>
+             {% endfor %}
+
+            {% if page.has_next %}
+                <li><a class="paginator_link" href="{% page diamond-list %}?page={{ page.next_page_number }}">Next &raquo;</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
 </div>

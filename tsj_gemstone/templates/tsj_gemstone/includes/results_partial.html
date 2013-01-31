@@ -1,3 +1,5 @@
 {% load thinkspace_pages %}
-
-Results: <span>{{ paginator.count }} Diamonds</span>
+<h2>
+    Results: {{ paginator.count }} Diamonds
+    <span>{% if page.has_other_pages %}{{ page.start_index }} of {{ page.end_index }} &middot; {{ paginator.count }}{% else %}{{ paginator.count }}{% endif %}</span>
+</h2>

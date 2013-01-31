@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for diamond in page.object_list %}
+        {% for diamond in page.object_list %}
         <tr id="{{ diamond.pk }}" class="diamond_listings">
             <td>{{ diamond.cut }}</td>
             <td>{{ diamond.carat_weight }}</td>
@@ -25,9 +25,9 @@
             <td>{{ diamond.symmetry.name|default:"----" }}</td>
             <td>{{ diamond.certifier|default:"----" }}</td>
             <td>{{ diamond.formatted_price }}</td>
-            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-normal"><span>View</span> <i class="icon-chevron-right"></i></a></td>
+            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-normal btn-primary"><span>View</span> <i class="icon-chevron-right"></i></a></td>
         </tr>
-    {% endfor %}
+        {% endfor %}
     </tbody>
 </table>
 

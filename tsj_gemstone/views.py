@@ -1,6 +1,7 @@
 from django.db.models import Min, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import simplejson
 from django.views.generic import DetailView

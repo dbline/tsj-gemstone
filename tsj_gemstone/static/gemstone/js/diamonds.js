@@ -1,6 +1,6 @@
 // When the page loads...
 $(function() {
-    $(window).scroll(function (event) {
+    /*$(window).scroll(function (event) {
         var top = $('#diamonds').offset().top;
         var height = $('#diamonds').height();
         var total = height - 292; // 47px height + 100px padding
@@ -10,7 +10,7 @@ $(function() {
         } else if (y < top) {
             $('#diamond_loading').css('margin-top', 100); 
         }
-    });
+    });*/
 
     $('#diamond_filter_form').change(function() {
         update_results();

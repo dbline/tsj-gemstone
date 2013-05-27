@@ -63,7 +63,7 @@
                                         <ul>
                                         {% for cut in cuts %}
                                             <li class="{{ cut.name|slugify }}">
-                                                <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" value="{{ cut.abbr }}" />
+                                                <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" value="{{ cut.abbr }}" {% if cut.abbr in initial_cuts %}checked="checked"{% endif %} />
                                                 <label for="{{ cut.name|slugify }}"><span class="icon"></span>{{ cut.name }}</label>
                                             </li>
                                         {% endfor %}

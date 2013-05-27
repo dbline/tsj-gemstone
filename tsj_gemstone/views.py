@@ -97,7 +97,9 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
                  results_partial_template='tsj_gemstone/includes/results_partial.html',
                  extra_context={}):
 
-    context = {}
+    context = {
+        'initial_cuts': request.GET.getlist('cut'),
+    }
 
     diamonds = Diamond.objects.select_related().order_by('carat_weight')
 

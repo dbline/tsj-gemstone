@@ -1,4 +1,4 @@
-from thinkspace.apps.ts_admin import site, ModelAdmin
+from django.contrib.admin import site, ModelAdmin
 
 from .. import models
 

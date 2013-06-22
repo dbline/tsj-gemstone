@@ -63,54 +63,78 @@
         <div class="group">
             <h3>Measurements</h3>
             <table class="table table-condensed">
-                <tr>
-                    <th>Cut Grade</th>
-                    <td>{{ diamond.cut_grade }}</td>
-                </tr>
-                <tr>
-                    <th>Depth %:</th>
-                    <td>{{ diamond.depth_percent }}</td>
-                </tr>
-                <tr>
-                    <th>Table %:</th>
-                    <td>{{ diamond.table_percent }}</td>
-                </tr>
-                <tr>
-                    <th>Girdle:</th>
-                    <td>{{ diamond.girdle }}</td>
-                </tr>
-                <tr>
-                    <th>Culet:</th>
-                    <td>{{ diamond.culet }}</td>
-                </tr>
-                <tr>
-                    <th>Polish:</th>
-                    <td>{{ diamond.potdsh }}</td>
-                </tr>
-                <tr>
-                    <th>Symmetry:</th>
-                    <td>{{ diamond.symmetry }}</td>
-                </tr>
-                <tr>
-                    <th>Fluorescence:</th>
-                    <td>{{ diamond.fluorescence }}</td>
-                </tr>
-                <tr>
-                    <th>Fluorescence Color:</th>
-                    <td>{{ diamond.fluorescence_color }}</td>
-                </tr>
-                <tr>
-                    <th>Length:</th>
-                    <td>{{ diamond.length }}</td>
-                </tr>
-                <tr>
-                    <th>Width:</th>
-                    <td>{{ diamond.width }}</td>
-                </tr>
-                <tr>
-                    <th>Depth:</th>
-                    <td>{{ diamond.depth }}</td>
-                </tr>
+                {% if diamond.cut_grade %}
+                    <tr>
+                        <th>Cut Grade</th>
+                        <td>{{ diamond.cut_grade }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.depth_percent %}
+                    <tr>
+                        <th>Depth %:</th>
+                        <td>{{ diamond.depth_percent }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.table_percent %}
+                    <tr>
+                        <th>Table %:</th>
+                        <td>{{ diamond.table_percent }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.girdle %}
+                    <tr>
+                        <th>Girdle:</th>
+                        <td>{{ diamond.girdle }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.cutlet %}
+                    <tr>
+                        <th>Culet:</th>
+                        <td>{{ diamond.culet }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.potdsh %}
+                    <tr>
+                        <th>Polish:</th>
+                        <td>{{ diamond.potdsh }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.symmetry %}
+                    <tr>
+                        <th>Symmetry:</th>
+                        <td>{{ diamond.symmetry }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.fluorescence %}
+                    <tr>
+                        <th>Fluorescence:</th>
+                        <td>{{ diamond.fluorescence }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.fluorescence_color %}
+                    <tr>
+                        <th>Fluorescence Color:</th>
+                        <td>{{ diamond.fluorescence_color }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.length %}
+                    <tr>
+                        <th>Length:</th>
+                        <td>{{ diamond.length }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.width %}
+                    <tr>
+                        <th>Width:</th>
+                        <td>{{ diamond.width }}</td>
+                    </tr>
+                {% endif %}
+                {% if diamond.depth %}
+                    <tr>
+                        <th>Depth:</th>
+                        <td>{{ diamond.depth }}</td>
+                    </tr>
+                {% endif %}
             </table>
         </div>
     </div>

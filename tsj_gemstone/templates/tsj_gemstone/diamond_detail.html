@@ -3,31 +3,6 @@
 
 {% block title %}Diamonds{% endblock title %}
 
-{% block css %}
-    {{ block.super }}
-    <style type="text/css">
-        .smooth_zoom_preloader {
-            background-image: url({{ STATIC_URL }}gemstone/images/preloader.gif);
-        }
-        .smooth_zoom_icons {
-            background-image: url({{ STATIC_URL }}gemstone/images/icons.png);
-        }
-    </style>
-{% endblock css %}
-
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{{ STATIC_URL }}gemstone/js/jquery.smoothZoom.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#cert_image').smoothZoom({
-                width: 620,
-                height: 620
-            });
-        });
-    </script>
-{% endblock js %}
-
 {% block bodyclass %}diamond-detail{% endblock %}
 
 {% block breadcrumb %}{% endblock %}
@@ -44,7 +19,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="diamond-details span4">
+    <div class="diamond-details span6">
         <div class="group">
             <h3>The 4 C's</h3>
             <table class="table table-condensed">
@@ -66,6 +41,8 @@
                 </tr>
             </table>
         </div>
+    </div>
+    <div class="diamond-details span6">
         <div class="group">
             <h3>Details</h3>
             <table class="table table-condensed">
@@ -79,6 +56,10 @@
                 </tr>
             </table>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="diamond-details span6">
         <div class="group">
             <h3>Measurements</h3>
             <table class="table table-condensed">
@@ -132,6 +113,8 @@
                 </tr>
             </table>
         </div>
+    </div>
+    <div class="diamond-details span6">
         <div class="group">
             <h3>Certification</h3>
             <table class="table table-condensed">
@@ -143,12 +126,12 @@
                     <th>Certificate #:</th>
                     <td>{{ diamond.cert_num }}</td>
                 </tr>
-            </table>
+                <tr>
+                    <th>Certificate:</th>
+                    <td><a class="cert_pdf" href="{{ diamond.cert_image }}">Download Certification</a></td>
+                </tr>
+           </table>
         </div>
-    </div>
-    <div class="certificate span8">
-        <h3>Certificate</h3>
-        <img id="cert_image" src="{{ diamond.cert_image }}" alt="Certification" />
     </div>
 </div>
 </div>

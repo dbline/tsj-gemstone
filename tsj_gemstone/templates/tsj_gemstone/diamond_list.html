@@ -1,7 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'base_page.html' %}
 {% load thinkspace_pages %}
-
-{% block title %}Diamonds{% endblock title %}
 
 {% block js %}
     {{ block.super }}
@@ -22,20 +20,9 @@
     </script>
 {% endblock js %}
 
-{% block bodyclass %}page-diamondlist{% endblock %}
+{% block bodyclass %}{{ block.super }} diamond-list{% endblock %}
 
-{% block breadcrumb %}{% endblock %}
-
-{% block wrapper %}
-<div class="container">
-<div class="content">
-    <div class="title-page">
-        <div class="row">
-            <div class="span12">
-                <h1>{% if tspages_page.title %}{{ tspages_page.title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</h1>
-            </div>
-        </div>
-    </div>
+{% block content %}
     <div id="diamonds" class="diamonds">
         <div class="row">
             <div class="span12">
@@ -164,6 +151,4 @@
             </div>
         </div>
     </div>
-</div>
-</div>
-{% endblock wrapper %}
+{% endblock content %}

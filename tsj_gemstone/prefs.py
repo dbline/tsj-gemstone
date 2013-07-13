@@ -4,6 +4,13 @@ from django.utils.translation import ugettext as _
 from thinkspace.apps.preferences import AppPreferences, PreferencesForm
 
 class GemstonePreferencesForm(PreferencesForm):
+    RAPAPORT_VERSION_CHOICES = (
+        # TODO: We could rename backends.rapaport to backends.rapnet08, but
+        #       it's not a big deal since we'll just drop the 0.8 version.
+        ('rapaport', '0.8'),
+        ('rapnet10', '1.0'),
+    )
+    rapaport_version = forms.ChoiceField(choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), required=False, initial='rapaport')
     rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True))
     rapaport_minimum_carat_weight = forms.DecimalField(label='Minimum Carat Weight',
@@ -23,6 +30,7 @@ class GemstonePreferences(AppPreferences):
     fieldsets = (
         (_('Rapaport'), {
             'fields': (
+                'rapaport_version',
                 'rapaport_username',
                 'rapaport_password',
                 'rapaport_minimum_carat_weight',

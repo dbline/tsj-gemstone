@@ -46,40 +46,47 @@ def split_measurements(measurements):
         'depth': depth or 'NULL'
     }
 
-def main():
-    if not settings.DEBUG:
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
+def get_fp(filename=None):
+    if filename:
+        return open(filename)
 
-        if not username or not password:
-            logger.warning('Missing rapaport credentials, aborting import.')
-            return 0, 1
+    if settings.DEBUG:
+        # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
+        return open(os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-v0.8-225rows.csv'), 'rb')
 
-        # The URLs to authenticate with and download from
-        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-        url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
+    username = prefs.get('rapaport_username')
+    password = prefs.get('rapaport_password')
 
-        # Post the username and password to the auth_url and save the resulting ticket
-        auth_data = urllib.urlencode({
-            'username': username,
-            'password': password})
-        auth_request = Request(auth_url, auth_data)
-        try:
-            ticket = urlopen(auth_request).read()
-        except HTTPError as e:
-            logger.error('Rapaport auth failure: %s' % e)
-            return 0, 1
+    if not username or not password:
+        logger.warning('Missing rapaport credentials, aborting import.')
+        return
 
-        # Download the CSV
-        feed_data = urllib.urlencode({'SortBy': 'Owner', 'White': '1', 'Programmatically': 'yes', 'Version': '0.8', 'ticket': ticket})
-        rap_list_request = Request(url + '?' + feed_data)
-        rap_list = urlopen(rap_list_request)
+    auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
+    url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
 
-        # Load the CSV file into the CSV reader for parsing
-        reader = csv.reader(rap_list)
-    else:
-        # This is for development only. Load a much smaller version of the diamonds database from the fixtures directory.
-        reader = csv.reader(open(os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-v0.8-225rows.csv'), 'rb'))
+    # Post the username and password to the auth_url and save the resulting ticket
+    auth_data = urllib.urlencode({
+        'username': username,
+        'password': password})
+    auth_request = Request(auth_url, auth_data)
+    try:
+        ticket = urlopen(auth_request).read()
+    except HTTPError as e:
+        logger.error('Rapaport auth failure: %s' % e)
+        return
+
+    # Download the CSV
+    feed_data = urllib.urlencode({'SortBy': 'Owner', 'White': '1', 'Programmatically': 'yes', 'Version': '0.8', 'ticket': ticket})
+    rap_list_request = Request(url + '?' + feed_data)
+    rap_list = urlopen(rap_list_request)
+
+def main(filename=None):
+    fp = get_fp(filename=filename)
+    # TODO: Raise exception, don't treat return value as success/failure
+    if not fp:
+        return 0, 1
+
+    reader = csv.reader(fp)
 
     # Skip the first line because it contains row names that we don't care about
     reader.next()
@@ -138,8 +145,7 @@ def main():
     tmp_file.flush()
     tmp_file = open(tmp_file.name)
 
-    @transaction.commit_manually
-    def copy_from():
+    with transaction.commit_manually():
         # FIXME: Don't truncate/replace the table if the import returned no data
         try:
             cursor = connection.cursor()
@@ -151,7 +157,6 @@ def main():
         else:
             transaction.commit()
 
-    copy_from()
     tmp_file.close()
 
     return import_successes, import_errors

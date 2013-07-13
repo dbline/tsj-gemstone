@@ -1,4 +1,12 @@
 from decimal import Decimal
+from importlib import import_module
+
+IMPORTER_MODULES_PACKAGE = 'tsj_gemstone.backends'
+
+def get_backend(mod):
+    m = import_module('%s.%s' % (IMPORTER_MODULES_PACKAGE, mod))
+
+    return m
 
 def moneyfmt(value, places=2, curr='$', sep=',', dp='.', pos='', neg='-', trailneg=''):
     """Convert Decimal to a money formatted string.

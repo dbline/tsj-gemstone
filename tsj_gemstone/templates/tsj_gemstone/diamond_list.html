@@ -1,9 +1,12 @@
 {% extends 'base_page.html' %}
 {% load thinkspace_pages %}
 
-{% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{{ STATIC_URL }}gemstone/js/diamonds.js"></script>
+{% block css %}{{ block.super }}
+    <link link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
+{% endblock css %}
+
+{% block js %}{{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/diamonds.js"></script>
     <script type="text/javascript">
         // Setup some variables that we need
         DIAMOND_LIST_URL = '{% page diamond-list %}'

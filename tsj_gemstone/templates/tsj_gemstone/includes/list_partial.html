@@ -25,7 +25,7 @@
             <td>{{ diamond.symmetry.name|default:"----" }}</td>
             <td>{{ diamond.certifier|default:"----" }}</td>
             <td>{{ diamond.formatted_price }}</td>
-            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-normal btn-primary"><span>View</span> <i class="icon-chevron-right"></i></a></td>
+            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-mini btn-primary">View</a></td>
         </tr>
         {% endfor %}
     </tbody>

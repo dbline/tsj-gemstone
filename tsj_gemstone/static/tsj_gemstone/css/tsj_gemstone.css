@@ -17,11 +17,16 @@
     font-size: 1.5em;
     color: #114371;
 }
-.filter-primary .row, 
+.filter-primary .row {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc; 
+}
+
 .filter-advanced .row,
 .filter-certifier .row { 
     margin-bottom: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #ccc; 
 }
     .filter-certifier label {
@@ -57,6 +62,10 @@
     #tab_price,
     #tab_carat_weight {
         margin-top: 35px;
+    }
+    #tab_color,
+    #tab_clarity {
+        margin-top: 10px;
     }
 .filter-primary .span6 {
     margin: 0;
@@ -155,7 +164,7 @@
                     #tab_cut li.marquise span {
                         background-position: -144px 0px;
                         height: 22px;
-                        margin: 0 3px;
+                        margin: 0 2px;
                         width: 13px;
                     }
                         #tab_cut li.marquise:hover span,
@@ -246,6 +255,7 @@
 }
 .diamond-listing .pagination {
     float: right !important;
+    margin: 0;
     text-align: right;
 }
 .diamond-listing-info {

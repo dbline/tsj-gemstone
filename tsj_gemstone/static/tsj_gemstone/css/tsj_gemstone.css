@@ -7,6 +7,9 @@
 .ui-slider {
     margin: 20px 8px 0;
 }
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
+}
 .diamond-filters,
 .diamond-results {
    margin-left: 20px; 

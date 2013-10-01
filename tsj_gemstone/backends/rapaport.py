@@ -80,6 +80,8 @@ def get_fp(filename=None):
     rap_list_request = Request(url + '?' + feed_data)
     rap_list = urlopen(rap_list_request)
 
+    return rap_list
+
 def main(filename=None):
     fp = get_fp(filename=filename)
     # TODO: Raise exception, don't treat return value as success/failure

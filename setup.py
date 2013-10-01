@@ -68,7 +68,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
 version = __import__('tsj_gemstone').get_version()
 
 setup(
-    name = "TSJ Gemstone",
+    name = "tsj-gemstone",
     version = version.replace(' ', '-'),
     url = 'http://www.typethink.com/',
     author = 'Typethink',

@@ -1,11 +1,14 @@
 /******************************************** 
 ` Page : Diamonds : Listing
 *********************************************/
-.ui-slider-handle {
-    cursor: pointer;
-}
 .toolbar-pagination {
     padding-top: 15px;
+}
+.ui-slider {
+    margin: 20px 8px 0;
+}
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
 }
 .diamond-filters,
 .diamond-results {
@@ -15,13 +18,17 @@
     margin: 0 0 5px 0;
     padding: 0;
     font-size: 1.5em;
-    color: #114371;
 }
-.filter-primary .row, 
+.filter-primary .row {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc; 
+}
+
 .filter-advanced .row,
 .filter-certifier .row { 
     margin-bottom: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #ccc; 
 }
     .filter-certifier label {
@@ -57,6 +64,10 @@
     #tab_price,
     #tab_carat_weight {
         margin-top: 35px;
+    }
+    #tab_color,
+    #tab_clarity {
+        margin-top: 10px;
     }
 .filter-primary .span6 {
     margin: 0;
@@ -155,7 +166,7 @@
                     #tab_cut li.marquise span {
                         background-position: -144px 0px;
                         height: 22px;
-                        margin: 0 3px;
+                        margin: 0 2px;
                         width: 13px;
                     }
                         #tab_cut li.marquise:hover span,
@@ -222,7 +233,6 @@
                         }
 .wrapper-price {
     float: right;
-    margin-right: -10px;
 }
     .price-min-display, 
     .price-max-display {
@@ -246,6 +256,7 @@
 }
 .diamond-listing .pagination {
     float: right !important;
+    margin: 0;
     text-align: right;
 }
 .diamond-listing-info {
@@ -299,58 +310,3 @@
         border-top: none;
         border-bottom: 1px solid #ccc;
     }
-.ui-widget-content { /* Inner Bar */
-    border: 0;
-}
-.ui-widget-header { /* Outer Bar */
-    border: 0;
-}
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-    border: 0;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-    border: 0;
-}
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-    border: 0;
-}
-.ui-slider-horizontal {
-    height: 1.2em;
-}
-    .ui-slider-horizontal .ui-slider-handle {
-        top: 0;
-        margin-left: -6px;
-    }
-        .ui-slider .ui-slider-handle {
-            width: 1.2em;
-            height: 1.2em;
-        }
-        .ui-slider-horizontal .ui-slider-range {
-            top: 0;
-            height: 100%;
-        }
-    .ui-slider .ui-slider-range {
-        display: block;
-        border: 0;
-        background-position: 0 0;
-    }
-    .ui-multiselect { padding:2px 0 2px 4px; text-align:left }
-    .ui-multiselect span.ui-icon { float:right }
-    .ui-multiselect-single .ui-multiselect-checkboxes input { position:absolute !important; top: auto !important; left:-9999px; }
-    .ui-multiselect-single .ui-multiselect-checkboxes label { padding:5px !important }
-    .ui-multiselect-header { margin-bottom:3px; padding:3px 0 3px 4px }
-    .ui-multiselect-header ul { font-size:0.9em }
-    .ui-multiselect-header ul li { float:left; padding:0 10px 0 0 }
-    .ui-multiselect-header a { text-decoration:none }
-    .ui-multiselect-header a:hover { text-decoration:underline }
-    .ui-multiselect-header span.ui-icon { float:left }
-    .ui-multiselect-header li.ui-multiselect-close { float:right; text-align:right; padding-right:0 }
-    .ui-multiselect-menu { display:none; padding:3px; position:absolute; z-index:10000; text-align: left }
-    .ui-multiselect-checkboxes { position:relative /* fixes bug in IE6/7 */; overflow-y:scroll }
-    .ui-multiselect-checkboxes label { cursor:default; display:block; border:1px solid transparent; padding:3px 1px }
-    .ui-multiselect-checkboxes label input { position:relative; top:1px }
-    .ui-multiselect-checkboxes li { clear:both; font-size:0.9em; padding-right:3px }
-    .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:center; font-weight:bold; border-bottom:1px solid }
-    .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }

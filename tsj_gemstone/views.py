@@ -101,7 +101,7 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
         'initial_cuts': request.GET.getlist('cut'),
     }
 
-    diamonds = Diamond.objects.select_related().order_by('carat_weight')
+    diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by('carat_weight')
 
     min_maxs = min_max()
 
@@ -143,3 +143,8 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
 
 class DiamondDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
+
+    def get_queryset(self):
+        qs = super(DiamondDetailView, self).get_queryset()
+        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
+        return qs

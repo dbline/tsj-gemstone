@@ -82,6 +82,8 @@ def get_fp(filename=None):
     rap_list_request = Request(url + '?' + feed_data)
     rap_list = urlopen(rap_list_request)
 
+    return rap_list
+
 class Backend(BaseBackend):
     def run(self):
         main(self.filename)

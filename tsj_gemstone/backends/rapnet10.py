@@ -130,6 +130,8 @@ class Backend(BaseBackend):
         rap_list_request = Request(url + '?' + feed_data)
         rap_list = urlopen(rap_list_request)
 
+        return rap_list
+
     def run(self, filename=None):
         fp = self.get_fp()
         # TODO: Raise exception, don't treat return value as success/failure

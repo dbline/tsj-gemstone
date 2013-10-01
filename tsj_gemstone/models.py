@@ -1,5 +1,7 @@
 from django.db import models
 
+from model_utils.models import TimeStampedModel
+
 from .managers import DictManager
 from .utils import moneyfmt
 
@@ -122,12 +124,16 @@ class DiamondMarkup(models.Model):
         verbose_name_plural = 'Diamond Markups'
         ordering = ['percent']
 
-class DiamondBase(models.Model):
-    # TODO: Use TimeStampedModel for created/modified
-    added = models.DateTimeField('Added', auto_now_add=True)
-    updated = models.DateTimeField('Updated', auto_now=True)
+class DiamondBase(TimeStampedModel):
+    SOURCE_CHOICES = (
+        ('local', 'Local'),
+        ('rapaport', 'Rapaport'),
+        ('rapnet10', 'Rapaport 1.0'),
+    )
 
-    lot_num = models.CharField('Lot #', primary_key=True, max_length=100)
+    active = models.BooleanField(default=True)
+    source = models.CharField(max_length=64, choices=SOURCE_CHOICES)
+    lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
     owner = models.CharField('Owner', max_length=100, blank=True)
     cut = models.ForeignKey(Cut, verbose_name='Cut', related_name='%(class)s_cut_set')
@@ -157,7 +163,7 @@ class DiamondBase(models.Model):
     country = models.CharField('Country', max_length=255, blank=True)
 
     # TODO: Abstract Rapaport information to a different model
-    rap_date = models.DateTimeField('Date added to Rapaport')
+    rap_date = models.DateTimeField('Date added to Rapaport', blank=True, null=True)
 
     def formatted_price(self):
         return moneyfmt(self.price, dp='', places=0)

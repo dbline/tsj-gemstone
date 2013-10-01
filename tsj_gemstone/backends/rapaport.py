@@ -12,6 +12,8 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 from django.conf import settings
 from django.db import connection, transaction
 
+from .base import BaseBackend
+from .rapnet10 import Row
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -25,7 +27,7 @@ def clean(var, newlines=True, upper=False):
     var = var.replace('\\', '').strip()
 
     if newlines:
-        var = var.replace('\n', '').replace('\r', '')
+        var = var.replace('\n', ' ').replace('\r', '')
     if upper:
         var = var.upper()
 
@@ -37,7 +39,7 @@ def split_measurements(measurements):
     except ValueError:
         try:
             length, width, depth = measurements.split('*')
-        except:
+        except ValueError:
             length, width, depth = 'NULL', 'NULL', 'NULL'
 
     return {
@@ -48,7 +50,7 @@ def split_measurements(measurements):
 
 def get_fp(filename=None):
     if filename:
-        return open(filename)
+        return open(filename, 'rb')
 
     if settings.DEBUG:
         # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
@@ -81,6 +83,10 @@ def get_fp(filename=None):
     rap_list = urlopen(rap_list_request)
 
     return rap_list
+
+class Backend(BaseBackend):
+    def run(self):
+        main(self.filename)
 
 def main(filename=None):
     fp = get_fp(filename=filename)
@@ -152,7 +158,7 @@ def main(filename=None):
         try:
             cursor = connection.cursor()
             cursor.execute('TRUNCATE TABLE tsj_gemstone_diamond CASCADE')
-            cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL')
+            cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
         except Exception as e:
             transaction.rollback()
             raise
@@ -299,9 +305,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if not price:
         raise KeyError, "A diamond markup doesn't exist for a diamond with pre-markup price of '%s'." % price_before_markup
 
-    ret = (
+    ret = Row(
         added_date,
         added_date,
+        't', # active
+        'rapaport', # source
         lot_num,
         stock_number,
         owner,

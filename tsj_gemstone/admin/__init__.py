@@ -28,7 +28,7 @@ class FluorescenceColorAdmin(ModelAdmin):
 
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'url')
+    list_display = ('name', 'abbr', 'aliases', 'url', 'disabled')
 
 class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True

@@ -30,7 +30,7 @@ def min_max(force_update=False):
         _min_max['gradings'] = Grading.objects.values('order', 'name').order_by('-order')
         _min_max['fluorescence'] = Fluorescence.objects.all()
         _min_max['fluorescence_colors'] = FluorescenceColor.objects.all()
-        _min_max['certifiers'] = Certifier.objects.exclude(abbr='NONE')
+        _min_max['certifiers'] = Certifier.objects.exclude(disabled=True)
     return _min_max
 
 def set_match(diamonds, get, get_key, store, store_key, field):

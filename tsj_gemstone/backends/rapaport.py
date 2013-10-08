@@ -48,126 +48,126 @@ def split_measurements(measurements):
         'depth': depth or 'NULL'
     }
 
-def get_fp(filename=None):
-    if filename:
-        return open(filename, 'rb')
-
-    if settings.DEBUG:
-        # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
-        return open(os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-v0.8-225rows.csv'), 'rb')
-
-    username = prefs.get('rapaport_username')
-    password = prefs.get('rapaport_password')
-
-    if not username or not password:
-        logger.warning('Missing rapaport credentials, aborting import.')
-        return
-
-    auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-    url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-
-    # Post the username and password to the auth_url and save the resulting ticket
-    auth_data = urllib.urlencode({
-        'username': username,
-        'password': password})
-    auth_request = Request(auth_url, auth_data)
-    try:
-        ticket = urlopen(auth_request).read()
-    except HTTPError as e:
-        logger.error('Rapaport auth failure: %s' % e)
-        return
-
-    # Download the CSV
-    feed_data = urllib.urlencode({'SortBy': 'Owner', 'White': '1', 'Programmatically': 'yes', 'Version': '0.8', 'ticket': ticket})
-    rap_list_request = Request(url + '?' + feed_data)
-    rap_list = urlopen(rap_list_request)
-
-    return rap_list
-
 class Backend(BaseBackend):
+    # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-0.8.csv')
+
+    def get_fp(self):
+        if self.filename:
+            return open(self.filename, 'rb')
+
+        if settings.DEBUG:
+            # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
+            return open(self.debug_filename, 'rb')
+
+        username = prefs.get('rapaport_username')
+        password = prefs.get('rapaport_password')
+
+        if not username or not password:
+            logger.warning('Missing rapaport credentials, aborting import.')
+            return
+
+        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
+        url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
+
+        # Post the username and password to the auth_url and save the resulting ticket
+        auth_data = urllib.urlencode({
+            'username': username,
+            'password': password})
+        auth_request = Request(auth_url, auth_data)
+        try:
+            ticket = urlopen(auth_request).read()
+        except HTTPError as e:
+            logger.error('Rapaport auth failure: %s' % e)
+            return
+
+        # Download the CSV
+        feed_data = urllib.urlencode({'SortBy': 'Owner', 'White': '1', 'Programmatically': 'yes', 'Version': '0.8', 'ticket': ticket})
+        rap_list_request = Request(url + '?' + feed_data)
+        rap_list = urlopen(rap_list_request)
+
+        return rap_list
+
     def run(self):
-        main(self.filename)
+        fp = self.get_fp()
+        # TODO: Raise exception, don't treat return value as success/failure
+        if not fp:
+            return 0, 1
 
-def main(filename=None):
-    fp = get_fp(filename=filename)
-    # TODO: Raise exception, don't treat return value as success/failure
-    if not fp:
-        return 0, 1
+        reader = csv.reader(fp)
 
-    reader = csv.reader(fp)
+        # Skip the first line because it contains row names that we don't care about
+        reader.next()
 
-    # Skip the first line because it contains row names that we don't care about
-    reader.next()
+        # Prepare a temp file to use for writing our output CSV to
+        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
+        #writer = csv.writer(tmp_file, quoting=csv.QUOTE_MINIMAL, doublequote=True, escapechar='\\', lineterminator='\n')
+        writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
+        
+        # Prepare some needed variables
+        import_successes = 0
+        import_errors = 0
+        
+        # Create the import log now so we can add entries to it and update it with successes and failures after we're done
+        #import_log = models.ImportLog.objects.create(type='D')
 
-    # Prepare a temp file to use for writing our output CSV to
-    tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
-    #writer = csv.writer(tmp_file, quoting=csv.QUOTE_MINIMAL, doublequote=True, escapechar='\\', lineterminator='\n')
-    writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
-    
-    # Prepare some needed variables
-    import_successes = 0
-    import_errors = 0
-    
-    # Create the import log now so we can add entries to it and update it with successes and failures after we're done
-    #import_log = models.ImportLog.objects.create(type='D')
+        # Setup the abbreviation and alias matching dictionaries
+        cut_aliases = models.Cut.objects.as_dict()
+        color_aliases = models.Color.objects.as_dict()
+        clarity_aliases = models.Clarity.objects.as_dict()
+        grading_aliases = models.Grading.objects.as_dict()
+        fluorescence_aliases = models.Fluorescence.objects.as_dict()
+        fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
+        certifier_aliases = models.Certifier.objects.as_dict_disabled()
 
-    # Setup the abbreviation and alias matching dictionaries
-    cut_aliases = models.Cut.objects.as_dict()
-    color_aliases = models.Color.objects.as_dict()
-    clarity_aliases = models.Clarity.objects.as_dict()
-    grading_aliases = models.Grading.objects.as_dict()
-    fluorescence_aliases = models.Fluorescence.objects.as_dict()
-    fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
-    certifier_aliases = models.Certifier.objects.as_dict_disabled()
+        # Prepare the markup list so that we don't have to make a DB query each time
+        markup_list = []
+        markups = models.DiamondMarkup.objects.all()
+        for markup in markups:
+            markup_list.append((markup.start_price, markup.end_price, markup.percent))
 
-    # Prepare the markup list so that we don't have to make a DB query each time
-    markup_list = []
-    markups = models.DiamondMarkup.objects.all()
-    for markup in markups:
-        markup_list.append((markup.start_price, markup.end_price, markup.percent))
+        # Loop through each line in the reader
+        for line in reader:
+            try:
+                diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list)
+            except KeyError, e:
+                import_errors += 1
+                logger.info('KeyError', exc_info=e)
+            except ValueError, e:
+                import_errors += 1
+                logger.info('ValueError', exc_info=e)
+            except Exception, e:
+                # Create an error log entry and increment the import_errors counter
+                #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
+                #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
+                import_errors += 1
+                logger.error('Diamond import exception', exc_info=e)
+            else:
+                writer.writerow(diamond_row)
+                import_successes += 1
 
-    # Loop through each line in the reader
-    for line in reader:
-        try:
-            diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list)
-        except KeyError, e:
-            import_errors += 1
-            logger.info('KeyError', exc_info=e)
-        except ValueError, e:
-            import_errors += 1
-            logger.info('ValueError', exc_info=e)
-        except Exception, e:
-            # Create an error log entry and increment the import_errors counter
-            #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-            #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-            import_errors += 1
-            logger.error('Diamond import exception', exc_info=e)
-        else:
-            writer.writerow(diamond_row)
-            import_successes += 1
+        #import_log.successes = import_successes
+        #import_log.failures = import_errors
+        #import_log.save()
 
-    #import_log.successes = import_successes
-    #import_log.failures = import_errors
-    #import_log.save()
+        tmp_file.flush()
+        tmp_file = open(tmp_file.name)
 
-    tmp_file.flush()
-    tmp_file = open(tmp_file.name)
+        with transaction.commit_manually():
+            # FIXME: Don't truncate/replace the table if the import returned no data
+            try:
+                cursor = connection.cursor()
+                cursor.execute('TRUNCATE TABLE tsj_gemstone_diamond CASCADE')
+                cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
+            except Exception as e:
+                transaction.rollback()
+                raise
+            else:
+                transaction.commit()
 
-    with transaction.commit_manually():
-        # FIXME: Don't truncate/replace the table if the import returned no data
-        try:
-            cursor = connection.cursor()
-            cursor.execute('TRUNCATE TABLE tsj_gemstone_diamond CASCADE')
-            cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
-        except Exception as e:
-            transaction.rollback()
-            raise
-        else:
-            transaction.commit()
+        tmp_file.close()
 
-    tmp_file.close()
-
-    return import_successes, import_errors
+        return import_successes, import_errors
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list):
     lot_num, owner, cut, carat_weight, color, clarity, cut_grade, carat_price, rap_percent, certifier, depth_percent, table_percent, girdle, culet, polish, symmetry, fluorescence, measurements, comment, num_stones, cert_num, stock_number, make, rap_date, city, state, country, cert_image = line

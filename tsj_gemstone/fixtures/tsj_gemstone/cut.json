@@ -1,0 +1,123 @@
+[
+    {
+        "pk": 1,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 10,
+            "desc": "Round Brilliant Cut",
+            "aliases": "B\nBR\nROUND",
+            "name": "Round",
+            "abbr": "RD"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 20,
+            "desc": "",
+            "aliases": "PRINCESS",
+            "name": "Princess",
+            "abbr": "PR"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 30,
+            "desc": "",
+            "aliases": "R\nRADIANT",
+            "name": "Radiant",
+            "abbr": "RA"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 40,
+            "desc": "",
+            "aliases": "ASSCHER",
+            "name": "Asscher",
+            "abbr": "AS"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 50,
+            "desc": "",
+            "aliases": "C\nCUSHION",
+            "name": "Cushion",
+            "abbr": "CU"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 60,
+            "desc": "",
+            "aliases": "O\nOVAL",
+            "name": "Oval",
+            "abbr": "OV"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 70,
+            "desc": "",
+            "aliases": "E\nEMERALD",
+            "name": "Emerald",
+            "abbr": "EM"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 80,
+            "desc": "",
+            "aliases": "P\nPEAR",
+            "name": "Pear",
+            "abbr": "PS"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 90,
+            "desc": "",
+            "aliases": "M\nMARQUISE",
+            "name": "Marquise",
+            "abbr": "MQ"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 100,
+            "desc": "",
+            "aliases": "H\nHEART",
+            "name": "Heart",
+            "abbr": "HS"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "tsj_gemstone.cut",
+        "fields": {
+            "order": 110,
+            "desc": "",
+            "aliases": "T\nTRI\nTRILLIANT",
+            "name": "Trilliant",
+            "abbr": "TR"
+        }
+    }
+]

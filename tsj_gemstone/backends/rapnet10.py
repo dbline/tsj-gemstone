@@ -95,7 +95,7 @@ def split_measurements(measurements):
 
 class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-v0.8-225rows.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-1.0.csv')
 
     def get_fp(self):
         if self.filename:
@@ -132,7 +132,7 @@ class Backend(BaseBackend):
 
         return rap_list
 
-    def run(self, filename=None):
+    def run(self):
         fp = self.get_fp()
         # TODO: Raise exception, don't treat return value as success/failure
         if not fp:

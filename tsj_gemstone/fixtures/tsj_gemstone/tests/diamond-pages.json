@@ -1,0 +1,56 @@
+[
+    {
+        "pk": "695470f6-4d2e-451c-aa39-27fa14e2ed4b",
+        "model": "pages.pagetype",
+        "fields": {
+            "name": "Diamond Detail",
+            "template": "",
+            "slug": "diamond-detail"
+        }
+    },
+    {
+        "pk": "0d856a0e-419a-41c0-8d4f-bda44a33fbcf",
+        "model": "pages.pagetype",
+        "fields": {
+            "name": "Diamond List",
+            "template": "",
+            "slug": "diamond-list"
+        }
+    },
+    {
+        "pk": "26fe83dc-9c01-4a59-9996-65ebeb56e5b4",
+        "model": "pages.page",
+        "fields": {
+            "category": null,
+            "exclude_from_sitemap": false,
+            "description": "",
+            "title": "Diamond Detail",
+            "url": "/diamonds/",
+            "created": "2013-05-23T23:55:04.478",
+            "modified": "2013-06-23T19:19:44.834",
+            "short_title": "",
+            "page_type": "695470f6-4d2e-451c-aa39-27fa14e2ed4b",
+            "published": true,
+            "keywords": "",
+            "slug": "diamond-detail"
+        }
+    },
+    {
+        "pk": "37c5728d-9748-4b58-99a1-a2151529cb68",
+        "model": "pages.page",
+        "fields": {
+            "category": null,
+            "exclude_from_sitemap": false,
+            "description": "Choose the perfect cut, shape, symmetry, purity of diamonds and make it fit your budget.",
+            "title": "Diamond List",
+            "url": "/diamonds/",
+            "created": "2013-05-23T23:55:04.105",
+            "modified": "2013-06-28T17:08:19.949",
+            "short_title": "Custom Diamond Selection Tools",
+            "page_type": "0d856a0e-419a-41c0-8d4f-bda44a33fbcf",
+            "published": true,
+            "keywords": "",
+            "slug": "diamond-list"
+        }
+    }
+]

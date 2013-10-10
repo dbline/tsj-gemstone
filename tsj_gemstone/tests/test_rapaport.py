@@ -1,5 +1,5 @@
+from django.core.management import call_command
 from django.test import TestCase
-from django.test.client import Client
 
 from tsj_gemstone.backends.rapaport import Backend
 from tsj_gemstone.models import Diamond
@@ -14,7 +14,5 @@ class RapaportBackendTest(TestCase):
     )
 
     def test_backend(self):
-        b = Backend(filename=Backend.debug_filename)
-        results = b.run()
-        self.assertEqual(results, (3488, 3268))
+        call_command('import_diamonds', backend='rapaport', file=Backend.debug_filename)
         self.assertEqual(Diamond.objects.count(), 3488)

@@ -49,7 +49,7 @@
                             <div class="row">
                                 <div class="span6">
                                     <div id="tab_cut" class="cut group">
-                                        <h2>Cut / Shape</h2>
+                                        <h3>Cut / Shape</h3>
                                         <ul>
                                         {% for cut in cuts %}
                                             <li class="{{ cut.name|slugify }}">
@@ -66,22 +66,22 @@
                                             <input class="price_display price-min-display" id="price_min_display" />
                                             <input class="price_display price-max-display" id="price_max_display" />
                                         </div>
-                                        <h3>Price</h3>
+                                        <h5>Price</h5>
                                         <div id="price_range"></div>
                                     </div>
                                     <div id="tab_carat_weight" class="carat-weight slider slider-normal group">
                                         <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
-                                        <h3>Carat Weight</h3>
+                                        <h5>Carat Weight</h5>
                                         <div id="carat_weight_range"></div>
                                     </div>
                                     <div id="tab_color" class="color slider slider-normal mgr group">
                                         <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
-                                        <h3>Color</h3>                    
+                                        <h5>Color</h5>                    
                                         <div id="color_range"></div>
                                     </div>
                                     <div id="tab_clarity" class="clarity slider slider-normal group">
                                         <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
-                                        <h3>Clarity</h3>
+                                        <h5>Clarity</h5>
                                         <div id="clarity_range"></div>
                                     </div>
                                 </div>
@@ -89,20 +89,20 @@
                         </div>
                         <div class="filter-advanced">
                             <div class="row">
-                                <h2>Cut / Polish / Symmetry</h2>
+                                <h3>Cut / Polish / Symmetry</h3>
                                 <div id="cut_grade" class="cut-grade slider slider-advanced group">
                                     <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
-                                    <h3>Cut</h3>
+                                    <h5>Cut</h5>
                                     <div id="cut_grade_range"></div>
                                 </div>
                                 <div id="polish" class="polish slider slider-advanced group">
                                     <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
-                                    <h3>Polish</h3>
+                                    <h5>Polish</h5>
                                     <div id="polish_range"></div>
                                 </div>
                                 <div id="symmmetry" class="symmetry slider slider-advanced group">
                                     <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
-                                    <h3>Symmetry</h3>
+                                    <h5>Symmetry</h5>
                                     <div id="symmetry_range"></div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                         <div class="filter-certifier">
                             <div class="row">
                                 <div id="certifier">
-                                    <h2>Certifiers</h2>
+                                    <h3>Certifiers</h3>
                                     {% for certifier in certifiers %}
                                     <label>
                                         <input type="checkbox" name="certifier" value="{{ certifier.abbr }}">
@@ -124,7 +124,7 @@
                 </div>
                 <div id="diamond_listings" class="diamond-listing">
                     <div id="diamond_loading" class="loading-diamond" style="display: none;">
-                        <h3>Updating Diamonds</h3>
+                        <h5>Updating Diamonds</h5>
                         <div class="loading">
                             <img src="{{ STATIC_URL }}gemstone/images/preloader.gif" alt="Loading...">
                         </div>

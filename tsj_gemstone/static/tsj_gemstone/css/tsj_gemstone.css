@@ -14,10 +14,9 @@
 .diamond-results {
    margin-left: 20px; 
 }
-.diamond-filters h2 {
+.diamond-filters h3 {
     margin: 0 0 5px 0;
     padding: 0;
-    font-size: 1.5em;
 }
 .filter-primary .row {
     margin-bottom: 10px;
@@ -57,9 +56,8 @@
         .slider p {
             color: #999;
             float: right;
-            font-size: .9em;
             font-weight: bold;
-            margin-top: 6px;
+            margin-top: 10px;
         }
     #tab_price,
     #tab_carat_weight {
@@ -72,21 +70,14 @@
 .filter-primary .span6 {
     margin: 0;
 }
-    .diamond-filters .group h3 {
+    .diamond-filters .group h4 {
         color: #999;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: bold;
-        line-height: 12px;
     }
     .diamond-filters ul {
         margin: 0;
         padding: 0;
         list-style: none;
     }
-        #tab_cut h3 {
-            font-size: 1.2em;
-        }
         #tab_cut ul {
             margin: 0 0 0 -5px;
             padding:0;
@@ -254,6 +245,9 @@
 .diamond-listing {
     position: relative;
 }
+.diamond-listing h5 {
+    margin: 20px 0;
+}
 .diamond-listing .pagination {
     float: right !important;
     margin: 0;
@@ -266,13 +260,6 @@
     margin-left: 0;
     padding: 0;
 }
-.diamond-listing h2 {
-    font-size: 1em;
-}
-    .diamond-listing h2 span {
-        display: block;
-        color: #666;
-    }
 .diamond-results {
     position: relative;
     margin-bottom: 30px;

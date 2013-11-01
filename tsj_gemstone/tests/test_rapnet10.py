@@ -13,6 +13,11 @@ class Rapnet10BackendTest(TestCase):
         'tsj_gemstone/diamond_markup.json',
     )
 
+    # TODO: Test importing a previously unknown certifier
+    # TODO: Test a diamond markup not existing for a pre-markup price
+    # TODO: Test invalid values for measurements
+    # TODO: Test error counter and aggregator (KeyValueError, SkipDiamond)
+
     def test_backend(self):
         call_command('import_diamonds', backend='rapnet10', file=Backend.debug_filename)
         self.assertEqual(Diamond.objects.count(), 3797)

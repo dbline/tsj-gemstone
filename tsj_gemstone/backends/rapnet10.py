@@ -70,21 +70,6 @@ def clean(data, upper=False):
 
     return data
 
-from string import ascii_letters, digits, whitespace, punctuation
-VALID_CHAR_LIST = (ascii_letters + digits + whitespace + punctuation)
-def orig_clean(var, newlines=True, upper=False):
-    # TODO: Replace with regex?
-    initial = var
-    var = ''.join([ch for ch in var if ch in VALID_CHAR_LIST])
-    var = var.replace('\\', '').strip()
-
-    if newlines:
-        var = var.replace('\n', ' ').replace('\r', '')
-    if upper:
-        var = var.upper()
-
-    return var
-
 def split_measurements(measurements):
     try:
         length, width, depth = MEASUREMENT_RE.split(measurements)

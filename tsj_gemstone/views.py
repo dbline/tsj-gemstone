@@ -83,7 +83,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
         get_min_max = (get[get_min_key], get[get_max_key])
 
         # Skip if full range
-        if get_min_max != store_min_max:
+        if get_min_max != store_min_max and get_min_max[0] and get_min_max[1]:
             if model_field_name:
                 params = {'{0}__{1}__range'.format(get_key, model_field_name):get_min_max}
             else:
@@ -112,7 +112,7 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
     diamonds = set_match(diamonds, request.GET, 'cut', min_maxs, 'cuts', 'abbr')
     diamonds = full_range_match(diamonds, request.GET, 'price', min_maxs, 'prices', floor_ceil=True)
     diamonds = full_range_match(diamonds, request.GET, 'carat_weight', min_maxs, 'carat_weights')
-    if 'color_min' in request.GET and 'color_max' in request.GET:
+    if request.GET.get('color_min') and request.GET.get('color_max'):
         color_list = [chr(x) for x in xrange(ord(request.GET['color_min']), ord(request.GET['color_max'])+1)]
         diamonds = diamonds.filter(color__abbr__in=color_list)
     diamonds = full_range_match(diamonds, request.GET, 'clarity', min_maxs, 'clarities', 'order')

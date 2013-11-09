@@ -74,7 +74,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
         store_type = type(store_min_max[0])
 
         # Floor / ceiling max and min if the stored values are Decimals or integers
-        if floor_ceil:
+        if floor_ceil and store_min_max[0] and store_min_max[1]:
             store_min_max = (int(store_min_max[0]), int(ceil(store_min_max[1])))
 
         if store_type in (Decimal, int):

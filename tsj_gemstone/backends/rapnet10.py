@@ -13,6 +13,7 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 
 from django.conf import settings
 from django.db import connection, transaction
+from django.utils.functional import memoize
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
@@ -69,6 +70,12 @@ def clean(data, upper=False):
         data = data.upper()
 
     return data
+
+_clean_cache = {}
+
+# Values that are expected to recur within an import can have their
+# cleaned values cached with this wrapper
+cached_clean = memoize(clean, _clean_cache, 2)
 
 def split_measurements(measurements):
     try:
@@ -160,13 +167,26 @@ class Backend(BaseBackend):
 
         markup_list = models.DiamondMarkup.objects.values_list('start_price', 'end_price', 'percent')
 
+        # We want all the imported records to have the same added_date
+        added_date = datetime.now()
+
+        # Preload prefs that write_diamond_row needs to filter out diamonds
+        pref_values = (
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
+            Decimal(prefs.get('rapaport_minimum_price', '1500')),
+            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            prefs.get('rapaport_must_be_certified', True),
+            prefs.get('rapaport_verify_cert_images', False),
+        )
+
         # TODO: We shouldn't need KeyError or ValueError if we're correctly
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
         for line in reader:
             try:
-                diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list)
+                diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
@@ -219,7 +239,7 @@ def nvl(data):
         return 'NULL'
     return data
 
-def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list):
+def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     # Order must match structure of CSV spreadsheet
     (
         unused_owner_name, # seller in CSV
@@ -258,38 +278,31 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         rap_date,
     ) = line
 
-    # Setup the diamond import requirements
-    minimum_carat_weight = Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2'))
-    maximum_carat_weight = Decimal(prefs.get('rapaport_maximum_carat_weight', '5'))
-    minimum_price = Decimal(prefs.get('rapaport_minimum_price', '1500'))
-    maximum_price = Decimal(prefs.get('rapaport_maximum_price', '200000'))
-    must_be_certified = prefs.get('rapaport_must_be_certified', True)
-    verify_cert_images = prefs.get('rapaport_verify_cert_images', False)
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
-    added_date = datetime.now()
     lot_num = clean(lot_num)
-    owner = clean(owner).title()
-    comment = clean(comment)
+    owner = cached_clean(owner).title()
+    comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)
     rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
-    city = clean(city)
-    state = clean(state)
-    country = clean(country)
+    city = cached_clean(city)
+    state = cached_clean(state)
+    country = cached_clean(country)
 
     try:
-        cut = cut_aliases[clean(cut, upper=True)]
+        cut = cut_aliases[cached_clean(cut, upper=True)]
     except KeyError as e:
         raise KeyValueError('cut_aliases', e.args[0])
 
-    carat_weight = Decimal(str(clean(carat_weight)))
+    carat_weight = Decimal(str(cached_clean(carat_weight)))
     if carat_weight < minimum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
     elif maximum_carat_weight and carat_weight > maximum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
 
-    color = color_aliases.get(clean(color, upper=True))
+    color = color_aliases.get(cached_clean(color, upper=True))
 
-    certifier = clean(certifier, upper=True)
+    certifier = cached_clean(certifier, upper=True)
     # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
     if must_be_certified:
         if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -309,7 +322,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     else:
         certifier = certifier_id
 
-    clarity = clean(clarity, upper=True)
+    clarity = cached_clean(clarity, upper=True)
     if not clarity:
         raise SkipDiamond('No clarity specified')
     try:
@@ -317,7 +330,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     except KeyError as e:
         raise KeyValueError('clarity', e.args[0])
 
-    cut_grade = grading_aliases.get(clean(cut_grade, upper=True))
+    cut_grade = grading_aliases.get(cached_clean(cut_grade, upper=True))
     carat_price = clean(carat_price)
     if carat_price:
         carat_price = Decimal(carat_price)
@@ -330,19 +343,19 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         depth_percent = 'NULL'
 
     try:
-        table_percent = Decimal(str(clean(table_percent)))
+        table_percent = Decimal(str(cached_clean(table_percent)))
     except InvalidOperation:
         table_percent = 'NULL'
 
-    girdle = clean(girdle, upper=True)
+    girdle = cached_clean(girdle, upper=True)
     if not girdle or girdle == '-':
         girdle = ''
 
-    culet = clean(culet, upper=True)
-    polish = grading_aliases.get(clean(polish, upper=True))
-    symmetry = grading_aliases.get(clean(symmetry, upper=True))
+    culet = cached_clean(culet, upper=True)
+    polish = grading_aliases.get(cached_clean(polish, upper=True))
+    symmetry = grading_aliases.get(cached_clean(symmetry, upper=True))
 
-    fluorescence = clean(fluorescence, upper=True)
+    fluorescence = cached_clean(fluorescence, upper=True)
     fluorescence_id = None
     fluorescence_color = None
     fluorescence_color_id = None
@@ -354,7 +367,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     fluorescence = fluorescence_id
 
     if fluorescence_color:
-        fluorescence_color = clean(fluorescence_color, upper=True)
+        fluorescence_color = cached_clean(fluorescence_color, upper=True)
         for abbr, id in fluorescence_color_aliases.iteritems():
             if fluorescence_color.startswith(abbr.upper()):
                 fluorescence_color_id = id

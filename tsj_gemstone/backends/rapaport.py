@@ -157,7 +157,7 @@ class Backend(BaseBackend):
             # FIXME: Don't truncate/replace the table if the import returned no data
             try:
                 cursor = connection.cursor()
-                cursor.execute('TRUNCATE TABLE tsj_gemstone_diamond CASCADE')
+                cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source='rapaport'")
                 cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
             except Exception as e:
                 transaction.rollback()

@@ -38,7 +38,7 @@ class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
     list_display = ('lot_num', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier')
-    list_filter = ('cut', 'color', 'clarity', 'certifier')
+    list_filter = ('cut', 'color', 'clarity', 'certifier', 'source')
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
     exclude = ('source',)
 

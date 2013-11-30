@@ -180,6 +180,10 @@ class Backend(BaseBackend):
             prefs.get('rapaport_verify_cert_images', False),
         )
 
+        # To cut down on disk writes, we buffer the rows
+        row_buffer = []
+        buffer_size = 1000
+
         # TODO: We shouldn't need KeyError or ValueError if we're correctly
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
@@ -206,8 +210,15 @@ class Backend(BaseBackend):
                 import_errors += 1
                 logger.error('Diamond import exception', exc_info=e)
             else:
-                writer.writerow(diamond_row)
+                if len(row_buffer) > buffer_size:
+                    writer.writerows(row_buffer)
+                    row_buffer = []
+                else:
+                    row_buffer.append(row)
                 import_successes += 1
+
+        if row_buffer:
+            writer.writerows(row_buffer)
 
         tmp_file.flush()
         tmp_file = open(tmp_file.name)

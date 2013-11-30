@@ -146,6 +146,7 @@ class DiamondBase(TimeStampedModel):
     certifier = models.ForeignKey(Certifier, verbose_name='Certifier', null=True, blank=True, related_name='%(class)s_certifier_set')
     cert_num = models.CharField('Cert Report #', max_length=255, blank=True)
     cert_image = models.CharField('Cert Image', max_length=255, blank=True)
+    cert_image_local = models.FileField('Cert Image', upload_to='tsj_gemstone/certificates/', blank=True)
     depth_percent = models.DecimalField('Depth %', max_digits=5, decimal_places=2, null=True, blank=True)
     table_percent = models.DecimalField('Table %', max_digits=5, decimal_places=2, null=True, blank=True)
     girdle = models.CharField('Girdle', max_length=50, blank=True)

@@ -143,8 +143,15 @@
                         <td>{{ diamond.cert_num }}</td>
                     </tr>
                     <tr>
-                        <th>Certificate:</th>
-                        <td><a class="cert_pdf" href="{{ diamond.cert_image }}">Download Certification</a></td>
+                        {% if diamond.source == 'local' %}
+                            {% if diamond.cert_image_local %}
+                                <th>Certificate:</th>
+                                <td><a class="cert_pdf" href="{{ diamond.cert_image_local.url }}">Download Certification</a></td>
+                            {% endif %}
+                        {% elif diamond.cert_image %}
+                            <th>Certificate:</th>
+                            <td><a class="cert_pdf" href="{{ diamond.cert_image }}">Download Certification</a></td>
+                        {% endif %}
                     </tr>
                </table>
             </div>

@@ -40,45 +40,70 @@ class DiamondAdmin(ModelAdmin):
     list_display = ('lot_num', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier')
     list_filter = ('cut', 'color', 'clarity', 'certifier')
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
-    fieldsets = (
-        ('Inventory', {
-            'fields': (
-                ('lot_num', 'stock_number', 'owner'),
-                ('rap_date'),
-            )
-        }),
-        ('Data', {
-            'fields': (
-                ('carat_weight', 'carat_price', 'price'),
-                ('cut', 'color', 'clarity'),
-                ('cut_grade'),
-            )
-        }),
-        ('Measurements', {
-            'fields': (
-                ('depth_percent', 'table_percent'),
-                ('length', 'width', 'depth'),
-            )
-        }),
-        ('Misc', {
-            'fields': (
-                ('polish', 'symmetry'),
-                ('girdle', 'culet'),
-                ('fluorescence', 'fluorescence_color'),
-            )
-        }),
-        ('Certificate', {
-            'fields': (
-                ('certifier', 'cert_num', 'cert_image'),
-            )
-        }),
-        ('Location', {
-            'fields': (
-                ('city', 'state', 'country'),
-                ('comment'),
-            )
-        }),
-    )
+    exclude = ('source',)
+
+    def get_fieldsets(self, request, obj=None):
+        # Initial fields
+        fieldsets = (
+            ('Inventory', {
+                'fields': [
+                    ('lot_num', 'stock_number', 'owner'),
+                ]
+            }),
+            ('Data', {
+                'fields': (
+                    ('carat_weight', 'carat_price', 'price'),
+                    ('cut', 'color', 'clarity'),
+                    ('cut_grade'),
+                )
+            }),
+            ('Measurements', {
+                'fields': (
+                    ('depth_percent', 'table_percent'),
+                    ('length', 'width', 'depth'),
+                )
+            }),
+            ('Misc', {
+                'fields': (
+                    ('polish', 'symmetry'),
+                    ('girdle', 'culet'),
+                    ('fluorescence', 'fluorescence_color'),
+                )
+            }),
+            ('Certificate', {
+                'fields': (
+                    ['certifier', 'cert_num'],
+                )
+            }),
+            ('Location', {
+                'fields': (
+                    ('city', 'state', 'country'),
+                    ('comment'),
+                )
+            }),
+        )
+
+        if obj is None or obj.source == 'local':
+            # Local diamonds have a locally uploaded certificate
+            fieldsets[4][1]['fields'][0].append('cert_image_local')
+        else:
+            # Imported diamonds have a certificate URL
+            fieldsets[4][1]['fields'][0].append('cert_image')
+
+        if obj and obj.source in ('rapaport', 'rapnet10'):
+            # Add rap_date to the Inventory section
+            fieldsets[0][1]['fields'].append(('rap_date',))
+
+        return fieldsets
+
+    def save_form(self, request, form, change):
+        obj = form.save(commit=False)
+
+        # Create form, which means local diamond
+        if not change:
+            obj.source = 'local'
+
+        return obj
 
 site.register(models.Cut, CutAdmin)
 site.register(models.Color, ColorAdmin)

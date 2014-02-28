@@ -6,6 +6,7 @@
 {% endblock css %}
 
 {% block js %}{{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/jquery.history.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/diamonds.js"></script>
     <script type="text/javascript">
         // Setup some variables that we need
@@ -26,132 +27,105 @@
 {% block bodyclass %}{{ block.super }} diamond-list{% endblock %}
 
 {% block content %}
-    <div id="diamonds" class="diamonds">
-        <div class="row">
-            <div class="span12">
-                <div id="diamond_filters" class="diamond-filters">
-                    <form id="diamond_filter_form">
-                        <input type="hidden" id="price_min" class="hidden" name="price_min" />
-                        <input type="hidden" id="price_max" class="hidden" name="price_max" />
-                        <input type="hidden" id="carat_weight_min" class="hidden" name="carat_weight_min" />
-                        <input type="hidden" id="carat_weight_max" class="hidden" name="carat_weight_max" />
-                        <input type="hidden" id="color_min" class="hidden" name="color_min" />
-                        <input type="hidden" id="color_max" class="hidden" name="color_max" />
-                        <input type="hidden" id="clarity_min" class="hidden" name="clarity_min" />
-                        <input type="hidden" id="clarity_max" class="hidden" name="clarity_max" />
-                        <input type="hidden" id="cut_grade_min" class="hidden" name="cut_grade_min" />
-                        <input type="hidden" id="cut_grade_max" class="hidden" name="cut_grade_max" />
-                        <input type="hidden" id="polish_min" class="hidden" name="polish_min" />
-                        <input type="hidden" id="polish_max" class="hidden" name="polish_max" />
-                        <input type="hidden" id="symmetry_min" class="hidden" name="symmetry_min" />
-                        <input type="hidden" id="symmetry_max" class="hidden" name="symmetry_max" />
-                        <div class="filter-primary">
-                            <div class="row">
-                                <div class="span6">
-                                    <div id="tab_cut" class="cut group">
-                                        <h3>Cut / Shape</h3>
-                                        <ul>
-                                        {% for cut in cuts %}
-                                            <li class="{{ cut.name|slugify }}">
-                                                <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" value="{{ cut.abbr }}" {% if cut.abbr in initial_cuts %}checked="checked"{% endif %} />
-                                                <label for="{{ cut.name|slugify }}"><span class="icon"></span>{{ cut.name }}</label>
-                                            </li>
-                                        {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="span6">
-                                    <div id="tab_price" class="price inputs slider slider-normal mgr group">
-                                        <div class="wrapper-price">
-                                            <input class="price_display price-min-display" id="price_min_display" />
-                                            <input class="price_display price-max-display" id="price_max_display" />
-                                        </div>
-                                        <h5>Price</h5>
-                                        <div id="price_range"></div>
-                                    </div>
-                                    <div id="tab_carat_weight" class="carat-weight slider slider-normal group">
-                                        <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
-                                        <h5>Carat Weight</h5>
-                                        <div id="carat_weight_range"></div>
-                                    </div>
-                                    <div id="tab_color" class="color slider slider-normal mgr group">
-                                        <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
-                                        <h5>Color</h5>                    
-                                        <div id="color_range"></div>
-                                    </div>
-                                    <div id="tab_clarity" class="clarity slider slider-normal group">
-                                        <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
-                                        <h5>Clarity</h5>
-                                        <div id="clarity_range"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="filter-advanced">
-                            <div class="row">
-                                <h3>Cut / Polish / Symmetry</h3>
-                                <div id="cut_grade" class="cut-grade slider slider-advanced group">
-                                    <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
-                                    <h5>Cut</h5>
-                                    <div id="cut_grade_range"></div>
-                                </div>
-                                <div id="polish" class="polish slider slider-advanced group">
-                                    <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
-                                    <h5>Polish</h5>
-                                    <div id="polish_range"></div>
-                                </div>
-                                <div id="symmmetry" class="symmetry slider slider-advanced group">
-                                    <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
-                                    <h5>Symmetry</h5>
-                                    <div id="symmetry_range"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="filter-certifier">
-                            <div class="row">
-                                <div id="certifier">
-                                    <h3>Certifiers</h3>
-                                    {% for certifier in certifiers %}
-                                    <label>
-                                        <input type="checkbox" name="certifier" value="{{ certifier.abbr }}">
-                                        {{ certifier.name }}
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+
+<div class="row">
+    <div class="span3 filters">
+        <form id="diamond_filter_form">
+            <input type="hidden" id="price_min" class="hidden" name="price_min" />
+            <input type="hidden" id="price_max" class="hidden" name="price_max" />
+            <input type="hidden" id="carat_weight_min" class="hidden" name="carat_weight_min" />
+            <input type="hidden" id="carat_weight_max" class="hidden" name="carat_weight_max" />
+            <input type="hidden" id="color_min" class="hidden" name="color_min" />
+            <input type="hidden" id="color_max" class="hidden" name="color_max" />
+            <input type="hidden" id="clarity_min" class="hidden" name="clarity_min" />
+            <input type="hidden" id="clarity_max" class="hidden" name="clarity_max" />
+            <input type="hidden" id="cut_grade_min" class="hidden" name="cut_grade_min" />
+            <input type="hidden" id="cut_grade_max" class="hidden" name="cut_grade_max" />
+            <input type="hidden" id="polish_min" class="hidden" name="polish_min" />
+            <input type="hidden" id="polish_max" class="hidden" name="polish_max" />
+            <input type="hidden" id="symmetry_min" class="hidden" name="symmetry_min" />
+            <input type="hidden" id="symmetry_max" class="hidden" name="symmetry_max" />
+            <div class="filter-primary">
+                <div id="tab_cut" class="cut group">
+                    <h4>Shape</h4>
+                    <ul class="unstyled">
+                    {% for cut in cuts %}
+                        <li class="{{ cut.name|slugify }}">
+                            <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" value="{{ cut.abbr }}" {% if cut.abbr in initial_cuts %}checked="checked"{% endif %} />
+                            <label for="{{ cut.name|slugify }}"><span class="icon"></span>{{ cut.name }}</label>
+                        </li>
+                    {% endfor %}
+                    </ul>
                 </div>
-                <div id="diamond_listings" class="diamond-listing">
-                    <div id="diamond_loading" class="loading-diamond" style="display: none;">
-                        <h5>Updating Diamonds</h5>
-                        <div class="loading">
-                            <img src="{{ STATIC_URL }}gemstone/images/preloader.gif" alt="Loading...">
-                        </div>
+                <div id="tab_price" class="price inputs slider mgr group">
+                    <h4>Price</h4>
+                    <div id="price_range"></div>
+                    <div class="wrapper-price">
+                        <input class="price_display price-min-display" id="price_min_display" />
+                        <input class="price_display price-max-display" id="price_max_display" />
                     </div>
-                    <div class="diamond-listing-info row">
-                        <div class="results span3">
-                            {% include "tsj_gemstone/includes/results_partial.html" %}
-                        </div>
-                        <div class="toolbar-pagination span9">
-                            {% include "tsj_gemstone/includes/paginator_full_partial.html" %}
-                        </div>
-                    </div>
-                    <div class="diamond-results">
-                        <div class="row wrapper-table">
-                            {% include "tsj_gemstone/includes/list_partial.html" %}
-                        </div>
-                    </div>
-                    <div class="diamond-listing-info row">
-                        <div class="results span3">
-                            {% include "tsj_gemstone/includes/results_partial.html" %}
-                        </div>
-                        <div class="toolbar-pagination span9">
-                            {% include "tsj_gemstone/includes/paginator_full_partial.html" %}
-                        </div>
-                    </div>
+                </div>
+                <div id="tab_carat_weight" class="carat-weight slider group">
+                    <h4>Carats</h4>
+                    <div id="carat_weight_range"></div>
+                    <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
+                </div>
+                <div id="cut_grade" class="cut-grade slider group">
+                    <h4>Cut</h4>
+                    <div id="cut_grade_range"></div>
+                    <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
+                </div>
+                <div id="tab_color" class="color slider mgr group">
+                    <h4>Color</h4>                    
+                    <div id="color_range"></div>
+                    <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
+                </div>
+                <div id="tab_clarity" class="clarity slider group">
+                    <h4>Clarity</h4>
+                    <div id="clarity_range"></div>
+                    <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
+                </div>
+            </div>
+            <div class="filter-advanced hide">
+                <div id="polish" class="polish slider group">
+                    <h4>Polish</h4>
+                    <div id="polish_range"></div>
+                    <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
+                </div>
+                <div id="symmmetry" class="symmetry slider group">
+                    <h4>Symmetry</h4>
+                    <div id="symmetry_range"></div>
+                    <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
+                </div>
+            </div>
+            <div class="filter-certifier hide">
+                <div id="certifier">
+                    <h4>Certifiers</h4>
+                    {% for certifier in certifiers %}
+                    <label>
+                        <input type="checkbox" name="certifier" value="{{ certifier.abbr }}">
+                        {{ certifier.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="span9 list">
+        <div id="diamond_listings" class="diamond-listing">
+            <div class="diamond-results">
+                <div class="row wrapper-table">
+                    {% include "tsj_gemstone/includes/list_partial.html" %}
+                </div>
+            </div>
+            <div class="diamond-listing-info row">
+                <div class="toolbar-pagination span9">
+                    {% include "tsj_gemstone/includes/paginator_full_partial.html" %}
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 {% endblock content %}
+

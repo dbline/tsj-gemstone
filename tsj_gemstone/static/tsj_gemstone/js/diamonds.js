@@ -1,16 +1,17 @@
 // When the page loads...
 $(function() {
-    /*$(window).scroll(function (event) {
-        var top = $('#diamonds').offset().top;
-        var height = $('#diamonds').height();
-        var total = height - 292; // 47px height + 100px padding
-        var y = $(this).scrollTop();
-        if (y > top && y <= total) {
-            $('#diamond_loading').css('margin-top', y + 25); 
-        } else if (y < top) {
-            $('#diamond_loading').css('margin-top', 100); 
-        }
-    });*/
+
+    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+        $.ajax({
+            url: State.hash,
+            dataType: 'json',
+            success: function(json) {
+                $('#diamond_results').html(json['list_partial']);
+                $('.toolbar-pagination').html(json['paginator_full_partial']);
+            }
+        });
+    });
 
     $('#diamond_filter_form').change(function() {
         update_results();
@@ -22,34 +23,9 @@ $(function() {
         $('#' + this.id + '_detail').toggle();
     });
 
-    // KJ BOX
-    $('.kjbox_link').live('click', function() {
-        $(this).toggleClass('active');
-
-        if ($(this).is('.active')) {
-            increment_kjbox_count();
-            $.get($(this).attr('add_href'));
-        } else {
-            decrement_kjbox_count();
-            $.get($(this).attr('del_href'));
-        }
-        return false;
-    });
-
-    $('.kjbox_remove_link').click(function() {
-        $(this).parent().addClass('active');
-        if (confirm('Are you sure you want to delete this diamond from your KJ Box?')) {
-            decrement_kjbox_count();
-            $.get($(this).attr('del_href'));
-            $(this).parent().remove();
-        };
-        $(this).parent().removeClass('active');
-        return false;
-    });
-
     // PAGINATION
     $('.paginator_link').live('click', function() {
-        update_results(this.href);
+        update_results($(this).attr('href'));
         return false;
     });
 
@@ -214,27 +190,14 @@ $(function() {
 
 function update_results(url) {
     // Set some defaults
-    if(!url) var url = DIAMOND_LIST_URL
+    if (url) {
+        var href = url += "&" + $('#diamond_filter_form').serialize();
+    } else {
+        var url = DIAMOND_LIST_URL;
+        var href = "?" + $('#diamond_filter_form').serialize(); 
+    }
 
-    $.ajax({
-        url: url,
-        data: $('#diamond_filter_form').serialize(),
-        dataType: 'json',
-        beforeSend: function() {
-            $('#diamond_loading').show();
-            $('#diamond_filters').addClass('overlay'); 
-            $('#diamond_listings').addClass('overlay'); 
-        },
-        success: function(json) {
-            $('#diamond_results').html(json['list_partial']);
-            $('.results').html(json['results_partial']);
-            $('.toolbar-pagination').html(json['paginator_full_partial']);
-            
-            $('#diamond_loading').hide();
-            $('#diamond_filters').removeClass('overlay'); 
-            $('#diamond_listings').removeClass('overlay'); 
-        }
-    });
+    History.pushState(null, null, href);
     
     return false;
 }

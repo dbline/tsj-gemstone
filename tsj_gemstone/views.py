@@ -1,9 +1,10 @@
+import json
+
 from django.db.models import Min, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.utils import simplejson
 from django.views.generic import DetailView
 
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
@@ -137,7 +138,7 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
             paginator_full_partial = render_to_string(paginator_full_partial_template, context, RequestContext(request)),
             results_partial = render_to_string(results_partial_template, context, RequestContext(request)),
         )
-        return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+        return HttpResponse(json.dumps(response_dict), mimetype='application/javascript')
     else:
         return render(request, template, context)
 

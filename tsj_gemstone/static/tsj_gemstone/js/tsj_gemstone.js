@@ -1,5 +1,4 @@
-// When the page loads...
-$(function() {
+$(document).ready(function() {
 
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var State = History.getState(); // Note: We are using History.getState() instead of event.state
@@ -7,24 +6,25 @@ $(function() {
             url: State.hash,
             dataType: 'json',
             success: function(json) {
-                $('#diamond_results').html(json['list_partial']);
-                $('.toolbar-pagination').html(json['paginator_full_partial']);
+                $('.table-wrapper').html(json['list_partial']);
+                $('.pagination-wrapper').html(json['paginator_full_partial']);
             }
         });
     });
 
-    $('#diamond_filter_form').change(function() {
+    $('.form-gemstone').change(function() {
         update_results();
     });
 
-    $('#diamond_listings').live('click', function() {
-        $(this).toggleClass('active').siblings().removeClass('active');
-        $('#' + this.id + '_detail_header').toggle().siblings('.diamond_detail_header, .diamond_detail').hide();
-        $('#' + this.id + '_detail').toggle();
+    $('body').on('click', '.table-gemstone tr', function() {
+        $('.table-gemstone tr.active').removeClass('active');
+        $(this).addClass('active');
+        $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
+        $('#' + this.id + '-detail').addClass('active').removeClass('hide');
     });
 
     // PAGINATION
-    $('.paginator_link').live('click', function() {
+    $('.paginator_link').on('click', function() {
         update_results($(this).attr('href'));
         return false;
     });
@@ -191,10 +191,10 @@ $(function() {
 function update_results(url) {
     // Set some defaults
     if (url) {
-        var href = url += "&" + $('#diamond_filter_form').serialize();
+        var href = url += "&" + $('.form-gemstone').serialize();
     } else {
         var url = DIAMOND_LIST_URL;
-        var href = "?" + $('#diamond_filter_form').serialize(); 
+        var href = "?" + $('.form-gemstone').serialize(); 
     }
 
     History.pushState(null, null, href);

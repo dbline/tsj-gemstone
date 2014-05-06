@@ -1,27 +1,74 @@
-<table id="diamond_results" class="table table-condensed table-striped">
-    <thead>
-        <tr class="diamond_listings_header">
-            <th>Shape</th>
-            <th>Cut</th>
-            <th>Carats</th>
-            <th>Color</th>
-            <th>Clarity</th>
-            <th>Price</th>
-            <th>Detail</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for diamond in page.object_list %}
-        <tr id="{{ diamond.pk }}" class="diamond_listings">
-            <td>{{ diamond.cut }}</td>
-            <td>{{ diamond.cut_grade.name|default:"N/A" }}</td>
-            <td>{{ diamond.carat_weight }}</td>
-            <td>{{ diamond.color }}</td>
-            <td>{{ diamond.clarity }}</td>
-            <td>{{ diamond.formatted_price }}</td>
-            <td><a href="/diamonds/{{ diamond.pk }}/" class="view btn btn-mini btn-primary">View</a></td>
-        </tr>
+{% load thinkspace_pages %}
+<div class="table-gemstone col-md-7">
+    <table class="table table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Shape</th>
+                <th>Cut</th>
+                <th>Carats</th>
+                <th>Color</th>
+                <th>Clarity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for gemstone in page.object_list %}
+            <tr id="{{ gemstone.pk }}"{% if forloop.first %} class="active"{% endif %}>
+                <td>{{ gemstone.cut }}</td>
+                <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
+                <td>{{ gemstone.carat_weight }}</td>
+                <td>{{ gemstone.color }}</td>
+                <td>{{ gemstone.clarity }}</td>
+                <td>{{ gemstone.formatted_price }}</td>
+            </tr>
         {% endfor %}
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
+<div class="table-gemstone-detail col-md-5">
+{% for gemstone in page.object_list %}
+    <div id="{{ gemstone.pk }}-detail"{% if forloop.first %} class="active"{% else %} class="hide"{% endif %}>
+        <div class="image">
+            <span class="{{ gemstone.cut|lower }}">{{ gemstone.cut }} Diamond</span> 
+        </div>
+        <dl class="dl-horizontal">
+        {% if gemstone.depth_percent %}
+            <dt>Depth</dt><dd>{{ gemstone.depth_percent }}</dd>
+        {% endif %}
+        {% if gemstone.table_percent %}
+            <dt>Table</dt><dd>{{ gemstone.table_percent }}</dd>
+        {% endif %}
+        {% if gemstone.girdle %}
+            <dt>Girdle</dt><dd>{{ gemstone.girdle }}</dd>
+        {% endif %}
+        {% if gemstone.cutlet %}
+            <dt>Culet</dt><dd>{{ gemstone.culet }}</dd>
+        {% endif %}
+        {% if gemstone.potdsh %}
+            <dt>Polish</dt><dd>{{ gemstone.potdsh }}</dd>
+        {% endif %}
+        {% if gemstone.symmetry %}
+            <dt>Symmetry</dt><dd>{{ gemstone.symmetry }}</dd>
+        {% endif %}
+        {% if gemstone.fluorescence %}
+            <dt>Fluorescence</dt><dd>{{ gemstone.fluorescence }}</dd>
+        {% endif %}
+        {% if gemstone.length %}
+            <dt>Length</dt><dd>{{ gemstone.length }}</dd>
+        {% endif %}
+        {% if gemstone.width %}
+            <dt>Width</dt><dd>{{ gemstone.width }}</dd>
+        {% endif %}
+        {% if gemstone.depth %}
+            <dt>Depth</dt><dd>{{ gemstone.depth }}</dd>
+        {% endif %}
+            <dt>Certifier</dt><dd>{{ gemstone.certifier }}</dd>
+            <dt>Certificate #</dt><dd>{{ gemstone.cert_num }}</dd>
+        </dl>
+        <div class="actions">
+            <a href="{% page gemstone-detail gemstone.pk %}" class="view btn btn-mini btn-primary">View Details</a>
+            <a href="#" class="view btn btn-mini btn-default">Add to Wishlist</a>
+        </div>
+    </div>
+{% endfor %}
+</div>

@@ -91,7 +91,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
             return diamonds.filter(**params)
     return diamonds
 
-def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
+def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):
@@ -139,10 +139,10 @@ def diamond_list(request, sort_by='', template='tsj_gemstone/diamond_list.html',
     else:
         return render(request, template, context)
 
-class DiamondDetailView(PagesTemplateResponseMixin, DetailView):
+class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
 
     def get_queryset(self):
-        qs = super(DiamondDetailView, self).get_queryset()
+        qs = super(GemstoneDetailView, self).get_queryset()
         qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
         return qs

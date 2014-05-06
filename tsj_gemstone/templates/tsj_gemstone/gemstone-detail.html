@@ -2,8 +2,27 @@
 {% load thinkspace_pages %}
 
 {% block css %}{{ block.super }}
-    <link link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
+    <link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
+    <style>
+        .smooth_zoom_preloader {
+            background-image: url({{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/preloader.gif);
+        }
+        .smooth_zoom_icons {
+            background-image: url({{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/icons.png);
+        }
+    </style>
 {% endblock css %}
+
+{% block js %}{{ block.super }}
+    <script src="{{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/jquery.smoothZoom.min.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.cert-image').smoothZoom({
+                responsive: true
+            });
+        });
+    </script>
+{% endblock js %}
 
 {% block bodyclass %}{{ block.super }} diamond-detail{% endblock %}
 
@@ -11,21 +30,21 @@
 
 {% block content %}
     <div class="row">
-        <div class="diamond-details span6">
+        <div class="col-md-6">
             <div class="group">
                 <h3>The 4 C's</h3>
                 <table class="table table-condensed">
                     <tr>
-                        <th>Cut / Shape:</th>
-                        <td>{{ diamond.cut }}</td>
+                        <th>Color:</th>
+                        <td>{{ diamond.color }}</td>
                     </tr>
                     <tr>
                         <th>Clarity:</th>
                         <td>{{ diamond.clarity }}</td>
                     </tr>
                     <tr>
-                        <th>Color:</th>
-                        <td>{{ diamond.color }}</td>
+                        <th>Cut</th>
+                        <td>{{ diamond.cut_grade }}</td>
                     </tr>
                     <tr>
                         <th>Carat Weight:</th>
@@ -33,8 +52,6 @@
                     </tr>
                 </table>
             </div>
-        </div>
-        <div class="diamond-details span6">
             <div class="group">
                 <h3>Details</h3>
                 <table class="table table-condensed">
@@ -48,19 +65,9 @@
                     </tr>
                 </table>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="diamond-details span6">
             <div class="group">
                 <h3>Measurements</h3>
                 <table class="table table-condensed">
-                    {% if diamond.cut_grade %}
-                        <tr>
-                            <th>Cut Grade</th>
-                            <td>{{ diamond.cut_grade }}</td>
-                        </tr>
-                    {% endif %}
                     {% if diamond.depth_percent %}
                         <tr>
                             <th>Depth %:</th>
@@ -130,30 +137,11 @@
                 </table>
             </div>
         </div>
-        <div class="diamond-details span6">
+        <div class="col-md-6">
             <div class="group">
-                <h3>Certification</h3>
-                <table class="table table-condensed">
-                    <tr>
-                        <th>Certifier:</th>
-                        <td>{{ diamond.certifier }}</td>
-                    </tr>
-                    <tr>
-                        <th>Certificate #:</th>
-                        <td>{{ diamond.cert_num }}</td>
-                    </tr>
-                    <tr>
-                        {% if diamond.source == 'local' %}
-                            {% if diamond.cert_image_local %}
-                                <th>Certificate:</th>
-                                <td><a class="cert_pdf" href="{{ diamond.cert_image_local.url }}">Download Certification</a></td>
-                            {% endif %}
-                        {% elif diamond.cert_image %}
-                            <th>Certificate:</th>
-                            <td><a class="cert_pdf" href="{{ diamond.cert_image }}">Download Certification</a></td>
-                        {% endif %}
-                    </tr>
-               </table>
+                {% if diamond.cert_image %}
+                    <img class="cert-image" src="{{ diamond.cert_image }}">
+                {% endif %}
             </div>
         </div>
     </div>

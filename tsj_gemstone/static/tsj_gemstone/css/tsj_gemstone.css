@@ -2,16 +2,178 @@
 ` Page : Diamonds : Listing
 *********************************************/
 
+.gemstone-list .cut li {
+    display: inline-block;
+    font-size: 11px;
+}
+
+.gemstone-list .cut li label {
+    cursor: pointer;
+    font-weight: normal;
+    text-align: center;
+    width: 50px;
+}
+
+.gemstone-list .cut li:hover label,
+.gemstone-list .cut li input[type="checkbox"]:checked + label {
+    font-weight: bold;
+}
+
+.gemstone-list .cut li span.icon {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40px 40px;
+    display: block;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+.gemstone-list .cut li.asscher span.icon {
+    background-image: url(../images/asscher.png);
+}
+
+.gemstone-list .cut li.baguette span.icon {
+    background-image: url(../images/baguette.png);
+}
+
+.gemstone-list .cut li.cushion span.icon {
+    background-image: url(../images/cushion.png);
+}
+
+.gemstone-list .cut li.emerald span.icon {
+    background-image: url(../images/emerald.png);
+}
+
+.gemstone-list .cut li.heart span.icon {
+    background-image: url(../images/heart.png);
+}
+
+.gemstone-list .cut li.marquise span.icon {
+    background-image: url(../images/marquise.png);
+}
+
+.gemstone-list .cut li.oval span.icon {
+    background-image: url(../images/oval.png);
+}
+
+.gemstone-list .cut li.pear span.icon {
+    background-image: url(../images/pear.png);
+}
+
+.gemstone-list .cut li.princess span.icon {
+    background-image: url(../images/princess.png);
+}
+
+.gemstone-list .cut li.radiant span.icon {
+    background-image: url(../images/radiant.png);
+}
+
+.gemstone-list .cut li.round span.icon {
+    background-image: url(../images/round.png);
+}
+
+.gemstone-list .cut li.trilliant span.icon {
+    background-image: url(../images/trilliant.png);
+}
+
+.gemstone-list .table-striped > tbody > tr > td,
+.gemstone-list .table-striped > tbody > tr > th {
+    background-color: #F8F7F5;
+}
+
+.gemstone-list .table-striped > tbody > tr:nth-child(2n+1) > td,
+.gemstone-list .table-striped > tbody > tr:nth-child(2n+1) > th {
+    background-color: #F0EFED;
+}
+
+.gemstone-list .table-striped > tbody > tr.active > td {
+    background-color: #FFF;
+    font-weight: bold;
+}
+
+.gemstone-list table > tbody > tr:hover {
+    cursor: pointer;
+}
+
+.gemstone-list .table-gemstone-detail .image {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.gemstone-list .table-gemstone-detail .image span {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 200px 200px;
+    display: block;
+    height: 200px;
+    text-indent: -9999px;
+}
+
+.gemstone-list .table-gemstone-detail .image span.asscher {
+    background-image: url(../images/asscher.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.baguette {
+    background-image: url(../images/baguette.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.cushion {
+    background-image: url(../images/cushion.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.emerald {
+    background-image: url(../images/emerald.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.heart {
+    background-image: url(../images/heart.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.marquise {
+    background-image: url(../images/marquise.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.oval {
+    background-image: url(../images/oval.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.pear {
+    background-image: url(../images/pear.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.princess {
+    background-image: url(../images/princess.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.radiant {
+    background-image: url(../images/radiant.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.round {
+    background-image: url(../images/round.png);
+}
+
+.gemstone-list .table-gemstone-detail .image span.trilliant {
+    background-image: url(../images/trilliant.png);
+}
+
+.gemstone-list .dl-horizontal {
+    font-size: 12px;
+}
+
+.gemstone-list .dl-horizontal dt {
+    width: 48%;
+}
+
+.gemstone-list .dl-horizontal dd {
+    margin-left: 52%;
+}
+
+.gemstone-list .table-gemstone-detail .actions {
+    text-align: center;
+}
+
 /******************************************** 
 ` Page : Diamonds : Details
 *********************************************/
-.page-diamond-detail .page-sidebar th {
-        width: 220px;
-        font-size: 1.1em;
-    }
-    .page-diamond-detail .page-sidebar td, .page-diamond-detail .page-sidebar th {
-        font-weight: normal;
-        color: #666;
-        border-top: none;
-        border-bottom: 1px solid #ccc;
-    }
+

@@ -99,10 +99,10 @@ class Backend(BaseBackend):
 
     def get_fp(self):
         if self.filename:
-            return open(self.filename, 'rb')
+            return open(self.filename, 'rU')
 
         if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
+            return open(self.debug_filename, 'rU')
 
         username = prefs.get('rapaport_username')
         password = prefs.get('rapaport_password')
@@ -331,7 +331,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     owner = cached_clean(owner).title()
     comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)
-    rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
+    rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%y %H:%M')[0:6])
     city = cached_clean(city)
     state = cached_clean(state)
     country = cached_clean(country)

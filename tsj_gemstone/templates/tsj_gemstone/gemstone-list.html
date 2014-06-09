@@ -57,6 +57,7 @@
                     {% endfor %}
                     </ul>
                 </div>
+            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                 <div id="tab_price" class="price inputs slider mgr group">
                     <h4>Price</h4>
                     <div id="price_range"></div>
@@ -65,6 +66,7 @@
                         <input class="price_display price-max-display" id="price_max_display" />
                     </div>
                 </div>
+            {% endif %}
                 <div id="tab_carat_weight" class="carat-weight slider group">
                     <h4>Carats</h4>
                     <div id="carat_weight_range"></div>

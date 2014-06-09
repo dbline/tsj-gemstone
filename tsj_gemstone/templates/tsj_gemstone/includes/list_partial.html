@@ -8,7 +8,9 @@
                 <th>Carats</th>
                 <th>Color</th>
                 <th>Clarity</th>
+            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                 <th>Price</th>
+            {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -19,7 +21,9 @@
                 <td>{{ gemstone.carat_weight }}</td>
                 <td>{{ gemstone.color }}</td>
                 <td>{{ gemstone.clarity }}</td>
+            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                 <td>{{ gemstone.formatted_price }}</td>
+            {% endif %}
             </tr>
         {% endfor %}
         </tbody>

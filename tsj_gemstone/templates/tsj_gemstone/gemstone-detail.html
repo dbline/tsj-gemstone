@@ -55,10 +55,12 @@
             <div class="group">
                 <h3>Details</h3>
                 <table class="table table-condensed">
+                {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                     <tr>
                         <th>Price:</th>
                         <td>{{ diamond.formatted_price }}</td>
                     </tr>
+                {% endif %}
                     <tr>
                         <th>Stock #:</th>
                         <td>{{ diamond.stock_number }}</td>

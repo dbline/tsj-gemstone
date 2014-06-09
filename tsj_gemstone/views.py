@@ -9,6 +9,7 @@ from django.views.generic import DetailView
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 
 from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
+from .prefs import prefs
 
 # TODO: Move to thinkspace, probably also bring up to date with the
 #       current paginator code in Django.
@@ -98,6 +99,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
 
     context = {
         'initial_cuts': request.GET.getlist('cut'),
+        'show_prices': prefs['show_prices'],
     }
 
     diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by('carat_weight')
@@ -146,3 +148,10 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         qs = super(GemstoneDetailView, self).get_queryset()
         qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(GemstoneDetailView, self).get_context_data(**kwargs)
+        context.update({
+            'show_prices': prefs['show_prices'],
+        })
+        return context

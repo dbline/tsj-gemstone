@@ -31,8 +31,10 @@
 <div class="row">
     <div class="gemstone-filters col-md-3">
         <form class="form form-gemstone">
+        {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
             <input type="hidden" id="price_min" class="hidden" name="price_min" />
             <input type="hidden" id="price_max" class="hidden" name="price_max" />
+        {% endif %}
             <input type="hidden" id="carat_weight_min" class="hidden" name="carat_weight_min" />
             <input type="hidden" id="carat_weight_max" class="hidden" name="carat_weight_max" />
             <input type="hidden" id="color_min" class="hidden" name="color_min" />

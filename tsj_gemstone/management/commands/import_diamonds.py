@@ -16,11 +16,11 @@ class Command(BaseCommand):
             default=None,
             help='File to import'
         ),
-        make_option('--backend',
+        make_option('-b', '--backend',
             action='store',
             dest='backend',
             default=prefs.get('rapaport_version', 'rapaport'),
-            help='Backend to import from (rapaport, rapnet10) (default: value of rapaport_version pref)',
+            help='Backend to import from (gndiamond, rapaport, rapnet10) (default: value of rapaport_version pref)',
         ),
         make_option('--async',
             action='store_true',

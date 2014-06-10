@@ -20,7 +20,7 @@ class Command(BaseCommand):
             action='store',
             dest='backend',
             default=prefs.get('rapaport_version', 'rapaport'),
-            help='Backend to import from (gndiamond, rapaport, rapnet10) (default: value of rapaport_version pref)',
+            help='Backend to import from (gndiamond, polygon, rapaport, rapnet10) (default: value of rapaport_version pref)',
         ),
         make_option('--async',
             action='store_true',

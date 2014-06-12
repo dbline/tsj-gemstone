@@ -3,7 +3,6 @@ import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 import logging
-import pprint
 import os
 import re
 from string import ascii_letters, digits, whitespace, punctuation
@@ -25,8 +24,6 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
-# Formats we've seen: 5x2x3, 5*2*3, 5-2x3
-MEASUREMENT_RE = re.compile('[x*-]')
 
 SOURCE_NAME = 'gndiamond'
 
@@ -90,7 +87,7 @@ cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
-        length, width, depth = MEASUREMENT_RE.split(measurements)
+        length, width, depth = measurements.split('x')
     except ValueError:
         length, width, depth = None, None, None
 
@@ -180,7 +177,7 @@ class Backend(BaseBackend):
                 blank_columns += 1
 
         # Prepare a temp file to use for writing our output CSV to
-        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_gn.')
+        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % SOURCE_NAME)
         #writer = csv.writer(tmp_file, quoting=csv.QUOTE_MINIMAL, doublequote=True, escapechar='\\', lineterminator='\n')
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 

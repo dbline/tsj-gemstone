@@ -8,6 +8,7 @@ $(document).ready(function() {
             success: function(json) {
                 $('.table-wrapper').html(json['list_partial']);
                 $('.pagination-wrapper').html(json['paginator_full_partial']);
+                affixDetails();
             }
         });
     });
@@ -16,17 +17,14 @@ $(document).ready(function() {
         update_results();
     });
 
+    // DETAILS
+    affixDetails();
+    
     $('body').on('click', '.table-gemstone tr', function() {
         $('.table-gemstone tr.active').removeClass('active');
         $(this).addClass('active');
         $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
         $('#' + this.id + '-detail').addClass('active').removeClass('hide');
-    });
-
-    // PAGINATION
-    $('.paginator_link').on('click', function() {
-        update_results($(this).attr('href'));
-        return false;
     });
 
     // UI WIDGETS
@@ -186,7 +184,41 @@ $(document).ready(function() {
     $('#polish_max').val(GRADINGS[$('#polish_range').slider('values', 0)][0]);
     $('#symmetry_min').val(GRADINGS[$('#symmetry_range').slider('values', 1)][0]);
     $('#symmetry_max').val(GRADINGS[$('#symmetry_range').slider('values', 0)][0]);
+    
+    // ADVANCED
+    $('.filter-advanced-toggle a').on('click', function(e) {
+        $('.filter-advanced').toggleClass('hide');
+        e.preventDefault();
+    });
+
+    // PAGINATION
+    $('.paginator_link').on('click', function() {
+        update_results($(this).attr('href'));
+        return false;
+    });
+
 });
+
+function affixDetails() {
+    var details = $('.detail-affix').height();
+    var results = $('.table-gemstone').height();
+
+    if (results > details) {
+        var top = $('.table-gemstone').offset().top;
+        var height = $('body').height();
+
+        var affix = $('.detail-affix').affix({
+            offset: {
+                top: top,
+                bottom: function() {
+                    return height - (top + results);
+                }
+            }
+        });
+        affix.width(affix.parent().width());
+        affix.css('position', 'relative');
+    }
+}
 
 function update_results(url) {
     // Set some defaults
@@ -198,7 +230,7 @@ function update_results(url) {
     }
 
     History.pushState(null, null, href);
-    
+
     return false;
 }
 

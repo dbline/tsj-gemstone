@@ -30,49 +30,51 @@
     </table>
 </div>
 <div class="table-gemstone-detail col-md-5">
-{% for gemstone in page.object_list %}
-    <div id="{{ gemstone.pk }}-detail"{% if forloop.first %} class="active"{% else %} class="hide"{% endif %}>
-        <div class="image">
-            <span class="{{ gemstone.cut|lower }}">{{ gemstone.cut }} Diamond</span> 
+    <div class="detail-affix">
+    {% for gemstone in page.object_list %}
+        <div id="{{ gemstone.pk }}-detail"{% if forloop.first %} class="active"{% else %} class="hide"{% endif %}>
+            <div class="image">
+                <span class="{{ gemstone.cut|lower }}">{{ gemstone.cut }} Diamond</span> 
+            </div>
+            <dl class="dl-horizontal">
+            {% if gemstone.depth_percent %}
+                <dt>Depth</dt><dd>{{ gemstone.depth_percent }}</dd>
+            {% endif %}
+            {% if gemstone.table_percent %}
+                <dt>Table</dt><dd>{{ gemstone.table_percent }}</dd>
+            {% endif %}
+            {% if gemstone.girdle %}
+                <dt>Girdle</dt><dd>{{ gemstone.girdle }}</dd>
+            {% endif %}
+            {% if gemstone.cutlet %}
+                <dt>Culet</dt><dd>{{ gemstone.culet }}</dd>
+            {% endif %}
+            {% if gemstone.potdsh %}
+                <dt>Polish</dt><dd>{{ gemstone.potdsh }}</dd>
+            {% endif %}
+            {% if gemstone.symmetry %}
+                <dt>Symmetry</dt><dd>{{ gemstone.symmetry }}</dd>
+            {% endif %}
+            {% if gemstone.fluorescence %}
+                <dt>Fluorescence</dt><dd>{{ gemstone.fluorescence }}</dd>
+            {% endif %}
+            {% if gemstone.length %}
+                <dt>Length</dt><dd>{{ gemstone.length }}</dd>
+            {% endif %}
+            {% if gemstone.width %}
+                <dt>Width</dt><dd>{{ gemstone.width }}</dd>
+            {% endif %}
+            {% if gemstone.depth %}
+                <dt>Depth</dt><dd>{{ gemstone.depth }}</dd>
+            {% endif %}
+                <dt>Certifier</dt><dd>{{ gemstone.certifier }}</dd>
+                <dt>Certificate #</dt><dd>{{ gemstone.cert_num }}</dd>
+            </dl>
+            <div class="actions">
+                <a href="{% page gemstone-detail gemstone.pk %}" class="view btn btn-mini btn-primary">View Details</a>
+                <a href="#" class="view btn btn-mini btn-default">Add to Wishlist</a>
+            </div>
         </div>
-        <dl class="dl-horizontal">
-        {% if gemstone.depth_percent %}
-            <dt>Depth</dt><dd>{{ gemstone.depth_percent }}</dd>
-        {% endif %}
-        {% if gemstone.table_percent %}
-            <dt>Table</dt><dd>{{ gemstone.table_percent }}</dd>
-        {% endif %}
-        {% if gemstone.girdle %}
-            <dt>Girdle</dt><dd>{{ gemstone.girdle }}</dd>
-        {% endif %}
-        {% if gemstone.cutlet %}
-            <dt>Culet</dt><dd>{{ gemstone.culet }}</dd>
-        {% endif %}
-        {% if gemstone.potdsh %}
-            <dt>Polish</dt><dd>{{ gemstone.potdsh }}</dd>
-        {% endif %}
-        {% if gemstone.symmetry %}
-            <dt>Symmetry</dt><dd>{{ gemstone.symmetry }}</dd>
-        {% endif %}
-        {% if gemstone.fluorescence %}
-            <dt>Fluorescence</dt><dd>{{ gemstone.fluorescence }}</dd>
-        {% endif %}
-        {% if gemstone.length %}
-            <dt>Length</dt><dd>{{ gemstone.length }}</dd>
-        {% endif %}
-        {% if gemstone.width %}
-            <dt>Width</dt><dd>{{ gemstone.width }}</dd>
-        {% endif %}
-        {% if gemstone.depth %}
-            <dt>Depth</dt><dd>{{ gemstone.depth }}</dd>
-        {% endif %}
-            <dt>Certifier</dt><dd>{{ gemstone.certifier }}</dd>
-            <dt>Certificate #</dt><dd>{{ gemstone.cert_num }}</dd>
-        </dl>
-        <div class="actions">
-            <a href="{% page gemstone-detail gemstone.pk %}" class="view btn btn-mini btn-primary">View Details</a>
-            <a href="#" class="view btn btn-mini btn-default">Add to Wishlist</a>
-        </div>
+    {% endfor %}
     </div>
-{% endfor %}
 </div>

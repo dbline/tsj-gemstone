@@ -1,6 +1,144 @@
+/* jQuery UI */
+
+.ui-widget {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 1.1em;
+}
+
+.ui-widget-content {
+    background: #fff;
+    border: 1px solid #aaa;
+    color: #222;
+}
+
+.ui-widget-header {
+    background: #ccc;
+    border: 1px solid #aaa;
+    color: #222;
+    font-weight: bold;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: #e6e6e6;
+    border: 1px solid #d3d3d3;
+    color: #555;
+    font-weight: normal;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    background: #dadada;
+    border: 1px solid #999;
+    color: #212121;
+    font-weight: normal;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 0px;
+}
+
+.ui-slider {
+    position: relative;
+    text-align: left;
+}
+
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
+    height: 1em;
+    position: absolute;
+    width: 1em;
+    z-index: 2;
+}
+
+.ui-slider .ui-slider-range {
+    background-position: 0 0;
+    border: 0 none;
+    display: block;
+    font-size: 0.7em;
+    position: absolute;
+    z-index: 1;
+}
+
+.ui-slider.ui-state-disabled .ui-slider-handle, .ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: 0.6em;
+    margin: 0 8px;
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+    margin-left: -0.6em;
+    top: -0.3em;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+    height: 100%;
+    top: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    height: 100px;
+    width: 0.8em;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+    left: -0.3em;
+    margin-bottom: -0.6em;
+    margin-left: 0;
+}
+
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+}
+
 /******************************************** 
 ` Page : Diamonds : Listing
 *********************************************/
+
+.gemstone-list .gemstone-filters {
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 0px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.gemstone-list .group {
+    padding-bottom: 10px;
+}
+
+.gemstone-list .group.cut {
+    padding-bottom: 0px;
+}
 
 .gemstone-list .cut li {
     display: inline-block;
@@ -11,7 +149,7 @@
     cursor: pointer;
     font-weight: normal;
     text-align: center;
-    width: 50px;
+    width: 48px;
 }
 
 .gemstone-list .cut li:hover label,
@@ -76,6 +214,55 @@
     background-image: url(../images/trilliant.png);
 }
 
+.gemstone-list h4 {
+    padding: 0 0 6px;
+}
+
+.gemstone-list .price h4 {
+    padding: 6px 0 10px;
+}
+
+.gemstone-list .filter-value,
+.gemstone-list .price .wrapper-price {
+    float: right;
+}
+
+.gemstone-list .price .wrapper-price input {
+    background: #FFF;
+    float: left;
+    margin-left: 5px;
+    width: 72px;
+}
+
+.gemstone-list .filter-value {
+    color: #999;
+    font-size: 13px;
+}
+
+.gemstone-list .filter-value span {
+    color: #072f5b;
+    font-weight: bold;
+}
+
+.gemstone-list .filter-primary {
+    margin-bottom: 10px;
+}
+
+.gemstone-list .filter-advanced-toggle {
+    margin-bottom: 20px;
+}
+
+.gemstone-list .filter-advanced label {
+    float: left;
+    font-size: 0.8em;
+    font-weight: normal;
+    margin: 0 10px 10px 0;
+}
+
+.gemstone-list .table-striped > tbody {
+    font-size: 12px;
+}
+
 .gemstone-list .table-striped > tbody > tr > td,
 .gemstone-list .table-striped > tbody > tr > th {
     background-color: #F8F7F5;
@@ -93,6 +280,11 @@
 
 .gemstone-list table > tbody > tr:hover {
     cursor: pointer;
+}
+
+.gemstone-list .table-gemstone-detail .affix {
+    position: fixed !important;
+    top: 20px;
 }
 
 .gemstone-list .table-gemstone-detail .image {

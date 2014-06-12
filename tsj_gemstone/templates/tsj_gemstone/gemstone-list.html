@@ -2,10 +2,12 @@
 {% load thinkspace_pages %}
 
 {% block css %}{{ block.super }}
-    <link link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
+    {#<link media="screen" type="text/css" href="{{ STATIC_URL }}assets/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet" />#}
+    <link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
 {% endblock css %}
 
 {% block js %}{{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}assets/jquery-ui/ui/minified/jquery.ui.slider.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/jquery.history.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/tsj_gemstone.js"></script>
     <script type="text/javascript">
@@ -61,48 +63,51 @@
                 </div>
             {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                 <div id="tab_price" class="price inputs slider mgr group">
+                    <div class="wrapper-price">
+                        <input class="price-min-display form-control input-sm" id="price_min_display" />
+                        <input class="price-max-display form-control input-sm" id="price_max_display" />
+                    </div>
                     <h4>Price</h4>
                     <div id="price_range"></div>
-                    <div class="wrapper-price">
-                        <input class="price_display price-min-display" id="price_min_display" />
-                        <input class="price_display price-max-display" id="price_max_display" />
-                    </div>
                 </div>
             {% endif %}
                 <div id="tab_carat_weight" class="carat-weight slider group">
+                    <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
                     <h4>Carats</h4>
                     <div id="carat_weight_range"></div>
-                    <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
                 </div>
                 <div id="cut_grade" class="cut-grade slider group">
+                    <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
                     <h4>Cut</h4>
                     <div id="cut_grade_range"></div>
-                    <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
                 </div>
                 <div id="tab_color" class="color slider mgr group">
+                    <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
                     <h4>Color</h4>                    
                     <div id="color_range"></div>
-                    <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
                 </div>
                 <div id="tab_clarity" class="clarity slider group">
+                    <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
                     <h4>Clarity</h4>
                     <div id="clarity_range"></div>
-                    <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
                 </div>
-            </div>
-            <div class="filter-advanced hide">
+            </form>
+        </div>
+        <div class="filter-advanced-toggle">
+            <a href="#" class="btn btn-block"><i class="fa fa-angle-double-down"></i> Advanced Options</a>
+        </div>
+        <div class="filter-advanced hide">
+            <form class="form form-gemstone">
                 <div id="polish" class="polish slider group">
+                    <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
                     <h4>Polish</h4>
                     <div id="polish_range"></div>
-                    <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
                 </div>
                 <div id="symmmetry" class="symmetry slider group">
+                    <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
                     <h4>Symmetry</h4>
                     <div id="symmetry_range"></div>
-                    <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
                 </div>
-            </div>
-            <div class="filter-certifier hide">
                 <div id="certifier">
                     <h4>Certifiers</h4>
                     {% for certifier in certifiers %}
@@ -112,8 +117,8 @@
                     </label>
                     {% endfor %}
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <div class="gemstone-results col-md-9">
         <div class="table-wrapper row">

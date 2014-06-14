@@ -13,7 +13,7 @@ class GemstonePreferencesForm(PreferencesForm):
 
     rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True))
-    rapaport_url = forms.URLField(required=False, help_text=_(u'A Downliad Listing Service URL which overrides all of the following criteria if specified'))
+    rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
     rapaport_version = forms.ChoiceField(required=False, choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), initial='rapaport')
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight',
             initial='.2', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")

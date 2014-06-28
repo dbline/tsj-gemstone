@@ -309,6 +309,44 @@ def nvl(data):
         return 'NULL'
     return data
 
+# GN combines fluorescence and fluorescence_color
+FLUORESCENCE_MAP = {
+    #'DIST.': (None, None),
+    #'DIST.B': (None, 'B'),
+    #'DST': (None, None),
+    'F': ('F', None),
+    'FB': ('F', 'B'),
+    'FNT BL': ('F', 'B'),
+    #'LB': (None, 'B'),
+    'MB': ('M', 'B'),
+    'MODER': ('M', None),
+    'MODER.': ('M', None),
+    'MODER.-ST': ('M', None),
+    'MODER.Y': ('M', 'Y'),
+    'MODERATE B.': ('M', 'B'),
+    'MY': ('M', 'Y'),
+    'N': ('N', None),
+    'NON': ('N', None),
+    'SB': ('S', 'B'),
+    #'SL': (None, None),
+    #'SLB': (None, 'B'),
+    #'SLT BL': (None, 'B'),
+    #'SLY': (None, 'Y'),
+    'ST': ('S', None),
+    'STB': ('S', 'B'),
+    'STG BL': ('S', 'B'),
+    'STY': ('S', 'Y'),
+    'SY': ('S', 'Y'),
+    #'VDIST.B': (None, 'B'),
+    'VS': ('VS', None),
+    #'VSL': (None, None),
+    #'VSL BL': (None, 'B'),
+    #'VSLB': (None, 'B'),
+    #'VSLY': (None, 'Y'),
+    'VSTB': ('VS', 'B'),
+    'VSY': ('VS', 'Y'),
+}
+
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
                       #pref_values,
                       blank_columns=None
@@ -426,27 +464,19 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     polish = grading_aliases.get(cached_clean_upper(polish))
     symmetry = grading_aliases.get(cached_clean_upper(symmetry))
 
-    """
-    fluorescence = cached_clean_upper(fluorescence)
-    fluorescence_id = None
-    fluorescence_color = None
-    fluorescence_color_id = None
-    for abbr, id in fluorescence_aliases.iteritems():
-        if fluorescence.startswith(abbr.upper()):
-            fluorescence_id = id
-            fluorescence_color = fluorescence.replace(abbr.upper(), '')
-            continue
-    fluorescence = fluorescence_id
+    # TODO: How do we want to distinguish Forever After diamonds?
+    if unused_fl_color == 'FOREVERAFT':
+        pass
 
-    if fluorescence_color:
-        fluorescence_color = cached_clean_upper(fluorescence_color)
-        for abbr, id in fluorescence_color_aliases.iteritems():
-            if fluorescence_color.startswith(abbr.upper()):
-                fluorescence_color_id = id
-                continue
-        if not fluorescence_color_id: fluorescence_color_id = None
-    fluorescence_color = fluorescence_color_id
-    """
+    fluorescence = cached_clean_upper(fluorescence)
+    #print 'FL', fluorescence
+    if fluorescence in FLUORESCENCE_MAP:
+        f, c = FLUORESCENCE_MAP[fluorescence]
+        fluorescence_id = fluorescence_aliases[f]
+        if c:
+            fluorescence_color_id = fluorescence_color_aliases[c]
+        else:
+            fluorescence_color_id = None
 
     measurements = clean(measurements)
     length, width, depth = split_measurements(measurements)
@@ -508,8 +538,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         culet,
         nvl(polish),
         nvl(symmetry),
-        'NULL', #nvl(fluorescence),
-        'NULL', #nvl(fluorescence_color),
+        nvl(fluorescence_id),
+        nvl(fluorescence_color_id),
         nvl(length),
         nvl(width),
         nvl(depth),

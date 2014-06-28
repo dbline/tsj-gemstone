@@ -477,6 +477,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
             fluorescence_color_id = fluorescence_color_aliases[c]
         else:
             fluorescence_color_id = None
+    else:
+        fluorescence_id = None
+        fluorescence_color_id = None
 
     measurements = clean(measurements)
     length, width, depth = split_measurements(measurements)

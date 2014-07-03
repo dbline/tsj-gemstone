@@ -370,8 +370,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         polish,
         fluorescence,
         symmetry,
-        unused_fl_color,
-        unused_fl_intensity,
+        owner,
         crown,
         pavilion,
         measurements, # WxHxD
@@ -384,7 +383,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         unused_fancy_color,
         trade_show,
         cert_num,
-        show_cert # Yes/No
+        show_cert, # Yes/No
+        fancy_color # Just Yellow so far
     ) = line
 
     #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
@@ -465,7 +465,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     symmetry = grading_aliases.get(cached_clean_upper(symmetry))
 
     # TODO: How do we want to distinguish Forever After diamonds?
-    if unused_fl_color == 'FOREVERAFT':
+    if owner == 'FOREVERAFT':
         pass
 
     fluorescence = cached_clean_upper(fluorescence)
@@ -523,7 +523,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         SOURCE_NAME,
         '', # lot_num
         stock_number,
-        '', # owner
+        owner,
         cut,
         nvl(cut_grade),
         nvl(color),

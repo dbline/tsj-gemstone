@@ -18,7 +18,7 @@
         <ul class="cuts">
         {% for cut in widget_object_list %}
             <li class="{{ cut.name|slugify }}">
-                <a href="{% page gemstone-list %}?cut={{ cut.abbr }}">{{ cut.name }}</a>
+                <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}">{{ cut.name }}</a>
             </li>
         {% endfor %}
         </ul>

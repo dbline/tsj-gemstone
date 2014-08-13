@@ -26,7 +26,10 @@ class GemstoneWidget(TemplatedWidget):
     verbose_name = 'Gemstones'
     def render(self, context):
         cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
-        qs = models.Cut.objects.filter(id__in=cuts)
+        if cuts:
+            qs = models.Cut.objects.filter(id__in=cuts)
+        else:
+            qs = models.Cut.objects.all()
 
         context['widget_style'] = self.preferences.get('style', STYLE_CHOICES[0][0])
         context['widget_object_list'] = qs

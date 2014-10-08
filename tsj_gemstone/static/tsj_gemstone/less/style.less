@@ -1,71 +1,371 @@
-.gemstone-widget {
-    .cuts {
-        .list-unstyled();
+/* jQuery UI */
 
-        li {
-            display: inline-block;
-            margin: 10px;
+.ui-widget {
+    .font-family-content();
+    font-size: 1.1em;
+}
+
+.ui-widget-content {
+    background: #fff;
+    border: 1px solid #aaa;
+    color: #222;
+}
+
+.ui-widget-header {
+    background: #ccc;
+    border: 1px solid #aaa;
+    color: #222;
+    font-weight: bold;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: #e6e6e6;
+    border: 1px solid #d3d3d3;
+    color: #555;
+    font-weight: normal;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    background: #dadada;
+    border: 1px solid #999;
+    color: #212121;
+    font-weight: normal;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 0px;
+}
+
+.ui-slider {
+    position: relative;
+    text-align: left;
+}
+
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
+    height: 1em;
+    position: absolute;
+    width: 1em;
+    z-index: 2;
+}
+
+.ui-slider .ui-slider-range {
+    background-position: 0 0;
+    border: 0 none;
+    display: block;
+    font-size: 0.7em;
+    position: absolute;
+    z-index: 1;
+}
+
+.ui-slider.ui-state-disabled .ui-slider-handle, .ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: 0.6em;
+    margin: 0 8px;
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+    margin-left: -0.6em;
+    top: -0.3em;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+    height: 100%;
+    top: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    height: 100px;
+    width: 0.8em;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+    left: -0.3em;
+    margin-bottom: -0.6em;
+    margin-left: 0;
+}
+
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+}
+
+/******************************************** 
+` Page : Diamonds : Listing
+*********************************************/
+.gemstone-list {
+    .gemstone-filters {
+        .well();
+        padding: 10px 18px;
+
+        .group {
+            padding-bottom: 10px;
         }
 
-        li a {
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 60px 60px;
-            display: block;
-            height: 60px;
-            text-align: center;
-            text-indent: -9999px;
-            width: 60px;
+        .cut {
+            padding-bottom: 0px;
+
+            li {
+                display: inline-block;
+                font-size: 11px;
+
+                label {
+                    cursor: pointer;
+                    font-weight: normal;
+                    text-align: center;
+                    width: 48px;
+                }
+
+                &:hover label,
+                input[type="checkbox"]:checked + label {
+                    font-weight: bold;
+                }
+
+                span.icon {
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: 40px 40px;
+                    display: block;
+                    margin-bottom: 5px;
+                    height: 40px;
+                }
+
+                &.asscher span.icon {
+                    background-image: url("/static/tsj_gemstone/images/asscher.png");
+                }
+
+                &.baguette span.icon {
+                    background-image: url("/static/tsj_gemstone/images/baguette.png");
+                }
+
+                &.cushion span.icon {
+                    background-image: url("/static/tsj_gemstone/images/cushion.png");
+                }
+
+                &.emerald span.icon {
+                    background-image: url("/static/tsj_gemstone/images/emerald.png");
+                }
+
+                &.heart span.icon {
+                    background-image: url("/static/tsj_gemstone/images/heart.png");
+                }
+
+                &.marquise span.icon {
+                    background-image: url("/static/tsj_gemstone/images/marquise.png");
+                }
+
+                &.oval span.icon {
+                    background-image: url("/static/tsj_gemstone/images/oval.png");
+                }
+
+                &.pear span.icon {
+                    background-image: url("/static/tsj_gemstone/images/pear.png");
+                }
+
+                &.princess span.icon {
+                    background-image: url("/static/tsj_gemstone/images/princess.png");
+                }
+
+                &.radiant span.icon {
+                    background-image: url("/static/tsj_gemstone/images/radiant.png");
+                }
+
+                &.round span.icon {
+                    background-image: url("/static/tsj_gemstone/images/round.png");
+                }
+
+                &.trilliant span.icon {
+                    background-image: url("/static/tsj_gemstone/images/trilliant.png");
+                }
+            }
+
         }
 
-        li.asscher a {
-            background-image: url(/static/tsj_gemstone/images/asscher.png);
+        h4 {
+            padding: 0 0 6px;
         }
 
-        li.baguette a {
-            background-image: url(/static/tsj_gemstone/images/baguette.png);
+        .filter-value {
+            .pull-right();
+            color: @gray-light;
+
+            span {
+                color: @gray-dark;
+                font-weight: bold;
+            }
         }
 
-        li.cushion a {
-            background-image: url(/static/tsj_gemstone/images/cushion.png);
+        .price {
+            h4 {
+                padding: 6px 0 10px;
+            }
+            .wrapper-price {
+                .pull-right();
+
+                input {
+                    background: @themecolor-offset;
+                    border: 1px solid @gray-light;
+                    float: left;
+                    margin-left: 5px;
+                    width: 72px;
+                }
+            }
+        }
+        .filter-primary {
+            margin-bottom: 10px;
         }
 
-        li.emerald a {
-            background-image: url(/static/tsj_gemstone/images/emerald.png);
+        .filter-advanced-toggle {
+            margin-bottom: 20px;
         }
 
-        li.heart a {
-            background-image: url(/static/tsj_gemstone/images/heart.png);
+        .filter-advanced label {
+            .pull-left();
+            font-size: 0.8em;
+            font-weight: normal;
+            margin: 0 10px 10px 0;
         }
+    }
 
-        li.marquise a {
-            background-image: url(/static/tsj_gemstone/images/marquise.png);
-        }
+    .table-striped > tbody {
+        font-size: 12px;
+    }
 
-        li.oval a {
-            background-image: url(/static/tsj_gemstone/images/oval.png);
-        }
+    .table-striped > tbody > tr > td,
+    .table-striped > tbody > tr > th {
+        background-color: #F8F7F5;
+    }
 
-        li.pear a {
-            background-image: url(/static/tsj_gemstone/images/pear.png);
-        }
+    .table-striped > tbody > tr:nth-child(2n+1) > td,
+    .table-striped > tbody > tr:nth-child(2n+1) > th {
+        background-color: #F0EFED;
+    }
 
-        li.princess a {
-            background-image: url(/static/tsj_gemstone/images/princess.png);
-        }
+    .table-striped > tbody > tr.active > td {
+        background-color: #FFF;
+        font-weight: bold;
+    }
 
-        li.radiant a {
-            background-image: url(/static/tsj_gemstone/images/radiant.png);
-        }
+    table > tbody > tr:hover {
+        cursor: pointer;
+    }
 
-        li.round a {
-            background-image: url(/static/tsj_gemstone/images/round.png);
-        }
+    .table-gemstone-detail .affix {
+        position: fixed !important;
+        top: 20px;
+    }
 
-        li.trilliant a {
-            background-image: url(/static/tsj_gemstone/images/trilliant.png);
-        }
+    .table-gemstone-detail .image {
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
+    .table-gemstone-detail .image span {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 200px 200px;
+        display: block;
+        height: 200px;
+        text-indent: -9999px;
+    }
 
+    .table-gemstone-detail .image span.asscher {
+        background-image: url("/static/tsj_gemstone/images/asscher.png");
+    }
+
+    .table-gemstone-detail .image span.baguette {
+        background-image: url("/static/tsj_gemstone/images/baguette.png");
+    }
+
+    .table-gemstone-detail .image span.cushion {
+        background-image: url("/static/tsj_gemstone/images/cushion.png");
+    }
+
+    .table-gemstone-detail .image span.emerald {
+        background-image: url("/static/tsj_gemstone/images/emerald.png");
+    }
+
+    .table-gemstone-detail .image span.heart {
+        background-image: url("/static/tsj_gemstone/images/heart.png");
+    }
+
+    .table-gemstone-detail .image span.marquise {
+        background-image: url("/static/tsj_gemstone/images/marquise.png");
+    }
+
+    .table-gemstone-detail .image span.oval {
+        background-image: url("/static/tsj_gemstone/images/oval.png");
+    }
+
+    .table-gemstone-detail .image span.pear {
+        background-image: url("/static/tsj_gemstone/images/pear.png");
+    }
+
+    .table-gemstone-detail .image span.princess {
+        background-image: url("/static/tsj_gemstone/images/princess.png");
+    }
+
+    .table-gemstone-detail .image span.radiant {
+        background-image: url("/static/tsj_gemstone/images/radiant.png");
+    }
+
+    .table-gemstone-detail .image span.round {
+        background-image: url("/static/tsj_gemstone/images/round.png");
+    }
+
+    .table-gemstone-detail .image span.trilliant {
+        background-image: url("/static/tsj_gemstone/images/trilliant.png");
+    }
+
+    .dl-horizontal {
+        font-size: 12px;
+    }
+
+    .dl-horizontal dt {
+        width: 48%;
+    }
+
+    .dl-horizontal dd {
+        margin-left: 52%;
+    }
+
+    .table-gemstone-detail .actions {
+        text-align: center;
     }
 }
+
+/******************************************** 
+` Page : Diamonds : Details
+*********************************************/
+

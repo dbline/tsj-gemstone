@@ -6,7 +6,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/tsj_gemstone.js"></script>
     <script type="text/javascript">
         // Setup some variables that we need
-        DIAMOND_LIST_URL = '{% page gemstone-list %}'
+        DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
         CLARITIES = [
             {% for clarity in clarities %}['{{ clarity.order }}', '{{ clarity.abbr }}']{% if not forloop.last %},
             {% endif %}{% endfor %}

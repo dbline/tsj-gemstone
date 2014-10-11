@@ -7,14 +7,28 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.generic import DetailView
 
-from thinkspace.apps.pages.views import PagesTemplateResponseMixin
+try:
+    from thinkspace.apps.pages.views import PagesTemplateResponseMixin
+    IN_TS = True
+except ImportError as e:
+    IN_TS = False
+
+    class PagesTemplateResponseMixin(object):
+        pass
 
 from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
-from .prefs import prefs
+if IN_TS:
+    from .prefs import prefs
+# TODO: Once we get ts-prefs abstracted out of thinkspace, we can use it
+#       on its own instead of hardcoding these prefs
+else:
+    prefs = {
+        'show_prices': True,
+    }
 
 # TODO: Move to thinkspace, probably also bring up to date with the
 #       current paginator code in Django.
-from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
+from .digg_paginator import QuerySetDiggPaginator
 
 # TODO: Move to common location.
 # TODO: cache instead of thread local.

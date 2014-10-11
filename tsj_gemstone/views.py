@@ -146,6 +146,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
+    template_name = 'tsj_gemstone/gemstone-detail.html'
 
     def get_queryset(self):
         qs = super(GemstoneDetailView, self).get_queryset()

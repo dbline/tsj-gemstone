@@ -329,7 +329,13 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
 
     lot_num = clean(lot_num)
     owner = cached_clean(owner).title()
+    # Rapnet has started putting the literal value 'null' in the comment field
+    """
+    if comment.strip() == 'null':
+        comment = ''
     comment = cached_clean(comment)
+    """
+    comment = ''
     stock_number = clean(stock_number, upper=True)
     rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
     city = cached_clean(city)

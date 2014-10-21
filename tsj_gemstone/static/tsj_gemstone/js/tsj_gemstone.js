@@ -192,7 +192,7 @@ $(document).ready(function() {
     });
 
     // PAGINATION
-    $('.paginator_link').on('click', function() {
+    $('body').on('click', '.paginator_link', function() {
         update_results($(this).attr('href'));
         return false;
     });

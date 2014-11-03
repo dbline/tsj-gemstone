@@ -11,6 +11,7 @@ from time import strptime
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
+import xlrd
 
 from django.conf import settings
 from django.db import connection, transaction
@@ -24,9 +25,10 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
-MEASUREMENT_RE = re.compile('\s+')
+# TODO: Need to handle spaces between dimensions
+MEASUREMENT_RE = re.compile('[\sx*-]')
 
-SOURCE_NAME = 'hasenfeld'
+SOURCE_NAME = 'varsha'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
 # of the id column which is excluded when doing an import.
@@ -68,7 +70,7 @@ Row = namedtuple('Row', (
     'rap_date'))
 
 def clean(data, upper=False):
-    data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')
+    data = ''.join(CLEAN_RE.findall(unicode(data))).strip().replace('\n', ' ').replace('\r', '')
     if upper:
         data = data.upper()
 
@@ -88,7 +90,7 @@ cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
-        length, width, depth = MEASUREMENT_RE.split(measurements)
+        length, width, depth = [x for x in MEASUREMENT_RE.split(measurements) if x]
     except ValueError:
         length, width, depth = None, None, None
 
@@ -96,14 +98,15 @@ def split_measurements(measurements):
 
 class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/hasenfeld.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/varsha.xls')
 
     def get_fp(self):
+        # NOTE: Other backends that read from CSV use 'rU', we need 'rb' for the Excel file.
         if self.filename:
-            return open(self.filename, 'rU')
+            return open(self.filename, 'rb')
 
         if settings.DEBUG:
-            return open(self.debug_filename, 'rU')
+            return open(self.debug_filename, 'rb')
 
         username = prefs.get('rapaport_username')
         password = prefs.get('rapaport_password')
@@ -167,10 +170,8 @@ class Backend(BaseBackend):
         if not fp:
             return 0, 1
 
-        reader = csv.reader(fp)
-
-        # Skip the first line because it contains row names that we don't care about
-        reader.next()
+        wb = xlrd.open_workbook(file_contents=fp.read())
+        sheet = wb.sheets()[0]
 
         # Prepare a temp file to use for writing our output CSV to
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
@@ -225,7 +226,11 @@ class Backend(BaseBackend):
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
-        for line in reader:
+        for row in range(2, sheet.nrows):
+            line = []
+            for col in range(sheet.ncols):
+                line.append(sheet.cell(row, col).value)
+
             try:
                 diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
@@ -288,27 +293,25 @@ def nvl(data):
     return data
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
-    # Order must match structure of CSV spreadsheet
+    # Order must match structure of XLS spreadsheet
     (
+        stock_number, # LOT NO in XLS
         cut, # shape in CSV
         carat_weight, # size in CSV
         color,
         clarity,
-        carat_price,
-        certifier, # lab in CSV
+        measurements,
         depth_percent,
         table_percent,
-        girdle,
+        cut_grade,
         culet,
         polish,
         symmetry,
         fluorescence,
-        stock_number, # inventory in CSV
-        measurements,
-        cert_num,
-        unused_disc,
-        cut_grade,
-        cert_image,
+        girdle,
+        certifier, # lab in CSV
+        carat_price,
+        unused_total_price,
     ) = line
 
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
@@ -412,20 +415,12 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     measurements = clean(measurements)
     length, width, depth = split_measurements(measurements)
 
-    cert_num = clean(cert_num)
-    if not cert_num:
-        cert_num = ''
-
-    cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
-    if not cert_image:
-        cert_image = ''
-    elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
-        cert_image = ''
-
     if carat_price is None:
         raise SkipDiamond('No carat_price specified')
 
     # Initialize price after all other data has been initialized
+    # NOTE: The spreadsheet has a total price column, is it ever different
+    #       from carat_price * carat_weight?
     price_before_markup = carat_price * carat_weight
 
     if minimum_price and price_before_markup < minimum_price:
@@ -458,8 +453,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         moneyfmt(Decimal(carat_price), curr='', sep=''),
         moneyfmt(Decimal(price), curr='', sep=''),
         certifier,
-        cert_num,
-        cert_image,
+        '', # cert_num,
+        '', # cert_image,
         '', # cert_image_local
         depth_percent,
         table_percent,

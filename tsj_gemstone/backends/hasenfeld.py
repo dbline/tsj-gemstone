@@ -18,7 +18,8 @@ from django.utils.functional import memoize
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
-from ..prefs import prefs
+#from ..prefs import prefs
+prefs = {}
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)

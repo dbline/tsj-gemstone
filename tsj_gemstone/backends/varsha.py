@@ -19,7 +19,8 @@ from django.utils.functional import memoize
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
-from ..prefs import prefs
+#from ..prefs import prefs
+prefs = {}
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)
@@ -298,6 +299,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         stock_number, # LOT NO in XLS
         cut, # shape in CSV
         carat_weight, # size in CSV
+        unused_stone_count,
         color,
         clarity,
         measurements,

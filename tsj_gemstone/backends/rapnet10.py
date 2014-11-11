@@ -124,37 +124,11 @@ class Backend(BaseBackend):
             return
 
         # Download the CSV
-        if prefs.get('rapaport_url'):
-            url = prefs.get('rapaport_url')
-            parsed = urlparse(url)
-            data = urllib.urlencode({'ticket': ticket})
-            if parsed.query:
-                # We rely on the default set of columns, so we strip out any
-                # custom column definition.
-                # TODO: Slicing like this assumes a particular order of query
-                #       string arguments, that's bad.
-                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
-                if '&UseCheckedCulommns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedCulommns=1')]
-                # ...In case they ever spellcheck it
-                elif '&UseCheckedColumns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedColumns=1')]
-                url += '&' + data
-            elif url.endswith('?'):
-                url += data
-            else:
-                url += '?' + data
-            rap_list_request = Request(url)
-        else:
-            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-            data = urllib.urlencode({
-                'SortBy': 'Owner',
-                'White': '1',
-                'Programmatically': 'yes',
-                'Version': '1.0',
-                'ticket': ticket
-            })
-            rap_list_request = Request(url + '?' + data)
+        url = 'http://technet.rapaport.com/HTTP/DLS/GetFile.aspx'
+        data = urllib.urlencode({
+            'ticket': ticket
+        })
+        rap_list_request = Request(url + '?' + data)
 
         rap_list = urlopen(rap_list_request)
 
@@ -290,39 +264,85 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     # Order must match structure of CSV spreadsheet
     (
         unused_owner_name, # seller in CSV
+        unused_owner_account_id, # seller in CSV
         owner, # seller code in CSV
         cut, # shape in CSV
         carat_weight,
         color,
+        clarity,
         unused_fancy_color,
         unused_fancy_intensity,
         unused_fancy_overtone,
-        clarity,
         cut_grade,
         polish,
         symmetry,
         fluorescence,
+        unused_fluorescence_intensity,
         measurements,
+        unused_meas_length,
+        unused_meas_width,
+        unused_meas_depth,
+        unused_ratio,
         certifier, # lab in CSV
         cert_num,
         stock_number,
         make, # treatment in CSV
         carat_price, # rapnet price in CSV
         rap_percent, # rapnet discount price in CSV
+        unused_total_price,
+        unused_cash_carat_price,
+        unused_cash_percent,
+        unused_cash_total_price,
+        unused_availability,
         depth_percent,
         table_percent,
         girdle,
+        unused_girdle_min,
+        unused_girdle_max,
         culet,
+        unused_culet_size,
+        unused_culet_condition,
+        unused_crown,
+        unused_pavilion,
         comment,
+        unused_member_comments,
         city,
         state,
         country,
         unused_is_matched_pair,
+        unused_is_matched_pair_separable,
         unused_pair_stock_number,
         num_stones,
         cert_image,
-        lot_num,
+        unused_image_url,
+        unused_rapspec,
         rap_date,
+        unused_external_image,
+        unused_milky,
+        unused_black_inclusion,
+        unused_center_inclusion,
+        unused_shade,
+        unused_key_to_symbols,
+        unused_report_issue_date,
+        unused_report_type,
+        unused_lab_location,
+        unused_brand,
+        unused_clarity_enhanced,
+        unused_color_enhanced,
+        unused_hpht,
+        unused_irradiated,
+        unused_laser_drilled,
+        unused_other_treatment,
+        unused_pavilion_depth,
+        unused_pavilion_angle,
+        unused_table_percent,
+        unused_supplier_country,
+        unused_depth_percent,
+        unused_crown_angle,
+        unused_crown_height,
+        unused_laser_inscription,
+        unused_girdle_condition,
+        lot_num
     ) = line
 
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values

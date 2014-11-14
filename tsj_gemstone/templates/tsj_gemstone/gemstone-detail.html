@@ -33,7 +33,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="text-center">
-                <img src="{{ STATIC_URL }}tsj_gemstone/images/{{ diamond.cut }}.png">
+                <img src="{{ STATIC_URL }}tsj_gemstone/images/{{ diamond.cut|lower }}.png">
             {% if diamond.cert_image %}
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modal-certifier"><i class="fa fa-certificate"></i> {{ diamond.certifier }} Report</button>
             {% endif %}

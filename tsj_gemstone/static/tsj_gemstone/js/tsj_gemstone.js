@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+    // Establish Variables
+    var State = History.getState();
+    // Log Initial State
+    History.log('initial:', State.data, State.title, State.url);
+
     History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
         var State = History.getState(); // Note: We are using History.getState() instead of event.state
         $.ajax({
@@ -192,7 +197,7 @@ $(document).ready(function() {
     });
 
     // PAGINATION
-    $('.paginator_link').on('click', function() {
+    $('body').on('click', '.paginator_link', function() {
         update_results($(this).attr('href'));
         return false;
     });

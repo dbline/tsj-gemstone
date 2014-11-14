@@ -154,7 +154,9 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
             list_partial = render_to_string(list_partial_template, context, RequestContext(request)),
             paginator_full_partial = render_to_string(paginator_full_partial_template, context, RequestContext(request)),
         )
-        return HttpResponse(json.dumps(response_dict), mimetype='application/javascript')
+        response = HttpResponse(json.dumps(response_dict), mimetype='application/javascript')
+        response['Cache-Control'] = "no-cache, no-store, must-revalidate"
+        return response
     else:
         return render(request, template, context)
 

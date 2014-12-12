@@ -2,6 +2,8 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 
+from thinkspace.lib.db.models import View
+
 from .managers import DictManager
 from .utils import moneyfmt
 
@@ -20,6 +22,24 @@ class Cut(models.Model):
         verbose_name = 'Cut'
         verbose_name_plural = 'Cuts'
         ordering = ['order', 'name']
+
+# TODO: Abstract base model for cut?  Or just phase out local cuts entirely..
+class CutView(View):
+    name = models.CharField(max_length=100)
+    abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
+    aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
+    order = models.PositiveSmallIntegerField(default=9999)
+    is_local = models.BooleanField()
+    objects = DictManager()
+
+    class Meta(View.Meta):
+        verbose_name = 'cut'
+        verbose_name_plural = 'cuts'
+        ordering = ['order', 'name']
+
+    def __unicode__(self):
+        return self.name
 
 class Color(models.Model):
     abbr = models.CharField(max_length=5, db_index=True)

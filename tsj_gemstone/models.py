@@ -2,10 +2,12 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 
+from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
 
 from .managers import DictManager
 from .utils import moneyfmt
+import mimetypes
 
 class Cut(models.Model):
     name = models.CharField(max_length=100)
@@ -155,7 +157,7 @@ class DiamondBase(TimeStampedModel):
     source = models.CharField(max_length=64, choices=SOURCE_CHOICES)
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
-    owner = models.CharField('Owner', max_length=100, blank=True)
+    owner = models.CharField('Owner', max_length=255, blank=True)
     cut = models.ForeignKey(Cut, verbose_name='Cut', related_name='%(class)s_cut_set')
     cut_grade = models.ForeignKey(Grading, verbose_name='Cut Grade', null=True, blank=True, related_name='%(class)s_cut_grade_set')
     color = models.ForeignKey(Color, verbose_name='Color', null=True, blank=True, related_name='%(class)s_color_set')
@@ -195,6 +197,19 @@ class DiamondBase(TimeStampedModel):
         return moneyfmt(self.carat_price, dp='', places=0)
     formatted_carat_price.short_description = 'Price / Ct.'
     formatted_carat_price.admin_order_field = 'carat_price'
+
+    def get_absolute_url(self):
+        return reverse('gemstone-detail', kwargs={'pk': self.pk})
+
+    def get_cert_image_type(self):
+        if self.cert_image: 
+            type, encoding = mimetypes.guess_type(self.cert_image)
+            if type in ('image/jpeg', 'image/png', 'image/gif'):
+                return 'image'
+            else:
+                return 'other'
+        else:
+            return None
 
     def __unicode__(self):
         return u'%s' % (self.lot_num)

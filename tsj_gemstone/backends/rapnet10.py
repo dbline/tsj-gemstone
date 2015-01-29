@@ -101,8 +101,8 @@ class Backend(BaseBackend):
         if self.filename:
             return open(self.filename, 'rU')
 
-        #if settings.DEBUG:
-        #    return open(self.debug_filename, 'rU')
+        if settings.DEBUG:
+            return open(self.debug_filename, 'rU')
 
         username = prefs.get('rapaport_username')
         password = prefs.get('rapaport_password')
@@ -182,10 +182,10 @@ class Backend(BaseBackend):
 
         # Preload prefs that write_diamond_row needs to filter out diamonds
         pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
-            Decimal(prefs.get('rapaport_minimum_price', '1500')),
-            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '0')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
@@ -263,9 +263,9 @@ def nvl(data):
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     # Order must match structure of CSV spreadsheet
     (
-        unused_owner_name, # seller in CSV
-        unused_owner_account_id, # seller in CSV
-        owner, # seller code in CSV
+        owner, # seller in CSV
+        unused_owner_account_id, # seller id in CSV
+        unused_owner_code, # seller code in CSV
         cut, # shape in CSV
         carat_weight,
         color,
@@ -348,7 +348,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     lot_num = clean(lot_num)
-    owner = cached_clean(owner).title()
+    owner = cached_clean(owner)
     # Rapnet has started putting the literal value 'null' in the comment field
     """
     if comment.strip() == 'null':
@@ -357,7 +357,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     """
     comment = ''
     stock_number = clean(stock_number, upper=True)
-    rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
+    from dateutil.parser import parse
+    rap_date = parse(clean(rap_date))
+    #rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
     city = cached_clean(city)
     state = cached_clean(state)
     country = cached_clean(country)

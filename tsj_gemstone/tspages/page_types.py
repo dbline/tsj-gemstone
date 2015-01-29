@@ -10,5 +10,10 @@ class GemstoneDetail(PageType):
     view = staticmethod(views.GemstoneDetailView.as_view())
     regex_suffix = r'(?P<pk>[\d-]+)/'
 
+class GemstonePrint(PageType):
+    view = staticmethod(views.GemstonePrintView.as_view())
+    regex_suffix = r'(?P<pk>[\d-]+)/print/'
+
 page_types.register('gemstone-list', GemstoneList)
 page_types.register('gemstone-detail', GemstoneDetail)
+page_types.register('gemstone-print', GemstonePrint)

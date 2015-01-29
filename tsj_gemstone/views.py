@@ -161,3 +161,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             'show_prices': prefs['show_prices'],
         })
         return context
+
+class GemstonePrintView(PagesTemplateResponseMixin, DetailView):
+    model = Diamond
+

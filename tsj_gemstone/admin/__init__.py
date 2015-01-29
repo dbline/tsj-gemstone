@@ -37,7 +37,8 @@ class DiamondMarkupAdmin(ModelAdmin):
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
-    list_display = ('lot_num', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'owner')
+    list_display = ('lot_num', 'stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'owner')
+    list_display_links = ('lot_num', 'stock_number')
     list_filter = ('cut', 'color', 'clarity', 'certifier', 'source', 'owner')
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
     exclude = ('source',)

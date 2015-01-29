@@ -1,8 +1,7 @@
 {% extends 'base_page.html' %}
-{% load thinkspace_pages %}
+{% load humanize thinkspace_pages %}
 
 {% block css %}{{ block.super }}
-    <link media="screen" type="text/css" href="{{ STATIC_URL }}tsj_gemstone/css/tsj_gemstone.css" rel="stylesheet" />
     <style>
         .smooth_zoom_preloader {
             background-image: url({{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/preloader.gif);
@@ -15,11 +14,14 @@
 
 {% block js %}{{ block.super }}
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/jquery.smoothZoom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_jewelrybox/js/ajaxsubmit.js"></script>
     <script>
         $( document ).ready(function() {
+            // Inquiry
+            $('.section-info-questions').jewelrybox_inquiry();
+            // Certificate
             $('.cert-image').smoothZoom({
-                height: '500px',
-                width: '560px',
+                responsive: true,
             });
         });
     </script>
@@ -27,27 +29,38 @@
 
 {% block bodyclass %}{{ block.super }} gemstone-detail{% endblock %}
 
-{% block title %}{{ diamond.carat_weight }}-Carat {{ diamond.cut }} Shaped Diamond{% endblock %}
+{% block title %}{{ diamond.carat_weight }} Carat, {{ diamond.cut }} Shaped Diamond{% endblock %}
+
+{% block breadcrumb %}
+    <ul class="breadcrumb">
+        <li>
+            <a class="btn btn-primary" href="#" onclick="history.back(-1); return false;"><i class="fa fa-backward"></i> Back to Search</a>
+        </li>
+    </ul>
+{% endblock breadcrumb %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-4">
-            <div class="text-center">
+    <div class="wrapper">
+        <div class="section-sidebar">
+            <div class="gemstone-images">
                 <img src="{{ STATIC_URL }}tsj_gemstone/images/{{ diamond.cut|lower }}.png">
-            {% if diamond.cert_image %}
-                <button class="btn btn-primary" data-toggle="modal" data-target="#modal-certifier"><i class="fa fa-certificate"></i> {{ diamond.certifier }} Report</button>
-            {% endif %}
+            </div>
+            <div class="section-info section-info-questions">
+                <h3>Have Questions?</h3>
+                {% with inquiry_form as form %}
+                    {% include "tsj_jewelrybox/ajax/inquire_form.html" %}
+                {% endwith %}
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-6">
+        <div class="section-content">
+            <div class="wrapper">
+                <div class="group-wrapper">
                     <div class="group">
                         <h3>The 4 C's</h3>
-                        <table class="table table-condensed">
+                        <table>
                             <tr>
                                 <th>Color:</th>
-                                <td>{{ diamond.color }}</td>
+                                <td>{% firstof diamond.color diamond.fancy_color %}</td>
                             </tr>
                             <tr>
                                 <th>Clarity:</th>
@@ -65,24 +78,28 @@
                     </div>
                     <div class="group">
                         <h3>Details</h3>
-                        <table class="table table-condensed">
+                        <table>
                         {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                             <tr>
                                 <th>Price:</th>
-                                <td>{{ diamond.formatted_price }}</td>
+                                <td>${{ diamond.price|floatformat:"0"|intcomma }}</td>
+                            </tr>
+                            <tr>
+                                <th>Price per Carat:</th>
+                                <td>${{ diamond.carat_price|floatformat:"0"|intcomma }}</td>
                             </tr>
                         {% endif %}
-                            <tr>
+                            <tr class="stock-number">
                                 <th>Stock #:</th>
                                 <td>{{ diamond.stock_number }}</td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="group-wrapper">
                     <div class="group">
                         <h3>Measurements</h3>
-                        <table class="table table-condensed">
+                        <table>
                             {% if diamond.depth_percent %}
                                 <tr>
                                     <th>Depth %:</th>
@@ -107,10 +124,10 @@
                                     <td>{{ diamond.culet }}</td>
                                 </tr>
                             {% endif %}
-                            {% if diamond.potdsh %}
+                            {% if diamond.polish %}
                                 <tr>
                                     <th>Polish:</th>
-                                    <td>{{ diamond.potdsh }}</td>
+                                    <td>{{ diamond.polish }}</td>
                                 </tr>
                             {% endif %}
                             {% if diamond.symmetry %}
@@ -152,24 +169,21 @@
                         </table>
                     </div>
                 </div>
+            {% if diamond.get_cert_image_type == 'image' %}
+                <div class="actions-wrapper">
+                    <a class="btn btn-default" href="{% page gemstone-print diamond.pk %}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                </div>
+                <div class="cert-wrapper">
+                    <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate: {{ diamond.cert_num }}</h3>
+                    <img class="cert-image" src="{{ diamond.cert_image }}">
+                </div>
+            {% elif diamond.get_cert_image_type == 'other' %}
+                <div class="actions-wrapper">
+                    <a class="btn btn-default" href="{{ diamond.cert_image }}" target="_blank">View Certificate</a>
+                </div>
+            {% endif %}
             </div>
         </div>
     </div>
-{% if diamond.cert_image %}
-    <div class="modal fade" id="modal-certifier" role="dialog" aria-labelledby="label-modal-certifier" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="label-modal-certifier">{{ diamond.certifier }} Report</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
-                        <img class="cert-image" src="{{ diamond.cert_image }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endif %}
 {% endblock content %}
+

@@ -281,6 +281,22 @@
         cursor: pointer;
     }
 
+    @media(max-width: @screen-xs-max) {
+        .table td {
+            padding: 0;
+
+            a {
+                color: @gray;
+                display: inline-block;
+                padding: 10px 5px;
+            }
+        }
+    }
+
+    .table-gemstone-detail {
+        .hidden-xs();
+    }
+
     .table-gemstone-detail .affix {
         position: fixed !important;
         top: 20px;

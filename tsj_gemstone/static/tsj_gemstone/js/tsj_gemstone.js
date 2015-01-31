@@ -26,10 +26,12 @@ $(document).ready(function() {
     affixDetails();
     
     $('body').on('click', '.table-gemstone tr', function() {
-        $('.table-gemstone tr.active').removeClass('active');
-        $(this).addClass('active');
-        $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
-        $('#' + this.id + '-detail').addClass('active').removeClass('hide');
+        if ($(this).hasClass('hidden-xs')) {
+            $('.table-gemstone tr.active').removeClass('active');
+            $(this).addClass('active');
+            $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
+            $('#' + this.id + '-detail').addClass('active').removeClass('hide');
+        }
     });
 
     // UI WIDGETS

@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView
 
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
@@ -15,6 +17,7 @@ from .prefs import prefs
 # TODO: Move to thinkspace, probably also bring up to date with the
 #       current paginator code in Django.
 from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
+from tsj_jewelrybox.forms import InquiryForm
 
 # TODO: Move to common location.
 # TODO: cache instead of thread local.
@@ -148,7 +151,6 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
-    template_name = 'tsj_gemstone/gemstone-detail.html'
 
     def get_queryset(self):
         qs = super(GemstoneDetailView, self).get_queryset()
@@ -157,10 +159,29 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GemstoneDetailView, self).get_context_data(**kwargs)
+
+        initial = { 
+            'item_selection': self.object.stock_number,
+            'type': 'gemstone',
+        }   
+    
+        if self.request.user.is_authenticated():
+            try:
+                inquiry_form = InquiryForm(account=self.request.user.account_set.all()[0], initial=initial)
+            except IndexError:
+                inquiry_form = InquiryForm(initial=initial)
+        else:
+            inquiry_form = InquiryForm(initial=initial)
+
         context.update({
+            'inquiry_form': inquiry_form, 
             'show_prices': prefs['show_prices'],
-        })
+        })  
         return context
+
+    @method_decorator(requires_csrf_token)
+    def dispatch(self, *args, **kwargs):
+        return super(GemstoneDetailView, self).dispatch(*args, **kwargs)
 
 class GemstonePrintView(PagesTemplateResponseMixin, DetailView):
     model = Diamond

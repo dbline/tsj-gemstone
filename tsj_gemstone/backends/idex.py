@@ -30,7 +30,6 @@ CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, di
 SOURCE_NAME = 'idex'
 
 Row = namedtuple('Row', (
-    #'id',
     'created',
     'modified',
     'active',
@@ -64,9 +63,7 @@ Row = namedtuple('Row', (
     'city',
     'state',
     'country',
-    'rap_date',
-    'brand',
-    'off_rap',
+    'rap_date'
 ))
 
 def clean(data, upper=False):
@@ -93,6 +90,8 @@ cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 def split_measurements(measurements):
     try:
         length, width, depth = measurements.split('x')
+        if length > 100 or width > 100 or depth > 100:
+            raise ValueError
     except ValueError:
         length, width, depth = None, None, None
 
@@ -113,7 +112,7 @@ class Backend(BaseBackend):
             logger.error('No IDEX key found')
             return
 
-        data = urllib.urlencode({'String_Access': key})
+        data = urllib.urlencode({'String_Access': key, 'Show_Empty': 1})
 
         url = 'http://idexonline.com/Idex_Feed_API-Full_Inventory'
         try:
@@ -295,19 +294,26 @@ def write_diamond_row(item, cut_aliases, color_aliases, clarity_aliases, grading
         raise KeyValueError('clarity', e.args[0])
 
     cut_grade = grading_aliases.get(cached_clean_upper(data.get('mk')))
-    carat_price = clean(data.get('ap').replace(',', ''))
-    if carat_price:
-        carat_price = Decimal(carat_price)
-    else:
+    try:
+        carat_price = clean(data.get('ap').replace(',', ''))
+        if carat_price:
+            carat_price = Decimal(carat_price)
+        else:
+            carat_price = None
+    except AttributeError:
         carat_price = None
 
     try:
         depth_percent = Decimal(str(clean(data.get('dp'))))
+        if depth_percent > 100:
+            raise InvalidOperation
     except InvalidOperation:
         depth_percent = 'NULL'
 
     try:
         table_percent = Decimal(str(cached_clean(data.get('tb'))))
+        if table_percent > 100:
+            raise InvalidOperation
     except InvalidOperation:
         table_percent = 'NULL'
 
@@ -410,9 +416,7 @@ def write_diamond_row(item, cut_aliases, color_aliases, clarity_aliases, grading
         '', # city,
         state,
         country,
-        'NULL', # rap_date
-        '', # brand
-        0, # off_rap
+        'NULL' # rap_date
     )
 
     return ret

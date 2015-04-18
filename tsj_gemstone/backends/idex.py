@@ -261,10 +261,10 @@ def write_diamond_row(item, cut_aliases, color_aliases, clarity_aliases, grading
         raise KeyValueError('cut_aliases', e.args[0])
 
     carat_weight = Decimal(str(cached_clean(data.get('ct'))))
-    #if carat_weight < minimum_carat_weight:
-    #    raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
-    #elif maximum_carat_weight and carat_weight > maximum_carat_weight:
-    #    raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
+    if carat_weight < minimum_carat_weight:
+        raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
+    elif maximum_carat_weight and carat_weight > maximum_carat_weight:
+        raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
 
     color = color_aliases.get(cached_clean_upper(data.get('col')))
 

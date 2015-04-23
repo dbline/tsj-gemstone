@@ -10,13 +10,12 @@ from string import ascii_letters, digits, whitespace, punctuation
 import tempfile
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
+import xml.sax
 import zipfile
 
 from django.conf import settings
 from django.db import connection, transaction
 from django.utils.functional import memoize
-
-from lxml import etree
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
@@ -97,6 +96,78 @@ def split_measurements(measurements):
 
     return length, width, depth
 
+class IdexHandler(xml.sax.ContentHandler):
+    def __init__(self, writer, missing_values, import_successes, import_errors):
+        # ContentHandler is an old-style class
+        xml.sax.ContentHandler.__init__(self)
+
+        # Passed in from Backend.run so that we can still access them there
+        self.writer, self.missing_values, self.import_successes, self.import_errors = writer, missing_values, import_successes, import_errors
+
+        self.cut_aliases = models.Cut.objects.as_dict()
+        self.color_aliases = models.Color.objects.as_dict()
+        self.clarity_aliases = models.Clarity.objects.as_dict()
+        self.grading_aliases = models.Grading.objects.as_dict()
+        self.fluorescence_aliases = models.Fluorescence.objects.as_dict()
+        self.fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
+        self.certifier_aliases = models.Certifier.objects.as_dict_disabled()
+
+        self.markup_list = models.DiamondMarkup.objects.values_list('start_price', 'end_price', 'percent')
+
+        # We want all the imported records to have the same added_date
+        self.added_date = datetime.now()
+
+        # To cut down on disk writes, we buffer the rows
+        self.row_buffer = []
+        self.buffer_size = 1000
+
+    def startElement(self, name, attrs):
+        if name != 'item':
+            return
+        try:
+            diamond_row = write_diamond_row(
+                attrs,
+                self.cut_aliases,
+                self.color_aliases,
+                self.clarity_aliases,
+                self.grading_aliases,
+                self.fluorescence_aliases,
+                self.fluorescence_color_aliases,
+                self.certifier_aliases,
+                self.markup_list,
+                self.added_date,
+                #pref_values,
+            )
+        except SkipDiamond as e:
+            #logger.info('SkipDiamond: %s' % e.message)
+            return
+            # TODO: Increment import_errors?
+        except KeyValueError as e:
+            self.missing_values[e.key].add(e.value)
+        except KeyError as e:
+            self.import_errors += 1
+            logger.info('KeyError', exc_info=e)
+        except ValueError as e:
+            self.import_errors += 1
+            logger.info('ValueError', exc_info=e)
+        except Exception as e:
+            # Create an error log entry and increment the import_errors counter
+            #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
+            #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
+            self.import_errors += 1
+            logger.error('Diamond import exception', exc_info=e)
+        else:
+            if len(self.row_buffer) > self.buffer_size:
+                self.writer.writerows(self.row_buffer)
+                self.row_buffer = []
+            else:
+                self.row_buffer.append(diamond_row)
+            self.import_successes += 1
+
+    def endDocument(self):
+        if self.row_buffer:
+            self.writer.writerows(self.row_buffer)
+
 class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/idex.xml')
 
@@ -134,88 +205,22 @@ class Backend(BaseBackend):
         if not fp:
             return 0, 1
 
-        doc = etree.parse(fp)
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % SOURCE_NAME)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
         import_successes = 0
         import_errors = 0
 
-        cut_aliases = models.Cut.objects.as_dict()
-        color_aliases = models.Color.objects.as_dict()
-        clarity_aliases = models.Clarity.objects.as_dict()
-        grading_aliases = models.Grading.objects.as_dict()
-        fluorescence_aliases = models.Fluorescence.objects.as_dict()
-        fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
-        certifier_aliases = models.Certifier.objects.as_dict_disabled()
-
-        markup_list = models.DiamondMarkup.objects.values_list('start_price', 'end_price', 'percent')
-
-        # We want all the imported records to have the same added_date
-        added_date = datetime.now()
-
-                # Preload prefs that write_diamond_row needs to filter out diamonds
-        pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
-            Decimal(prefs.get('rapaport_minimum_price', '0')),
-            Decimal(prefs.get('rapaport_maximum_price', '0')),
-            prefs.get('rapaport_must_be_certified', True),
-            prefs.get('rapaport_verify_cert_images', False),
-        )
-
-        # To cut down on disk writes, we buffer the rows
-        row_buffer = []
-        buffer_size = 1000
-
         # TODO: We shouldn't need KeyError or ValueError if we're correctly
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
 
-        for item in doc.xpath('//item'):
-            try:
-                diamond_row = write_diamond_row(
-                    item,
-                    cut_aliases,
-                    color_aliases,
-                    clarity_aliases,
-                    grading_aliases,
-                    fluorescence_aliases,
-                    fluorescence_color_aliases,
-                    certifier_aliases,
-                    markup_list,
-                    added_date,
-                    pref_values
-                )
-            except SkipDiamond as e:
-                #logger.info('SkipDiamond: %s' % e.message)
-                continue
-                # TODO: Increment import_errors?
-            except KeyValueError as e:
-                missing_values[e.key].add(e.value)
-            except KeyError as e:
-                import_errors += 1
-                logger.info('KeyError', exc_info=e)
-            except ValueError as e:
-                import_errors += 1
-                logger.info('ValueError', exc_info=e)
-            except Exception as e:
-                # Create an error log entry and increment the import_errors counter
-                #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-                #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-                import_errors += 1
-                logger.error('Diamond import exception', exc_info=e)
-            else:
-                if len(row_buffer) > buffer_size:
-                    writer.writerows(row_buffer)
-                    row_buffer = []
-                else:
-                    row_buffer.append(diamond_row)
-                import_successes += 1
-
-        if row_buffer:
-            writer.writerows(row_buffer)
+        IdexParser = xml.sax.make_parser()
+        IdexParser.setContentHandler(IdexHandler(
+            writer, missing_values, import_successes, import_errors
+        ))
+        IdexParser.parse(fp)
 
         tmp_file.flush()
         tmp_file = open(tmp_file.name)
@@ -247,10 +252,17 @@ def nvl(data):
         return 'NULL'
     return data
 
-def write_diamond_row(item, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
-    data = item.attrib
-
-    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
+def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
+                      #pref_values,
+                      ):
+    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
+    # TODO: Until we have prefs
+    minimum_carat_weight = 0
+    maximum_carat_weight = None
+    minimum_price = 0
+    maximum_price = False
+    must_be_certified = True
+    verify_cert_images = False
 
     stock_number = clean(data.get('sr'))
     comment = cached_clean(data.get('rm'))

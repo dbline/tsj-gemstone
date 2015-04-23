@@ -117,11 +117,22 @@ class IdexHandler(xml.sax.ContentHandler):
         # We want all the imported records to have the same added_date
         self.added_date = datetime.now()
 
+        # Preload prefs that write_diamond_row needs to filter out diamonds
+        self.pref_values = (
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '0')),
+            prefs.get('rapaport_must_be_certified', True),
+            prefs.get('rapaport_verify_cert_images', False),
+        )
+
         # To cut down on disk writes, we buffer the rows
         self.row_buffer = []
         self.buffer_size = 1000
 
     def startElement(self, name, attrs):
+
         if name != 'item':
             return
         try:
@@ -136,7 +147,7 @@ class IdexHandler(xml.sax.ContentHandler):
                 self.certifier_aliases,
                 self.markup_list,
                 self.added_date,
-                #pref_values,
+                self.pref_values,
             )
         except SkipDiamond as e:
             #logger.info('SkipDiamond: %s' % e.message)
@@ -252,17 +263,9 @@ def nvl(data):
         return 'NULL'
     return data
 
-def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
-                      #pref_values,
-                      ):
-    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
-    # TODO: Until we have prefs
-    minimum_carat_weight = 0
-    maximum_carat_weight = None
-    minimum_price = 0
-    maximum_price = False
-    must_be_certified = True
-    verify_cert_images = False
+def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
+
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     stock_number = clean(data.get('sr'))
     comment = cached_clean(data.get('rm'))

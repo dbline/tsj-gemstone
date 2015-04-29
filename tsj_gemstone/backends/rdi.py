@@ -330,7 +330,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         unused_fancy_color_overtone,
         fluorescence_color,
         fluorescence,
-        unused_girdle_percent,
+        girdle,
         unused_girdle_condition,
         unused_girdle_thick,
         unused_girdle_thin,

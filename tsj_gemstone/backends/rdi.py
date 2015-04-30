@@ -295,7 +295,7 @@ class Backend(BaseBackend):
 
 # TODO: Move somewhere more general
 def nvl(data):
-    if data is None:
+    if data is None or data == '':
         return 'NULL'
     return data
 

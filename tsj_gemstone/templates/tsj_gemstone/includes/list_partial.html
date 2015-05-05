@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         {% for gemstone in page.object_list %}
-            <tr id="{{ gemstone.pk }}" class="hidden-xs{% if forloop.first %} active{% endif %}">
+            <tr id="{{ gemstone.pk }}" class="hidden-xs hidden-sm{% if forloop.first %} active{% endif %}">
                 <td>{{ gemstone.cut }}</td>
                 <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
                 <td>{{ gemstone.carat_weight }}</td>
@@ -25,7 +25,7 @@
                 <td>{{ gemstone.formatted_price }}</td>
             {% endif %}
             </tr>
-            <tr id="{{ gemstone.pk }}" class="visible-xs">
+            <tr id="{{ gemstone.pk }}" class="visible-xs visible-sm">
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.cut }}</a></td>
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.cut_grade.name|default:"N/A" }}</a></td>
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.carat_weight }}</a></td>
@@ -44,7 +44,7 @@
     {% for gemstone in page.object_list %}
         <div id="{{ gemstone.pk }}-detail"{% if forloop.first %} class="active"{% else %} class="hide"{% endif %}>
             <div class="image">
-                <span class="{{ gemstone.cut|lower }}">{{ gemstone.cut }} Diamond</span> 
+                <span class="{{ gemstone.cut|lower }}">{{ gemstone.cut }} Diamond</span>
             </div>
             <dl class="dl-horizontal">
             {% if gemstone.depth_percent %}

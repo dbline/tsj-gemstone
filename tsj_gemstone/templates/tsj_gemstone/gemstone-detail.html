@@ -167,7 +167,9 @@
                 </div>
             {% if diamond.get_cert_image_type == 'image' %}
                 <div class="actions-wrapper">
-                    <a class="btn btn-default" href="{% page gemstone-print diamond.pk %}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                    {% page gemstone-print diamond.pk as gemstone_print_url %}{% if gemstone_print_url %}
+                    <a class="btn btn-default" href="{{ gemstone_print_url }}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                    {% endif %}
                 </div>
                 <div class="cert-wrapper">
                     <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate: {{ diamond.cert_num }}</h3>

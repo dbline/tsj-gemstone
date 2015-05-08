@@ -66,7 +66,8 @@ Row = namedtuple('Row', (
     'city',
     'state',
     'country',
-    'rap_date'))
+    'rap_date',
+    'manmade'))
 
 def clean(data, upper=False):
     data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')
@@ -359,6 +360,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         unused_rapnet_only,
         unused_index_only,
         cert_image,
+        manmade,
     ) = line
 
     #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
@@ -480,6 +482,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     measurements = clean(measurements)
     length, width, depth = split_measurements(measurements)
 
+    if manmade == '1':
+        manmade = 't'
+    else:
+        manmade = 'f'
+
     if carat_price is None:
         raise SkipDiamond('No carat_price specified')
 
@@ -535,6 +542,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         '', #state,
         '', #country,
         'NULL', # rap_date
+        manmade,
     )
 
     return ret

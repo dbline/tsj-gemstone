@@ -184,6 +184,7 @@ class DiamondBase(TimeStampedModel):
     city = models.CharField('City', max_length=255, blank=True)
     state = models.CharField('State', max_length=255, blank=True)
     country = models.CharField('Country', max_length=255, blank=True)
+    manmade = models.BooleanField(default=False, verbose_name='Man-made')
 
     # TODO: Abstract Rapaport information to a different model
     rap_date = models.DateTimeField('Date added to Rapaport', blank=True, null=True)

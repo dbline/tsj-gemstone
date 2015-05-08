@@ -69,6 +69,7 @@ class DiamondAdmin(ModelAdmin):
                     ('polish', 'symmetry'),
                     ('girdle', 'culet'),
                     ('fluorescence', 'fluorescence_color'),
+                    ('manmade',),
                 )
             }),
             ('Certificate', {

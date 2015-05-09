@@ -162,7 +162,7 @@ class DiamondBase(TimeStampedModel):
     cut_grade = models.ForeignKey(Grading, verbose_name='Cut Grade', null=True, blank=True, related_name='%(class)s_cut_grade_set')
     color = models.ForeignKey(Color, verbose_name='Color', null=True, blank=True, related_name='%(class)s_color_set')
     clarity = models.ForeignKey(Clarity, verbose_name='Clarity', null=True, blank=True, related_name='%(class)s_clarity_set')
-    carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2)
+    carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2, db_index=True)
     carat_price = models.DecimalField('Price / Ct.', max_digits=10, decimal_places=2)
     price = models.DecimalField('Price', max_digits=10, decimal_places=2)
     certifier = models.ForeignKey(Certifier, verbose_name='Certifier', null=True, blank=True, related_name='%(class)s_certifier_set')

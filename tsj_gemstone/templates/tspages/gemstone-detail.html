@@ -1,5 +1,5 @@
 {% extends 'base_page.html' %}
-{% load humanize thinkspace_pages %}
+{% load humanize thinkspace_pages tsj_builder_tags tsj_commerce_local_tags %}
 
 {% block css %}{{ block.super }}
     <style>
@@ -13,8 +13,9 @@
 {% endblock css %}
 
 {% block js %}{{ block.super }}
-    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/jquery.smoothZoom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_builder/js/add_to_builder.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_jewelrybox/js/ajaxsubmit.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/plugins/smoothZoom/jquery.smoothZoom.min.js"></script>
     <script>
         $( document ).ready(function() {
             // Inquiry
@@ -40,6 +41,7 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+    {% ring_builder_steps 'diamond' %}
     <div class="wrapper">
         <div class="section-sidebar">
             <div class="gemstone-images">
@@ -170,14 +172,15 @@
                         </table>
                     </div>
                 </div>
-            {% if diamond.get_cert_image_type == 'image' %}
                 <div class="actions-wrapper">
-                    {% page gemstone-print diamond.pk as gemstone_print_url %}{% if gemstone_print_url %}
-                    <a class="btn btn-default" href="{{ gemstone_print_url }}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
-                    {% endif %}
+                    {% add_to_builder 'tsj_gemstone.Diamond' diamond %}
+                {% if diamond.get_cert_image_type == 'image' %}
+                    <a class="btn btn-default" href="{% page gemstone-print diamond.pk %}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                {% endif %}
                 </div>
+            {% if diamond.get_cert_image_type == 'image' %}
                 <div class="cert-wrapper">
-                    <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate: {{ diamond.cert_num }}</h3>
+                    <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate{#: {{ diamond.cert_num }}#}</h3>
                     <img class="cert-image" src="{{ diamond.cert_image }}">
                 </div>
             {% elif diamond.get_cert_image_type == 'other' %}
@@ -189,4 +192,3 @@
         </div>
     </div>
 {% endblock content %}
-

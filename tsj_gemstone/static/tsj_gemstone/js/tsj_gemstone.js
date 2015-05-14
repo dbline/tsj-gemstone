@@ -65,12 +65,12 @@ $(document).ready(function() {
         $('#price_min_display').val(FormatCurrency(price_min));
         price_min = Number(price_min.replace(/[^0-9\.]+/g,""));
         $('#price_min').val(price_min);
-
+        
         var price_max = $('#price_max_display').val();
         $('#price_max_display').val(FormatCurrency(price_max));
-        price_max = Number(price_max.replace(/[^0-9\.]+/g,""))
+        price_max = Number(price_max.replace(/[^0-9\.]+/g,"")) 
         $('#price_max').val(price_max);
-
+        
         price_min = Number(logposition(price_min, range_min, range_max)).toFixed();
         price_max = Number(logposition(price_max, range_min, range_max)).toFixed();
         $('#price_range').slider({

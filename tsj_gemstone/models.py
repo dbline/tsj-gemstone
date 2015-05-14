@@ -1,4 +1,5 @@
 from django.db import models
+from django.template import Context, loader
 
 from model_utils.models import TimeStampedModel
 
@@ -201,6 +202,23 @@ class DiamondBase(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse('gemstone-detail', kwargs={'pk': self.pk})
+
+    def get_price(self):
+        return self.price
+
+    def handle_order_item(self, orderitem):
+        orderitem.name = '%s Diamond' % self.cut
+        orderitem.sku = self.stock_number
+
+    def display_order_item(self, order_item):
+        t = loader.get_template('tsj_gemstone/includes/order_item.html')
+        c = Context({'item': self, 'order_item': order_item})
+        return t.render(c)
+
+    def display_email_item(self, order_item):
+        t = loader.get_template('tsj_gemstone/includes/email_item.txt')
+        c = Context({'item': self, 'order_item': order_item})
+        return t.render(c)
 
     def get_cert_image_type(self):
         if self.cert_image: 

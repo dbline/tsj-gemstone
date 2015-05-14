@@ -1,12 +1,13 @@
 {% extends 'base_page.html' %}
-{% load thinkspace_pages %}
+{% load thinkspace_pages tsj_builder_tags %}
 
 {% block js %}{{ block.super }}
     <script type="text/javascript" src="{{ STATIC_URL }}assets/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/tsj_gemstone.js?timestamp=20150504"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_builder/js/add_to_builder.js"></script>
     <script type="text/javascript">
         // Setup some variables that we need
-        DIAMOND_LIST_URL = '{% page gemstone-list %}'
+        DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
         CLARITIES = [
             {% for clarity in clarities %}['{{ clarity.order }}', '{{ clarity.abbr }}']{% if not forloop.last %},
             {% endif %}{% endfor %}
@@ -58,8 +59,8 @@
             {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
                 <div id="tab_price" class="price inputs slider mgr group">
                     <div class="wrapper-price">
-                        <input class="price-min-display form-control input-sm" id="price_min_display" />
-                        <input class="price-max-display form-control input-sm" id="price_max_display" />
+                        <input class="price-min-display price_display form-control input-sm" id="price_min_display" />
+                        <input class="price-max-display price_display form-control input-sm" id="price_max_display" />
                     </div>
                     <h4>Price</h4>
                     <div id="price_range"></div>
@@ -73,6 +74,7 @@
                 <div id="cut_grade" class="cut-grade slider group">
                     <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
                     <h4>Cut</h4>
+                    <a role="button" tabindex="0" title="Cut" data-toggle="popover" data-trigger="focus" data-content="Diamond Cut only pertains to Round Shape Diamonds"><i class="fa fa-question-circle"></i></a>
                     <div id="cut_grade_range"></div>
                 </div>
                 <div id="tab_color" class="color slider mgr group">
@@ -115,6 +117,7 @@
         </div>
     </div>
     <div class="gemstone-results col-md-9">
+        {% ring_builder_steps 'diamond' %}
         <div class="table-wrapper row">
             {% include "tsj_gemstone/includes/list_partial.html" %}
         </div>

@@ -18,13 +18,16 @@ from django.utils.functional import memoize
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
+#from ..prefs import prefs
+prefs = {}
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
+MEASUREMENT_RE = re.compile('\s+')
 
-SOURCE_NAME = 'gndiamond'
+SOURCE_NAME = 'hasenfeld'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
 # of the id column which is excluded when doing an import.
@@ -86,7 +89,7 @@ cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
-        length, width, depth = measurements.split('x')
+        length, width, depth = MEASUREMENT_RE.split(measurements)
     except ValueError:
         length, width, depth = None, None, None
 
@@ -94,14 +97,70 @@ def split_measurements(measurements):
 
 class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/gndiamond.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/hasenfeld.csv')
 
     def get_fp(self):
         if self.filename:
-            return open(self.filename, 'rb')
+            return open(self.filename, 'rU')
 
         if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
+            return open(self.debug_filename, 'rU')
+
+        username = prefs.get('rapaport_username')
+        password = prefs.get('rapaport_password')
+
+        if not username or not password:
+            logger.warning('Missing rapaport credentials, aborting import.')
+            return
+
+        # Post the username and password to the auth_url and save the resulting ticket
+        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
+        auth_data = urllib.urlencode({
+            'username': username,
+            'password': password})
+        auth_request = Request(auth_url, auth_data)
+        try:
+            ticket = urlopen(auth_request).read()
+        except HTTPError as e:
+            logger.error('Rapaport auth failure: %s' % e)
+            return
+
+        # Download the CSV
+        if prefs.get('rapaport_url'):
+            url = prefs.get('rapaport_url')
+            parsed = urlparse(url)
+            data = urllib.urlencode({'ticket': ticket})
+            if parsed.query:
+                # We rely on the default set of columns, so we strip out any
+                # custom column definition.
+                # TODO: Slicing like this assumes a particular order of query
+                #       string arguments, that's bad.
+                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
+                if '&UseCheckedCulommns=1' in parsed.query:
+                    url = url[:url.find('&UseCheckedCulommns=1')]
+                # ...In case they ever spellcheck it
+                elif '&UseCheckedColumns=1' in parsed.query:
+                    url = url[:url.find('&UseCheckedColumns=1')]
+                url += '&' + data
+            elif url.endswith('?'):
+                url += data
+            else:
+                url += '?' + data
+            rap_list_request = Request(url)
+        else:
+            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
+            data = urllib.urlencode({
+                'SortBy': 'Owner',
+                'White': '1',
+                'Programmatically': 'yes',
+                'Version': '1.0',
+                'ticket': ticket
+            })
+            rap_list_request = Request(url + '?' + data)
+
+        rap_list = urlopen(rap_list_request)
+
+        return rap_list
 
     def run(self):
         fp = self.get_fp()
@@ -111,15 +170,11 @@ class Backend(BaseBackend):
 
         reader = csv.reader(fp)
 
-        headers = reader.next()
-        blank_columns = 0
-        # Count empty columns on the end
-        for col in headers:
-            if not col:
-                blank_columns += 1
+        # Skip the first line because it contains row names that we don't care about
+        reader.next()
 
         # Prepare a temp file to use for writing our output CSV to
-        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % SOURCE_NAME)
+        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
         #writer = csv.writer(tmp_file, quoting=csv.QUOTE_MINIMAL, doublequote=True, escapechar='\\', lineterminator='\n')
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
@@ -154,9 +209,6 @@ class Backend(BaseBackend):
         added_date = datetime.now()
 
         # Preload prefs that write_diamond_row needs to filter out diamonds
-        # TODO: Do we have a way to send pref values to GN, or do we do all the
-        #       filtering locally?
-        """
         pref_values = (
             Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
             Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
@@ -165,7 +217,6 @@ class Backend(BaseBackend):
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
-        """
 
         # To cut down on disk writes, we buffer the rows
         row_buffer = []
@@ -177,21 +228,7 @@ class Backend(BaseBackend):
         missing_values = defaultdict(set)
         for line in reader:
             try:
-                diamond_row = write_diamond_row(
-                    line,
-                    cut_aliases,
-                    color_aliases,
-                    clarity_aliases,
-                    grading_aliases,
-                    fluorescence_aliases,
-                    fluorescence_color_aliases,
-                    certifier_aliases,
-                    markup_list,
-                    added_date,
-                    # TODO:
-                    #pref_values
-                    blank_columns=blank_columns,
-                )
+                diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
@@ -228,7 +265,7 @@ class Backend(BaseBackend):
             # FIXME: Don't truncate/replace the table if the import returned no data
             try:
                 cursor = connection.cursor()
-                cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source='%s'" % SOURCE_NAME)
+                cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source=%s", (SOURCE_NAME,))
                 cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
             except Exception as e:
                 transaction.rollback()
@@ -251,94 +288,39 @@ def nvl(data):
         return 'NULL'
     return data
 
-# GN combines fluorescence and fluorescence_color
-FLUORESCENCE_MAP = {
-    #'DIST.': (None, None),
-    #'DIST.B': (None, 'B'),
-    #'DST': (None, None),
-    'F': ('F', None),
-    'FB': ('F', 'B'),
-    'FNT BL': ('F', 'B'),
-    #'LB': (None, 'B'),
-    'MB': ('M', 'B'),
-    'MODER': ('M', None),
-    'MODER.': ('M', None),
-    'MODER.-ST': ('M', None),
-    'MODER.Y': ('M', 'Y'),
-    'MODERATE B.': ('M', 'B'),
-    'MY': ('M', 'Y'),
-    'N': ('N', None),
-    'NON': ('N', None),
-    'SB': ('S', 'B'),
-    #'SL': (None, None),
-    #'SLB': (None, 'B'),
-    #'SLT BL': (None, 'B'),
-    #'SLY': (None, 'Y'),
-    'ST': ('S', None),
-    'STB': ('S', 'B'),
-    'STG BL': ('S', 'B'),
-    'STY': ('S', 'Y'),
-    'SY': ('S', 'Y'),
-    #'VDIST.B': (None, 'B'),
-    'VS': ('VS', None),
-    #'VSL': (None, None),
-    #'VSL BL': (None, 'B'),
-    #'VSLB': (None, 'B'),
-    #'VSLY': (None, 'Y'),
-    'VSTB': ('VS', 'B'),
-    'VSY': ('VS', 'Y'),
-}
-
-def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
-                      #pref_values,
-                      blank_columns=None
-                      ):
-    if blank_columns:
-        line = line[:-blank_columns]
+def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     # Order must match structure of CSV spreadsheet
     (
-        cut,
-        carat_weight,
+        cut, # shape in CSV
+        carat_weight, # size in CSV
         color,
         clarity,
-        cut_grade,
         carat_price,
-        rap_percent, # TODO: What's this?
-        certifier,
+        certifier, # lab in CSV
         depth_percent,
         table_percent,
         girdle,
         culet,
         polish,
-        fluorescence,
         symmetry,
-        owner,
-        crown,
-        pavilion,
-        measurements, # WxHxD
-        comment,
-        num_stones,
-        unused_cert_num,
-        stock_number,
-        pair,
-        pair_separable,
-        unused_fancy_color,
-        trade_show,
+        fluorescence,
+        stock_number, # inventory in CSV
+        measurements,
         cert_num,
-        show_cert, # Yes/No
-        fancy_color # Just Yellow so far
+        unused_disc,
+        cut_grade,
+        cert_image,
     ) = line
 
-    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
-    # TODO: Until we have prefs
-    minimum_carat_weight = 0
-    maximum_carat_weight = None
-    minimum_price = 0
-    maximum_price = False
-    must_be_certified = True
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
-    comment = cached_clean(comment)
+    #owner = cached_clean(owner).title()
+    #comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)
+    #rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
+    #city = cached_clean(city)
+    #state = cached_clean(state)
+    #country = cached_clean(country)
 
     try:
         cut = cut_aliases[cached_clean_upper(cut)]
@@ -382,7 +364,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         raise KeyValueError('clarity', e.args[0])
 
     cut_grade = grading_aliases.get(cached_clean_upper(cut_grade))
-    carat_price = clean(carat_price.replace(',', ''))
+    carat_price = clean(carat_price)
     if carat_price:
         carat_price = Decimal(carat_price)
     else:
@@ -406,21 +388,27 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     polish = grading_aliases.get(cached_clean_upper(polish))
     symmetry = grading_aliases.get(cached_clean_upper(symmetry))
 
-    # TODO: How do we want to distinguish Forever After diamonds?
-    if owner == 'FOREVERAFT':
-        pass
-
+    """
     fluorescence = cached_clean_upper(fluorescence)
-    if fluorescence in FLUORESCENCE_MAP:
-        f, c = FLUORESCENCE_MAP[fluorescence]
-        fluorescence_id = fluorescence_aliases[f]
-        if c:
-            fluorescence_color_id = fluorescence_color_aliases[c]
-        else:
-            fluorescence_color_id = None
-    else:
-        fluorescence_id = None
-        fluorescence_color_id = None
+    fluorescence_id = None
+    fluorescence_color = None
+    fluorescence_color_id = None
+    for abbr, id in fluorescence_aliases.iteritems():
+        if fluorescence.startswith(abbr.upper()):
+            fluorescence_id = id
+            fluorescence_color = fluorescence.replace(abbr.upper(), '')
+            continue
+    fluorescence = fluorescence_id
+
+    if fluorescence_color:
+        fluorescence_color = cached_clean_upper(fluorescence_color)
+        for abbr, id in fluorescence_color_aliases.iteritems():
+            if fluorescence_color.startswith(abbr.upper()):
+                fluorescence_color_id = id
+                continue
+        if not fluorescence_color_id: fluorescence_color_id = None
+    fluorescence_color = fluorescence_color_id
+    """
 
     measurements = clean(measurements)
     length, width, depth = split_measurements(measurements)
@@ -429,13 +417,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if not cert_num:
         cert_num = ''
 
-    """
     cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
     if not cert_image:
         cert_image = ''
     elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
         cert_image = ''
-    """
 
     if carat_price is None:
         raise SkipDiamond('No carat_price specified')
@@ -464,7 +450,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         SOURCE_NAME,
         '', # lot_num
         stock_number,
-        owner,
+        '', # owner
         cut,
         nvl(cut_grade),
         nvl(color),
@@ -474,7 +460,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         moneyfmt(Decimal(price), curr='', sep=''),
         certifier,
         cert_num,
-        '', #cert_image,
+        cert_image,
         '', # cert_image_local
         depth_percent,
         table_percent,
@@ -482,15 +468,15 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         culet,
         nvl(polish),
         nvl(symmetry),
-        nvl(fluorescence_id),
-        nvl(fluorescence_color_id),
+        'NULL', # nvl(fluorescence),
+        'NULL', # nvl(fluorescence_color),
         nvl(length),
         nvl(width),
         nvl(depth),
-        comment,
-        '', # city,
-        '', # state,
-        '', # country,
+        '', # comment
+        '', # city
+        '', # state
+        '', # country
         'NULL', # rap_date
     )
 

@@ -113,7 +113,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
     return diamonds
 
 @csrf_protect
-def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html',
+def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):
@@ -141,7 +141,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
     if not request.is_ajax():
         #Send all of the available filter data to the template
         context.update(min_maxs)
-    
+
     diamonds = set_match(diamonds, request.GET, 'cut', min_maxs, 'cuts', 'abbr')
     diamonds = full_range_match(diamonds, request.GET, 'price', min_maxs, 'prices', floor_ceil=True)
     diamonds = full_range_match(diamonds, request.GET, 'carat_weight', min_maxs, 'carat_weights')
@@ -157,7 +157,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
     paginator = QuerySetDiggPaginator(diamonds, 40, body=5, padding=2)
     try: paginator_page = paginator.page(request.GET.get('page', 1))
     except: paginator_page = paginator.page(paginator.num_pages)
-    
+
     context.update(dict(
         paginator = paginator,
         page = paginator_page,
@@ -190,7 +190,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             'item_selection': self.object.stock_number,
             'type': 'gemstone',
         }
-        
+
         if self.request.user.is_authenticated():
             try:
                 inquiry_form = InquiryForm(account=self.request.user.account_set.all()[0], initial=initial)
@@ -200,9 +200,9 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             inquiry_form = InquiryForm(initial=initial)
 
         context.update({
-            'inquiry_form': inquiry_form, 
+            'inquiry_form': inquiry_form,
             'show_prices': prefs['show_prices'],
-        })  
+        })
         return context
 
     @method_decorator(requires_csrf_token)

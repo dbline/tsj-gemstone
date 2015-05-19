@@ -111,6 +111,20 @@
                     </label>
                     {% endfor %}
                 </div>
+                {% if show_lab_grown_filter %}
+                <div id="manmade" class="manmade group">
+                    <h4>Lab Grown</h4>
+                    <label>
+                        <input type="radio" name="manmade" value=""> Show all
+                    </label>
+                    <label>
+                        <input type="radio" name="manmade" value="0"> Only natural
+                    </label>
+                    <label>
+                        <input type="radio" name="manmade" value="1"> Only lab-grown
+                    </label>
+                </div>
+                {% endif %}
             </form>
         </div>
     </div>

@@ -89,11 +89,16 @@
                                 <th>Stock #:</th>
                                 <td>{{ diamond.stock_number }}</td>
                             </tr>
-                        {% if diamond.manmade %}
                             <tr>
-                                <td colspan="2">This is a lab-grown diamond</td>
+                                <th>Origin:</th>
+                                <td colspan="2">
+                                {% if diamond.manmade %}
+                                    Lab Grown
+                                {% else %}
+                                    Natural
+                                {% endif %}
+                                </td>
                             </tr>
-                        {% endif %}
                         </table>
                     </div>
                 </div>

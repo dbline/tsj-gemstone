@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import glob
 import logging
 import os
 import re
@@ -26,6 +27,8 @@ logger = logging.getLogger(__name__)
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
 SOURCE_NAME = 'polygon'
+
+INFILE_GLOB = '/glusterfs/ftp_home/polygonftp/{id}*.csv'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
 # of the id column which is excluded when doing an import.
@@ -104,62 +107,17 @@ class Backend(BaseBackend):
         if settings.DEBUG:
             return open(self.debug_filename, 'rb')
 
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
+        polygon_id = prefs.get('polygon_id')
 
-        # TODO: Short-ciruciting until we know how retrieving GN data will work
-        if True or not username or not password:
-            logger.warning('Missing credentials, aborting import.')
+        if not polygon_id:
+            logger.warning('Missing Polygon ID, aborting import.')
             return
 
-        # Post the username and password to the auth_url and save the resulting ticket
-        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-        auth_data = urllib.urlencode({
-            'username': username,
-            'password': password})
-        auth_request = Request(auth_url, auth_data)
-        try:
-            ticket = urlopen(auth_request).read()
-        except HTTPError as e:
-            logger.error('Rapaport auth failure: %s' % e)
-            return
+        files = sorted(glob.glob(INFILE_GLOB.format(id=polygon_id)))
+        if len(files):
+            fn = files[-1]
 
-        # Download the CSV
-        if prefs.get('rapaport_url'):
-            url = prefs.get('rapaport_url')
-            parsed = urlparse(url)
-            data = urllib.urlencode({'ticket': ticket})
-            if parsed.query:
-                # We rely on the default set of columns, so we strip out any
-                # custom column definition.
-                # TODO: Slicing like this assumes a particular order of query
-                #       string arguments, that's bad.
-                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
-                if '&UseCheckedCulommns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedCulommns=1')]
-                # ...In case they ever spellcheck it
-                elif '&UseCheckedColumns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedColumns=1')]
-                url += '&' + data
-            elif url.endswith('?'):
-                url += data
-            else:
-                url += '?' + data
-            rap_list_request = Request(url)
-        else:
-            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-            data = urllib.urlencode({
-                'SortBy': 'Owner',
-                'White': '1',
-                'Programmatically': 'yes',
-                'Version': '1.0',
-                'ticket': ticket
-            })
-            rap_list_request = Request(url + '?' + data)
-
-        rap_list = urlopen(rap_list_request)
-
-        return rap_list
+        return open(fn, 'rU')
 
     def run(self):
         fp = self.get_fp()
@@ -233,7 +191,20 @@ class Backend(BaseBackend):
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
+        x = 0
         for line in reader:
+            x += 1
+            # Sometimes the feed has blank lines
+            if not line:
+                print 'SKIPLINE', x
+                continue
+
+            # And sometimes there's one too many columns between J (cert #) and M (dimensions)
+            if len(line) > 42:
+                print 'TOOLONG', x
+                #assert False
+                continue
+
             try:
                 diamond_row = write_diamond_row(
                     line,

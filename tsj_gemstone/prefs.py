@@ -64,6 +64,11 @@ class GemstonePreferences(AppPreferences):
                 'idex_access_key',
             ),
         }),
+        (_('Polygon'), {
+            'fields': (
+                'polygon_id',
+            ),
+        }),
     )
     form = GemstonePreferencesForm
     verbose_name = 'Gemstone'

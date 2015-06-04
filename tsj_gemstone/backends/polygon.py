@@ -196,13 +196,10 @@ class Backend(BaseBackend):
             x += 1
             # Sometimes the feed has blank lines
             if not line:
-                print 'SKIPLINE', x
                 continue
 
             # And sometimes there's one too many columns between J (cert #) and M (dimensions)
             if len(line) > 42:
-                print 'TOOLONG', x
-                #assert False
                 continue
 
             try:

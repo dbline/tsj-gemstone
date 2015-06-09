@@ -41,7 +41,9 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-    {% ring_builder_steps 'diamond' %}
+    {% if has_ring_builder %}
+        {% ring_builder_steps 'diamond' %}
+    {% endif %}
     <div class="wrapper">
         <div class="section-sidebar">
             <div class="gemstone-images">
@@ -81,7 +83,7 @@
                     <div class="group">
                         <h3>Details</h3>
                         <table>
-                        {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+                        {% if show_prices %}
                             <tr>
                                 <th>Price:</th>
                                 <td>${{ diamond.price|floatformat:"0"|intcomma }}</td>
@@ -173,7 +175,11 @@
                     </div>
                 </div>
                 <div class="actions-wrapper">
+                {% if has_ring_builder %}
                     {% add_to_builder 'tsj_gemstone.Diamond' diamond %}
+                {% else %}
+                    {% add_to_cart 'tsj_gemstone.Diamond' diamond %}
+                {% endif %}
                 {% if diamond.get_cert_image_type == 'image' %}
                     <a class="btn btn-default" href="{% page gemstone-print diamond.pk %}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
                 {% endif %}

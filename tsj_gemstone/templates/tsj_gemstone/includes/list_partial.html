@@ -9,7 +9,7 @@
                 <th><a href="?sort=color">Color</a></th>
                 <th><a href="?sort=clarity">Clarity</a></th>
                 <th class="hidden-xs"><a href="?sort=certifier">Certifier</a></th>
-            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+            {% if show_prices %}
                 <th><a href="?sort=price">Price</a></th>
             {% endif %}
             </tr>
@@ -23,7 +23,7 @@
                 <td>{{ gemstone.color }}</td>
                 <td>{{ gemstone.clarity }}</td>
                 <td>{{ gemstone.certifier }}</td>
-            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+            {% if show_prices %}
                 <td>{{ gemstone.formatted_price }}</td>
             {% endif %}
             </tr>
@@ -34,7 +34,7 @@
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.color }}</a></td>
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.clarity }}</a></td>
                 <td class="hidden-xs"><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.certifier }}</a></td>
-            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+            {% if show_prices %}
                 <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.formatted_price }}</a></td>
             {% endif %}
             </tr>
@@ -82,12 +82,16 @@
             {% endif %}
                 <dt>Certifier</dt><dd>{{ gemstone.certifier }}</dd>
                 {#<dt>Certificate #</dt><dd>{{ gemstone.cert_num }}</dd>#}
-            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+            {% if show_prices %}
                 <dt>Price</dt><dd>{{ gemstone.formatted_price }}</dd>
             {% endif %}
             </dl>
             <div class="actions">
+            {% if has_ring_builder %}
                 {% add_to_builder 'tsj_gemstone.Diamond' gemstone %}
+            {% else %}
+                {% add_to_cart 'tsj_gemstone.Diamond' gemstone %}
+            {% endif %}
                 <a href="{% page gemstone-detail gemstone.pk %}" class="btn-view-diamond">View Details</a>
             </div>
         </div>

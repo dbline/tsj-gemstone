@@ -11,33 +11,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView
 
-try:
-    from thinkspace.apps.pages.views import PagesTemplateResponseMixin
-    IN_TS = True
-except ImportError as e:
-    IN_TS = False
-
-    class PagesTemplateResponseMixin(object):
-        pass
-
-from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
-if IN_TS:
-    from .prefs import prefs
-# TODO: Once we get ts-prefs abstracted out of thinkspace, we can use it
-#       on its own instead of hardcoding these prefs
-else:
-    prefs = {
-        'show_prices': True,
-    }
 
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
-# TODO: Move to thinkspace, probably also bring up to date with the
-#       current paginator code in Django.
+from thinkspace.apps.pages.views import PagesTemplateResponseMixin
+from tsj_builder.prefs import prefs as builder_prefs
+from tsj_commerce_local.utils import show_prices
+from tsj_gemstone.models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
 from tsj_gemstone.digg_paginator import QuerySetDiggPaginator
 from tsj_jewelrybox.forms import InquiryForm
-
-from decimal import Decimal
-from math import ceil
 
 _min_max = {}
 def min_max(force_update=False):
@@ -118,9 +99,12 @@ def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):
 
+    has_ring_builder = builder_prefs.get('ring')
+
     context = {
+        'has_ring_builder': has_ring_builder,
         'initial_cuts': request.GET.getlist('cut'),
-        'show_prices': prefs['show_prices'],
+        'show_prices': show_prices(request.user),
     }
 
     q = request.GET
@@ -199,9 +183,12 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         else:
             inquiry_form = InquiryForm(initial=initial)
 
+        has_ring_builder = builder_prefs.get('ring')
+
         context.update({
+            'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
-            'show_prices': prefs['show_prices'],
+            'show_prices': show_prices(self.request.user),
         })
         return context
 

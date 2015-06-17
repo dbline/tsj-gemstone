@@ -187,6 +187,7 @@
                 </div>
             {% elif diamond.get_cert_image_type == 'other' %}
                 <div class="actions-wrapper">
+                    <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate: {{ diamond.cert_num }}</h3>
                     <a class="btn btn-default" href="{{ diamond.cert_image }}" target="_blank">View Certificate</a>
                 </div>
             {% endif %}

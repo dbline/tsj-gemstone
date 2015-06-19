@@ -212,8 +212,7 @@ class Backend(BaseBackend):
                     certifier_aliases,
                     markup_list,
                     added_date,
-                    # TODO:
-                    #pref_values
+                    pref_values
                     blank_columns=blank_columns,
                 )
             except SkipDiamond as e:

@@ -65,12 +65,12 @@ $(document).ready(function() {
         $('#price_min_display').val(FormatCurrency(price_min));
         price_min = Number(price_min.replace(/[^0-9\.]+/g,""));
         $('#price_min').val(price_min);
-        
+
         var price_max = $('#price_max_display').val();
         $('#price_max_display').val(FormatCurrency(price_max));
-        price_max = Number(price_max.replace(/[^0-9\.]+/g,"")) 
+        price_max = Number(price_max.replace(/[^0-9\.]+/g,""))
         $('#price_max').val(price_max);
-        
+
         price_min = Number(logposition(price_min, range_min, range_max)).toFixed();
         price_max = Number(logposition(price_max, range_min, range_max)).toFixed();
         $('#price_range').slider({
@@ -78,22 +78,43 @@ $(document).ready(function() {
         });
     });
 
+    var carat_weight_min = CARAT_WEIGHTS[0];
+    var carat_weight_max = CARAT_WEIGHTS[1];
+
+    $('#carat_weight_min_display').val(carat_weight_min);
+    $('#carat_weight_max_display').val(carat_weight_max);
+
     $('#carat_weight_range').slider({
         range: true,
-        min: CARAT_WEIGHTS[0],
-        max: CARAT_WEIGHTS[1],
-        values: [CARAT_WEIGHTS[0], CARAT_WEIGHTS[1]],
+        min: carat_weight_min,
+        max: carat_weight_max,
+        values: [carat_weight_min, carat_weight_max],
         step: .1,
-        slide: function(event, ui) {
-            $('#carat_weight_min_display').html(ui.values[0]);
-            $('#carat_weight_max_display').html(ui.values[1]);
-        },
         change: function(event, ui) {
-            $('#carat_weight_min').val(ui.values[0]);
-            $('#carat_weight_max').val(ui.values[1]);
             update_results();
+        },
+        slide: function(event, ui) {
+            carat_weight_min = ui.values[0];
+            carat_weight_max = ui.values[1];
+            $('#carat_weight_min_display').val(carat_weight_min);
+            $('#carat_weight_max_display').val(carat_weight_max);
+            $('#carat_weight_min').val(carat_weight_min);
+            $('#carat_weight_max').val(carat_weight_max);
         }
     });
+
+    $('.carat_weight_display').change(function() {
+        var carat_weight_min = $('#carat_weight_min_display').val();
+        var carat_weight_max = $('#carat_weight_max_display').val();
+        $('#carat_weight_min_display').val(carat_weight_min);
+        $('#carat_weight_min').val(carat_weight_min);
+        $('#carat_weight_max_display').val(carat_weight_max);
+        $('#carat_weight_max').val(carat_weight_max);
+        $('#carat_weight_range').slider({
+            values: [carat_weight_min, carat_weight_max]
+        });
+    });
+
     $('#color_range').slider({
         range: true,
         min: 68,

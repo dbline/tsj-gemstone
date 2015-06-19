@@ -28,7 +28,7 @@
 <div class="row">
     <div class="gemstone-filters col-md-3">
         <form class="form form-gemstone">
-        {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+        {% if show_prices %}
             <input type="hidden" id="price_min" class="hidden" name="price_min" />
             <input type="hidden" id="price_max" class="hidden" name="price_max" />
         {% endif %}
@@ -56,7 +56,7 @@
                     {% endfor %}
                     </ul>
                 </div>
-            {% if show_prices == 'anon' or show_prices == 'auth' and user.is_authenticated %}
+            {% if show_prices %}
                 <div id="tab_price" class="price inputs slider mgr group">
                     <div class="wrapper-price">
                         <input class="price-min-display price_display form-control input-sm" id="price_min_display" />
@@ -66,8 +66,11 @@
                     <div id="price_range"></div>
                 </div>
             {% endif %}
-                <div id="tab_carat_weight" class="carat-weight slider group">
-                    <p class="filter-value"><span id="carat_weight_min_display"></span> to <span id="carat_weight_max_display"></span></p>
+                <div id="tab_carat_weight" class="carat-weight inputs slider group">
+                    <div class="wrapper-carat-weight">
+                        <input class="carat-weight-min-display carat_weight_display form-control input-sm" id="carat_weight_min_display" />
+                        <input class="carat-weight-max-display carat_weight_display form-control input-sm" id="carat_weight_max_display" />
+                    </div>
                     <h4>Carats</h4>
                     <div id="carat_weight_range"></div>
                 </div>

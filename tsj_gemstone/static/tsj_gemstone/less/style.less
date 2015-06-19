@@ -158,7 +158,7 @@
 .ui-slider-horizontal {
     height: 0.6em;
     margin: 0 8px;
-    
+
     @media(max-width: @screen-sm-max) {
         height: 1.3em;
         margin: 2px 8px 0 16px;
@@ -348,6 +348,25 @@
             }
         }
 
+        .carat-weight {
+            h4 {
+                padding: 6px 0 10px;
+            }
+            .wrapper-carat-weight {
+                .pull-right();
+                padding: 10px 0 0 0;
+
+                input {
+                    background: @themecolor-offset;
+                    border: 1px solid @gray-light;
+                    float: left;
+                    font-size: 0.85em;
+                    margin-left: 5px;
+                    width: 72px;
+                }
+            }
+        }
+
         .cut-grade {
             a {
                 .pull-left();
@@ -429,18 +448,18 @@
         .table td {
             padding: 0;
 
-            a { 
+            a {
                 color: @gray;
                 display: inline-block;
                 padding: 10px 5px;
-            }   
-        }   
-    }   
+            }
+        }
+    }
 
     .table-gemstone-detail {
         .hidden-xs();
         .hidden-sm();
-    } 
+    }
 
     .table-gemstone-detail .affix {
         position: fixed !important;

@@ -28,6 +28,7 @@ class GemstonePreferencesForm(PreferencesForm):
     rapaport_verify_cert_images = forms.BooleanField(label='Verify Cert. Images',
             required=False, help_text="If a certificate image URL is provided, confirm the URL. This will slow the import process down considerably as each defined certificate image is independently confirmed. If the image doesn't exist, the URL is removed from the diamond being imported but the rest of the diamond will be imported as expected.")
     idex_access_key = forms.CharField(help_text="Your IDEX access key", required=False)
+    polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
     
     PRICE_CHOICES = (
         ('anon', 'All Users'),
@@ -61,6 +62,11 @@ class GemstonePreferences(AppPreferences):
         (_('IDEX'), {
             'fields': (
                 'idex_access_key',
+            ),
+        }),
+        (_('Polygon'), {
+            'fields': (
+                'polygon_id',
             ),
         }),
     )

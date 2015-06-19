@@ -125,6 +125,15 @@ def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
     if not request.is_ajax():
         #Send all of the available filter data to the template
         context.update(min_maxs)
+        context['show_lab_grown_filter'] = Diamond.objects.filter(manmade=True).exists()
+
+    # Show lab-grown only
+    if request.GET.get('manmade') == '1':
+        diamonds = diamonds.filter(manmade=True)
+    # Show natural only by default (0 means 'show all')
+    elif request.GET.get('manmade') != '0':
+        diamonds = diamonds.exclude(manmade=True)
+        context['only_natural'] = True
 
     diamonds = set_match(diamonds, request.GET, 'cut', min_maxs, 'cuts', 'abbr')
     diamonds = full_range_match(diamonds, request.GET, 'price', min_maxs, 'prices', floor_ceil=True)

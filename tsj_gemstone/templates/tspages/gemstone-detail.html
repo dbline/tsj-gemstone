@@ -93,11 +93,16 @@
                                 <th>Stock #:</th>
                                 <td>{{ diamond.stock_number }}</td>
                             </tr>
-                        {% if diamond.manmade %}
                             <tr>
-                                <td colspan="2">This is a lab-grown diamond</td>
+                                <th>Origin:</th>
+                                <td colspan="2">
+                                {% if diamond.manmade %}
+                                    Lab Grown
+                                {% else %}
+                                    Natural
+                                {% endif %}
+                                </td>
                             </tr>
-                        {% endif %}
                         </table>
                     </div>
                 </div>
@@ -191,6 +196,7 @@
                 </div>
             {% elif diamond.get_cert_image_type == 'other' %}
                 <div class="actions-wrapper">
+                    <h3><i class="fa fa-certificate"></i> {{ diamond.certifier }} Certificate: {{ diamond.cert_num }}</h3>
                     <a class="btn btn-default" href="{{ diamond.cert_image }}" target="_blank">View Certificate</a>
                 </div>
             {% endif %}

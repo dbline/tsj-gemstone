@@ -2,16 +2,15 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
-import glob
 import logging
 import os
 import re
+import six
 from string import ascii_letters, digits, whitespace, punctuation
 import tempfile
 from time import strptime
-import urllib
-from urllib2 import Request, urlopen, URLError, HTTPError
-from urlparse import urlparse
+
+import requests
 
 from django.conf import settings
 from django.db import connection, transaction
@@ -25,10 +24,10 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
+# TODO: Need to handle spaces between dimensions
+MEASUREMENT_RE = re.compile('[\sx*-]')
 
-SOURCE_NAME = 'polygon'
-
-INFILE_GLOB = '/glusterfs/ftp_home/polygonftp/{id}*.csv'
+SOURCE_NAME = 'mid'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
 # of the id column which is excluded when doing an import.
@@ -67,7 +66,8 @@ Row = namedtuple('Row', (
     'city',
     'state',
     'country',
-    'rap_date'))
+    'rap_date',
+    'manmade'))
 
 def clean(data, upper=False):
     data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')
@@ -90,7 +90,7 @@ cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
-        length, width, depth = measurements.split('|')
+        length, width, depth = [x for x in MEASUREMENT_RE.split(measurements) if x]
     except ValueError:
         length, width, depth = None, None, None
 
@@ -98,26 +98,27 @@ def split_measurements(measurements):
 
 class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/polygon.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mid.csv')
 
     def get_fp(self):
         if self.filename:
             return open(self.filename, 'rb')
 
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
+        #if settings.DEBUG:
+        #    return open(self.debug_filename, 'rb')
 
-        polygon_id = prefs.get('polygon_id')
+        # TODO: Do we need a feed per-site?
+        #url = prefs.get('mid_api_url')
+        #if not url:
+        #    logger.warning('Missing MID API URL, aborting import.')
+        #    return
 
-        if not polygon_id:
-            logger.warning('Missing Polygon ID, aborting import.')
-            return
+        url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3NvbZ3oYopkxLjXA%3d%3d"
 
-        files = sorted(glob.glob(INFILE_GLOB.format(id=polygon_id)))
-        if len(files):
-            fn = files[-1]
+        # TODO: Catch HTTP errors
+        response = requests.get(url)
 
-        return open(fn, 'rU')
+        return six.moves.cStringIO(response.content)
 
     def run(self):
         fp = self.get_fp()
@@ -172,16 +173,14 @@ class Backend(BaseBackend):
         # Preload prefs that write_diamond_row needs to filter out diamonds
         # TODO: Do we have a way to send pref values to GN, or do we do all the
         #       filtering locally?
-        """
         pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
-            Decimal(prefs.get('rapaport_minimum_price', '1500')),
-            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '0')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
-        """
 
         # To cut down on disk writes, we buffer the rows
         row_buffer = []
@@ -191,17 +190,7 @@ class Backend(BaseBackend):
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
-        x = 0
         for line in reader:
-            x += 1
-            # Sometimes the feed has blank lines
-            if not line:
-                continue
-
-            # And sometimes there's one too many columns between J (cert #) and M (dimensions)
-            if len(line) > 42:
-                continue
-
             try:
                 diamond_row = write_diamond_row(
                     line,
@@ -214,8 +203,7 @@ class Backend(BaseBackend):
                     certifier_aliases,
                     markup_list,
                     added_date,
-                    # TODO:
-                    #pref_values
+                    pref_values,
                     blank_columns=blank_columns,
                 )
             except SkipDiamond as e:
@@ -230,14 +218,13 @@ class Backend(BaseBackend):
             except ValueError as e:
                 import_errors += 1
                 logger.info('ValueError', exc_info=e)
-            except AssertionError:
-                break
             except Exception as e:
                 # Create an error log entry and increment the import_errors counter
                 #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
                 #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
                 import_errors += 1
                 logger.error('Diamond import exception', exc_info=e)
+                break
             else:
                 if len(row_buffer) > buffer_size:
                     writer.writerows(row_buffer)
@@ -256,7 +243,7 @@ class Backend(BaseBackend):
             # FIXME: Don't truncate/replace the table if the import returned no data
             try:
                 cursor = connection.cursor()
-                cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source='%s'" % SOURCE_NAME)
+                cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source=%s", (SOURCE_NAME,))
                 cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
             except Exception as e:
                 transaction.rollback()
@@ -280,68 +267,85 @@ def nvl(data):
     return data
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
-                      #pref_values,
-                      blank_columns=None
-                      ):
+                      pref_values, blank_columns=None):
     if blank_columns:
         line = line[:-blank_columns]
+
     # Order must match structure of CSV spreadsheet
     (
         owner,
+        unused_feed_date,
+        availability, # "Guaranteed Available"
+        stock_number, # StockName in CSV
+        cert_num,
+        unused_is_new_arrival,
+        unused_parcel_units,
+        unused_location,
+        country,
+        city,
+        state,
         cut,
         carat_weight,
         color,
         clarity,
-        carat_price,
-        lot_num, # But not really, appears to be a different carat_weight
-        stock_number,
         certifier,
-        cert_num,
-        cert_image,
-        unused_second_image,
-        measurements,
-        depth_percent,
-        table_percent,
-        crown_angle,
-        crown_percent,
-        pavilion_angle,
-        pavilion_percent,
-        girdle_thinnest,
-        girdle_thickest,
-        girdle_percent, # Ignored for now
-        culet_size,
-        culet_condition,
+        unused_fancy_color_fullname,
+        unused_fancy_color_intensity,
+        unused_fancy_color_overtone,
+        unused_fancy_color,
+        cut_grade,
         polish,
         symmetry,
-        fluorescence_color,
         fluorescence,
-        enhancements, # Ignored
+        fluorescence_color,
+        length,
+        width,
+        depth,
+        u_measurements,
+        depth_percent,
+        table_percent,
+        unused_crown_height,
+        unused_crown_angle,
+        unused_pavilion_depth,
+        unused_pavilion_angle,
+        u_girdle_thin,
+        u_girdle_thick,
+        u_girdle_condition,
+        u_girdle_percent,
+        girdle,
+        culet,
+        unused_culet_condition,
         comment,
-        availability, # Guaranteed Available, Not Specified, On Memo
-        active, # Y/N
-        fc_main_body, # Ignored
-        fc_intensity, # Ignored
-        fc_overtone, # Ignored
-        pair, # True/False
-        pair_separable, # True/False
-        pair_stock_number,
-        pavilion,
-        syndication,
-        cut_grade,
-        external_url # Ignored
+        unused_treatment,
+        unused_laser_inscription,
+        u_clarity_description,
+        u_shade,
+        u_milky,
+        u_black_inclsion,
+        u_central_inclusion,
+        u_verification_url,
+        cert_image,
+        u_diamond_image,
+        u_discount,
+        u_total_price,
+        carat_price,
+        u_rap_price,
+        u_cert_filename,
+        u_image_filename,
+        u_allow_on_rap,
+        unused_is_matched_pair,
+        unused_matching_stock_number,
+        unused_is_matched_pair_separable,
     ) = line
 
-    if active != 'Y':
-        raise SkipDiamond('Diamond is not active')
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
-    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
     # TODO: Until we have prefs
     minimum_carat_weight = 0
     maximum_carat_weight = None
     minimum_price = 0
     maximum_price = False
     must_be_certified = True
-    verify_cert_images = False
 
     comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)
@@ -389,9 +393,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
 
     cut_grade = grading_aliases.get(cached_clean_upper(cut_grade))
     carat_price = clean(carat_price.replace(',', ''))
-    if carat_price:
+    try:
         carat_price = Decimal(carat_price)
-    else:
+    except InvalidOperation:
         carat_price = None
 
     try:
@@ -404,37 +408,23 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     except InvalidOperation:
         table_percent = 'NULL'
 
-    if girdle_thinnest:
-        girdle_thinnest = cached_clean_upper(girdle_thinnest)
-        girdle = [girdle_thinnest]
-        if girdle_thickest:
-            girdle_thickest = cached_clean_upper(girdle_thickest)
-            girdle.append(girdle_thickest)
-        girdle = ' - '.join(girdle)
-    else:
+    girdle = cached_clean_upper(girdle)
+    if not girdle or girdle == '-':
         girdle = ''
 
-    if culet_size and culet_size != 'None':
-        culet_size = cached_clean_upper(culet_size)
-        culet = [culet_size]
-        if culet_condition and culet_condition != 'None':
-            culet_condition = cached_clean_upper(culet_condition)
-            culet.append(culet_condition)
-        culet = ' '.join(culet)
-    else:
-        culet = ''
-
+    culet = cached_clean_upper(culet)
     polish = grading_aliases.get(cached_clean_upper(polish))
     symmetry = grading_aliases.get(cached_clean_upper(symmetry))
 
     fluorescence = cached_clean_upper(fluorescence)
     fluorescence_id = None
+    fluorescence_color = None
     fluorescence_color_id = None
     for abbr, id in fluorescence_aliases.iteritems():
         if fluorescence.startswith(abbr.upper()):
             fluorescence_id = id
-            #fluorescence_color = fluorescence.replace(abbr.upper(), '')
-            break
+            fluorescence_color = fluorescence.replace(abbr.upper(), '')
+            continue
     fluorescence = fluorescence_id
 
     if fluorescence_color:
@@ -442,22 +432,35 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         for abbr, id in fluorescence_color_aliases.iteritems():
             if fluorescence_color.startswith(abbr.upper()):
                 fluorescence_color_id = id
-                break
+                continue
         if not fluorescence_color_id: fluorescence_color_id = None
     fluorescence_color = fluorescence_color_id
-
-    measurements = clean(measurements)
-    length, width, depth = split_measurements(measurements)
 
     cert_num = clean(cert_num)
     if not cert_num:
         cert_num = ''
 
-    cert_image = cert_image.strip()
+    """
+    cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
     if not cert_image:
         cert_image = ''
     elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
         cert_image = ''
+    """
+
+    if length == '0':
+        length = None
+    if width == '0':
+        width = None
+    if depth == '0':
+        depth = None
+
+    """
+    if manmade == '1':
+        manmade = 't'
+    else:
+        manmade = 'f'
+    """
 
     if carat_price is None:
         raise SkipDiamond('No carat_price specified')
@@ -497,23 +500,24 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         certifier,
         cert_num,
         cert_image,
-        '', # cert_image_local
+        '', # cert_image_local,
         depth_percent,
         table_percent,
         girdle,
         culet,
         nvl(polish),
         nvl(symmetry),
-        nvl(fluorescence),
-        nvl(fluorescence_color),
+        nvl(fluorescence_id),
+        nvl(fluorescence_color_id),
         nvl(length),
         nvl(width),
         nvl(depth),
         comment,
-        '', # city,
-        '', # state,
-        '', # country,
+        city,
+        state,
+        country,
         'NULL', # rap_date
+        'NULL', # manmade
     )
 
     return ret

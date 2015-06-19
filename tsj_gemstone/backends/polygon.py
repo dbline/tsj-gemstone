@@ -172,7 +172,6 @@ class Backend(BaseBackend):
         # Preload prefs that write_diamond_row needs to filter out diamonds
         # TODO: Do we have a way to send pref values to GN, or do we do all the
         #       filtering locally?
-        """
         pref_values = (
             Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
             Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
@@ -181,7 +180,6 @@ class Backend(BaseBackend):
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
-        """
 
         # To cut down on disk writes, we buffer the rows
         row_buffer = []
@@ -280,9 +278,7 @@ def nvl(data):
     return data
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
-                      #pref_values,
-                      blank_columns=None
-                      ):
+                      pref_values, blank_columns=None):
     if blank_columns:
         line = line[:-blank_columns]
     # Order must match structure of CSV spreadsheet
@@ -334,14 +330,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if active != 'Y':
         raise SkipDiamond('Diamond is not active')
 
-    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
-    # TODO: Until we have prefs
-    minimum_carat_weight = 0
-    maximum_carat_weight = None
-    minimum_price = 0
-    maximum_price = False
-    must_be_certified = True
-    verify_cert_images = False
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)

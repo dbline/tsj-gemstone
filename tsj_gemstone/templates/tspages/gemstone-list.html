@@ -16,8 +16,8 @@
             {% for grading in gradings %}['{{ grading.order }}', '{{ grading.name }}']{% if not forloop.last %},
             {% endif %}{% endfor %}
         ];
-        CARAT_WEIGHTS = [Math.floor({{ carat_weights.min }}), Math.ceil({{ carat_weights.max }})];
-        PRICES = [Math.floor({{ prices.min }}), Math.ceil({{ prices.max }})];
+        CARAT_WEIGHTS = [{{ carat_weights.min }}, {{ carat_weights.max }}];
+        PRICES = [{{ prices.min }}, {{ prices.max }}];
     </script>
 {% endblock js %}
 

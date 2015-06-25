@@ -1,0 +1,42 @@
+
+<form action="" method="get" id="form-gemstone">
+    {# filterset.form #}
+    cut
+    <input id="price" class="slider" type="text"
+        data-slider-min="0" data-slider-max="100000"
+        data-slider-scale="logarithmic"
+        data-slider-value="[0,100000]" value="[0,100000]" />
+    <input id="carat_weight" class="slider" type="text"
+        data-slider-min="0.40" data-slider-max="20.00"
+        data-slider-scale="logarithmic"
+        data-slider-step=".01"
+        data-slider-value="[0.40,20.00]" value="[0.40,20.00]" />
+    <input id="color" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+        data-slider-ticks-labels="['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']"
+        data-slider-value="[1,10]" value="[1,10]" />
+    <input id="cut_grade" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5]"
+        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
+        data-slider-value="[1,5]" value="[1,5]" />
+    <input id="clarity" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+        data-slider-ticks-labels="['I2', 'I1', 'SI3', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL']"
+        data-slider-value="[1,11]" value="[1,11]" />
+
+    /* ADVANCED */
+
+    <input id="polish" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5]"
+        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
+        data-slider-value="[1,5]" value="[1,5]" />
+    <input id="symmetry" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5]"
+        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
+        data-slider-value="[1,5]" value="[1,5]" />
+    <input id="fluorescence" class="slider" type="text"
+        data-slider-ticks="[1, 2, 3, 4, 5]"
+        data-slider-ticks-labels="['None', 'Faint', 'Medium', 'Strong', 'Very Strong']"
+        data-slider-value="[1,5]" value="[1,5]" />
+    certifier
+</form>

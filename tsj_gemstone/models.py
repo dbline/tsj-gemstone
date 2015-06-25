@@ -15,6 +15,8 @@ class Cut(models.Model):
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
     desc = models.TextField('Description', blank=True)
+    image = models.ImageField(blank=True, upload_to='gemstone/cuts')
+    icon = models.TextField(blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -221,7 +223,7 @@ class DiamondBase(TimeStampedModel):
         return t.render(c)
 
     def get_cert_image_type(self):
-        if self.cert_image: 
+        if self.cert_image:
             type, encoding = mimetypes.guess_type(self.cert_image)
             if type in ('image/jpeg', 'image/png', 'image/gif'):
                 return 'image'

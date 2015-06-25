@@ -1,1 +1,52 @@
-[{"pk": 1, "model": "tsj_gemstone.fluorescence", "fields": {"order": 10, "aliases": "NN", "name": "None", "abbr": "N"}}, {"pk": 2, "model": "tsj_gemstone.fluorescence", "fields": {"order": 20, "aliases": "", "name": "Faint", "abbr": "F"}}, {"pk": 3, "model": "tsj_gemstone.fluorescence", "fields": {"order": 30, "aliases": "", "name": "Medium", "abbr": "M"}}, {"pk": 4, "model": "tsj_gemstone.fluorescence", "fields": {"order": 40, "aliases": "", "name": "Strong", "abbr": "S"}}, {"pk": 5, "model": "tsj_gemstone.fluorescence", "fields": {"order": 50, "aliases": "", "name": "Very Strong", "abbr": "VS"}}]
+[
+{
+    "pk": 1, 
+    "model": "tsj_gemstone.fluorescence", 
+    "fields": {
+        "order": 10, 
+        "aliases": "NN", 
+        "name": "None", 
+        "abbr": "N"
+    }
+},
+{
+    "pk": 2, 
+    "model": "tsj_gemstone.fluorescence", 
+    "fields": {
+        "order": 20, 
+        "aliases": "", 
+        "name": "Faint", 
+        "abbr": "F"
+    }
+},
+{
+    "pk": 3, 
+    "model": "tsj_gemstone.fluorescence", 
+    "fields": {
+        "order": 30, 
+        "aliases": "", 
+        "name": "Medium", 
+        "abbr": "M"
+    }
+},
+{
+    "pk": 4, 
+    "model": "tsj_gemstone.fluorescence", 
+    "fields": {
+        "order": 40, 
+        "aliases": "", 
+        "name": "Strong", 
+        "abbr": "S"
+    }
+},
+{
+    "pk": 5, 
+    "model": "tsj_gemstone.fluorescence", 
+    "fields": {
+        "order": 50, 
+        "aliases": "", 
+        "name": "Very Strong", 
+        "abbr": "VS"
+    }
+}
+]

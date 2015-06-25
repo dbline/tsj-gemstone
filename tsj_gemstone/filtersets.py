@@ -1,0 +1,132 @@
+from django import forms
+from django.db.models import Min, Max, Q
+
+from tsj_gemstone.models import Certifier, Clarity, Color, Cut, Diamond, Fluorescence, Grading
+
+import django_filters
+
+class RangeChoiceWidget(forms.MultiWidget):
+    def decompress(self, value):
+        if value:
+            return [value.start, value.stop]
+        return [None, None]
+
+    def format_output(self, rendered_widgets):
+        return '<span class="dash">-</span>'.join(rendered_widgets)
+
+class RangeDecimalField(forms.MultiValueField):
+    def __init__(self, *args, **kwargs):
+        fields = (
+            forms.DecimalField(),
+            forms.DecimalField(),
+        )
+        defaults = {
+            'widgets': [f.widget for f in fields],
+        }
+        widget = RangeChoiceWidget(**defaults)
+        kwargs['widget'] = widget
+        super(RangeDecimalField, self).__init__(fields, *args, **kwargs)
+
+    def compress(self, data_list):
+        if data_list:
+            return slice(*data_list)
+        return None
+
+class RangeChoiceField(forms.MultiValueField):
+    def __init__(self, queryset=None, *args, **kwargs):
+        fields = (
+            forms.ModelChoiceField(queryset=queryset, **kwargs),
+            forms.ModelChoiceField(queryset=queryset, **kwargs),
+        )
+        if kwargs.get('empty_label'):
+            kwargs.pop('empty_label')
+
+        defaults = {
+            'widgets': [f.widget for f in fields],
+        }
+        widget = RangeChoiceWidget(**defaults)
+        kwargs['widget'] = widget
+        super(RangeChoiceField, self).__init__(fields, *args, **kwargs)
+
+    def compress(self, data_list):
+        if data_list:
+            return slice(*data_list)
+        return None
+
+class RangeDecimalFilter(django_filters.RangeFilter):
+    field_class = RangeDecimalField
+
+    def filter(self, qs, value):
+        if value:
+            if value.start and value.stop:
+                lookup = '%s__range' % self.name
+                if value.start > value.stop:
+                    return qs.filter(**{lookup: (value.stop, value.start)})
+                else:
+                    return qs.filter(**{lookup: (value.start, value.stop)})
+        else:
+            if value.start:
+                qs = qs.filter(**{'%s__gte'%self.name:value.start})
+            if value.stop:
+                qs = qs.filter(**{'%s__lte'%self.name:value.stop})
+        return qs
+
+class RangeChoiceFilter(django_filters.RangeFilter):
+    field_class = RangeChoiceField
+
+    def filter(self, qs, value):
+        if value.start and value.stop:
+            start = value.start
+            stop = value.stop
+            if start.id > stop.id:
+                start = value.stop
+                stop = value.start
+            lookup = '%s__range' % self.name
+            null = '%s__isnull' % self.name
+            q = (Q(**{lookup: (start, stop)}) | Q(**{null: True}))
+            return qs.filter(q)
+        return qs
+
+class GemstoneFilterSet(django_filters.FilterSet):
+    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple)
+
+    price = django_filters.RangeFilter()
+
+    carat_weight = RangeDecimalFilter(label='Size')
+
+    colors = Color.objects.all()
+    color = RangeChoiceFilter(queryset=colors)
+
+    gradings = Grading.objects.filter(order__lt=50)
+    cut_grade = RangeChoiceFilter(queryset=gradings, label='Cut')
+    polish = RangeChoiceFilter(queryset=gradings)
+    symmetry = RangeChoiceFilter(queryset=gradings)
+
+    clarities = Clarity.objects.exclude(abbr='N').order_by('order')
+    clarity = RangeChoiceFilter(queryset=clarities)
+
+    fluorescences = Fluorescence.objects.all()
+    fluorescence = RangeChoiceFilter(queryset=fluorescences)
+
+    distinct_certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct('certifier__id')
+    certifiers = Certifier.objects.filter(id__in=distinct_certifiers).exclude(disabled=True)
+    certifier = django_filters.ModelMultipleChoiceFilter(queryset=certifiers, label='Certificate')
+
+    depth_percent = django_filters.RangeFilter(label='Depth')
+    table_percent = django_filters.RangeFilter(label='Table')
+
+    class Meta:
+        fields = [
+            'cut',
+            'price',
+            'carat_weight',
+            'color',
+            'cut_grade',
+            'clarity',
+            'certifier',
+            'polish',
+            'symmetry',
+            'fluorescence',
+            'depth_percent',
+            'table_percent',
+        ]

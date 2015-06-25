@@ -3,145 +3,28 @@
 
 {% block js %}{{ block.super }}
     <script type="text/javascript" src="{{ STATIC_URL }}assets/history.js/scripts/bundled/html4+html5/jquery.history.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/tsj_gemstone.js?timestamp=20150504"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}tsj_gemstone/js/tsj_gemstone.js?timestamp=20150524"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_builder/js/add_to_builder.js"></script>
     <script type="text/javascript">
-        // Setup some variables that we need
         DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
-        CLARITIES = [
-            {% for clarity in clarities %}['{{ clarity.order }}', '{{ clarity.abbr }}']{% if not forloop.last %},
-            {% endif %}{% endfor %}
-        ];
-        GRADINGS = [
-            {% for grading in gradings %}['{{ grading.order }}', '{{ grading.name }}']{% if not forloop.last %},
-            {% endif %}{% endfor %}
-        ];
-        CARAT_WEIGHTS = [{{ carat_weights.min }}, {{ carat_weights.max }}];
-        PRICES = [{{ prices.min }}, {{ prices.max }}];
     </script>
 {% endblock js %}
 
-{% block bodyclass %}{{ block.super }} gemstone-list{% endblock %}
+{% block bodyclass %}{{ block.super }} page-gemstone page-gemstone-list{% endblock %}
 
 {% block content %}
-
-<div class="row">
-    <div class="gemstone-filters col-md-3">
-        <form class="form form-gemstone">
-        {% if show_prices %}
-            <input type="hidden" id="price_min" class="hidden" name="price_min" />
-            <input type="hidden" id="price_max" class="hidden" name="price_max" />
-        {% endif %}
-            <input type="hidden" id="carat_weight_min" class="hidden" name="carat_weight_min" />
-            <input type="hidden" id="carat_weight_max" class="hidden" name="carat_weight_max" />
-            <input type="hidden" id="color_min" class="hidden" name="color_min" />
-            <input type="hidden" id="color_max" class="hidden" name="color_max" />
-            <input type="hidden" id="clarity_min" class="hidden" name="clarity_min" />
-            <input type="hidden" id="clarity_max" class="hidden" name="clarity_max" />
-            <input type="hidden" id="cut_grade_min" class="hidden" name="cut_grade_min" />
-            <input type="hidden" id="cut_grade_max" class="hidden" name="cut_grade_max" />
-            <input type="hidden" id="polish_min" class="hidden" name="polish_min" />
-            <input type="hidden" id="polish_max" class="hidden" name="polish_max" />
-            <input type="hidden" id="symmetry_min" class="hidden" name="symmetry_min" />
-            <input type="hidden" id="symmetry_max" class="hidden" name="symmetry_max" />
-            <div class="filter-primary">
-                <div id="tab_cut" class="cut group">
-                    <h4>Shape</h4>
-                    <ul class="list-unstyled">
-                    {% for cut in cuts %}
-                        <li class="{{ cut.name|slugify }}">
-                            <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" class="hide" value="{{ cut.abbr }}" {% if cut.abbr in initial_cuts %}checked="checked"{% endif %} />
-                            <label for="{{ cut.name|slugify }}"><span class="icon"></span>{{ cut.name }}</label>
-                        </li>
-                    {% endfor %}
-                    </ul>
-                </div>
-            {% if show_prices %}
-                <div id="tab_price" class="price inputs slider mgr group">
-                    <div class="wrapper-price">
-                        <input class="price-min-display price_display form-control input-sm" id="price_min_display" />
-                        <input class="price-max-display price_display form-control input-sm" id="price_max_display" />
-                    </div>
-                    <h4>Price</h4>
-                    <div id="price_range"></div>
-                </div>
-            {% endif %}
-                <div id="tab_carat_weight" class="carat-weight inputs slider group">
-                    <div class="wrapper-carat-weight">
-                        <input class="carat-weight-min-display carat_weight_display form-control input-sm" id="carat_weight_min_display" />
-                        <input class="carat-weight-max-display carat_weight_display form-control input-sm" id="carat_weight_max_display" />
-                    </div>
-                    <h4>Carats</h4>
-                    <div id="carat_weight_range"></div>
-                </div>
-                <div id="cut_grade" class="cut-grade slider group">
-                    <p class="filter-value"><span id="cut_grade_min_display"></span> to <span id="cut_grade_max_display"></span></p>
-                    <h4>Cut</h4>
-                    <a role="button" tabindex="0" title="Cut" data-toggle="popover" data-trigger="focus" data-content="Diamond Cut only pertains to Round Shape Diamonds"><i class="fa fa-question-circle"></i></a>
-                    <div id="cut_grade_range"></div>
-                </div>
-                <div id="tab_color" class="color slider mgr group">
-                    <p class="filter-value"><span id="color_min_display"></span> to <span id="color_max_display"></span></p>
-                    <h4>Color</h4>
-                    <div id="color_range"></div>
-                </div>
-                <div id="tab_clarity" class="clarity slider group">
-                    <p class="filter-value"><span id="clarity_min_display"></span> to <span id="clarity_max_display"></span></p>
-                    <h4>Clarity</h4>
-                    <div id="clarity_range"></div>
-                </div>
-            </form>
-        </div>
-        <div class="filter-advanced-toggle">
-            <a href="#" class="btn btn-block"><i class="fa fa-angle-double-down"></i> Advanced Options</a>
-        </div>
-        <div class="filter-advanced hide">
-            <form class="form form-gemstone">
-                <div id="polish" class="polish slider group">
-                    <p class="filter-value"><span id="polish_min_display"></span> to <span id="polish_max_display"></span></p>
-                    <h4>Polish</h4>
-                    <div id="polish_range"></div>
-                </div>
-                <div id="symmmetry" class="symmetry slider group">
-                    <p class="filter-value"><span id="symmetry_min_display"></span> to <span id="symmetry_max_display"></span></p>
-                    <h4>Symmetry</h4>
-                    <div id="symmetry_range"></div>
-                </div>
-                <div id="certifier" class="certifier group">
-                    <h4>Certifiers</h4>
-                    {% for certifier in certifiers %}
-                    <label>
-                        <input type="checkbox" name="certifier" value="{{ certifier.abbr }}">
-                        {{ certifier.name }}
-                    </label>
-                    {% endfor %}
-                </div>
-                {% if show_lab_grown_filter %}
-                <div id="manmade" class="manmade group">
-                    <h4>Origin</h4>
-                    <label>
-                        <input type="radio" name="manmade" value="0"> All
-                    </label>
-                    <label>
-                        <input type="radio" name="manmade" value="" {% if only_natural %}checked="checked"{% endif %}> Only natural
-                    </label>
-                    <label>
-                        <input type="radio" name="manmade" value="1"> Only lab-grown
-                    </label>
-                </div>
-                {% endif %}
-            </form>
-        </div>
+<div class="wrapper">
+    {% ring_builder_steps 'diamond' %}
+    <div class="section-filters">
+        {% include "tsj_gemstone/includes/filterset_site.html" %}
     </div>
-    <div class="gemstone-results col-md-9">
-        {% ring_builder_steps 'diamond' %}
+    <section class="section-content">
         <div class="table-wrapper row">
-            {% include "tsj_gemstone/includes/list_partial.html" %}
+            {% include "tsj_gemstone/includes/gemstones.html" %}
         </div>
-        <div class="pagination-wrapper row">
-            {% include "tsj_gemstone/includes/paginator_full_partial.html" %}
+        <div class="section-pagination bottom">
+            {% include "tsj_gemstone/includes/pagination.html" %}
         </div>
-    </div>
+    </section>
 </div>
-
 {% endblock content %}

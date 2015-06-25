@@ -1,1 +1,52 @@
-[{"pk": 1, "model": "tsj_gemstone.grading", "fields": {"order": 10, "aliases": "", "name": "Ideal", "abbr": "I"}}, {"pk": 2, "model": "tsj_gemstone.grading", "fields": {"order": 20, "aliases": "EX-I\nI-EX", "name": "Excellent", "abbr": "EX"}}, {"pk": 3, "model": "tsj_gemstone.grading", "fields": {"order": 30, "aliases": "VG-EX\nEX-VG", "name": "Very Good", "abbr": "VG"}}, {"pk": 4, "model": "tsj_gemstone.grading", "fields": {"order": 40, "aliases": "G-VG\nVG-G", "name": "Good", "abbr": "G"}}, {"pk": 5, "model": "tsj_gemstone.grading", "fields": {"order": 50, "aliases": "F-G\nG-F", "name": "Fair", "abbr": "F"}}, {"pk": 6, "model": "tsj_gemstone.grading", "fields": {"order": 60, "aliases": "P-F\nF-P", "name": "Poor", "abbr": "P"}}]
+[
+{
+    "pk": 1, 
+    "model": "tsj_gemstone.grading", 
+    "fields": {
+        "order": 10, 
+        "aliases": "", 
+        "name": "Ideal", 
+        "abbr": "I"
+    }
+},
+{
+    "pk": 2, 
+    "model": "tsj_gemstone.grading", 
+    "fields": {
+        "order": 20, 
+        "aliases": "EX-I\nI-EX", 
+        "name": "Excellent", 
+        "abbr": "EX"
+    }
+},
+{
+    "pk": 3, 
+    "model": "tsj_gemstone.grading", 
+    "fields": {
+        "order": 30, 
+        "aliases": "VG-EX\nEX-VG", 
+        "name": "Very Good", 
+        "abbr": "VG"
+    }
+},
+{
+    "pk": 4, 
+    "model": "tsj_gemstone.grading", 
+    "fields": {
+        "order": 40, 
+        "aliases": "G-VG\nVG-G", 
+        "name": "Good", 
+        "abbr": "G"
+    }
+},
+{
+    "pk": 5, 
+    "model": "tsj_gemstone.grading", 
+    "fields": {
+        "order": 50, 
+        "aliases": "F-G\nG-F", 
+        "name": "Fair", 
+        "abbr": "F"
+    }
+}
+]

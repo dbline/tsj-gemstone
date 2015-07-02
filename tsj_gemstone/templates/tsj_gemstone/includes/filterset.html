@@ -1,42 +1,182 @@
+{% load humanize thinkspace_utils %}
 
 <form action="" method="get" id="form-gemstone">
-    {# filterset.form #}
-    cut
-    <input id="price" class="slider" type="text"
-        data-slider-min="0" data-slider-max="100000"
-        data-slider-scale="logarithmic"
-        data-slider-value="[0,100000]" value="[0,100000]" />
-    <input id="carat_weight" class="slider" type="text"
-        data-slider-min="0.40" data-slider-max="20.00"
-        data-slider-scale="logarithmic"
-        data-slider-step=".01"
-        data-slider-value="[0.40,20.00]" value="[0.40,20.00]" />
-    <input id="color" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-        data-slider-ticks-labels="['M', 'L', 'K', 'J', 'I', 'H', 'G', 'F', 'E', 'D']"
-        data-slider-value="[1,10]" value="[1,10]" />
-    <input id="cut_grade" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5]"
-        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
-        data-slider-value="[1,5]" value="[1,5]" />
-    <input id="clarity" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
-        data-slider-ticks-labels="['I2', 'I1', 'SI3', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL']"
-        data-slider-value="[1,11]" value="[1,11]" />
+    <fieldset class="filter-primary">
+    {% with filterset.form.cut as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter no-range">
+                <ul class="list-unstyled">
+                {% for cut in cuts %}
+                    <li class="{{ cut.name|slugify }}">
+                        <label for="{{ field.auto_id }}_{{ forloop.counter0 }}">
+                        {% with field.value|in_value:cut.pk as checked %}
+                            <input type="checkbox" id="{{ field.auto_id }}_{{ forloop.counter0 }}" value="{{ cut.pk }}" name="{{ field.html_name }}" {% if checked %}checked{% endif %}>
+                            <span class="icon">{{ cut.icon|safe }}</span>
+                        {% endwith %}
+                        </label>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.price as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="range">
+                    <input id="price" class="slider" type="text"
+                        data-type="double"
+                    />
+                </div>
+                <div class="fields">
+                    {{ field }}
+                </div>
+            </div>
+        </div>
+    {% endwith %}
 
-    /* ADVANCED */
+    {% with filterset.form.carat_weight as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="range">
+                    <input id="carat_weight" class="slider" type="text"
+                        data-type="double"
+                        data-step=".01"
+                    />
+                </div>
+                <div class="fields">
+                    {{ field }}
+                </div>
+            </div>
+        </div>
+    {% endwith %}
 
-    <input id="polish" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5]"
-        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
-        data-slider-value="[1,5]" value="[1,5]" />
-    <input id="symmetry" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5]"
-        data-slider-ticks-labels="['Fair', 'Good', 'Very Good', 'Excellent', 'Ideal']"
-        data-slider-value="[1,5]" value="[1,5]" />
-    <input id="fluorescence" class="slider" type="text"
-        data-slider-ticks="[1, 2, 3, 4, 5]"
-        data-slider-ticks-labels="['None', 'Faint', 'Medium', 'Strong', 'Very Strong']"
-        data-slider-value="[1,5]" value="[1,5]" />
-    certifier
+    {% with filterset.form.color as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="color" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.color_0 %}
+                        value="{{ filterset.data.color_0 }};{{ filterset.data.color_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.cut_grade as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="cut_grade" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.cut_grade_0 %}
+                        value="{{ filterset.data.cut_grade_0 }};{{ filterset.data.cut_grade_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.clarity as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="clarity" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.clarity_0 %}
+                        value="{{ filterset.data.clarity_0 }};{{ filterset.data.clarity_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    </fieldset>
+    <fieldset class="filter-advanced">
+    {% with filterset.form.polish as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="polish" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.polish_0 %}
+                        value="{{ filterset.data.polish_0 }};{{ filterset.data.polish_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.symmetry as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="symmetry" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.symmetry_0 %}
+                        value="{{ filterset.data.symmetry_0 }};{{ filterset.data.symmetry_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.fluorescence as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter">
+                <div class="fields hidden">
+                    {{ field }}
+                </div>
+                <div class="range">
+                    <input id="fluorescence" class="slider" type="text"
+                        data-type="double"
+                        data-grid="true"
+                    {% if filterset.data.fluorescence_0 %}
+                        value="{{ filterset.data.fluorescence_0 }};{{ filterset.data.fluorescence_1 }}"
+                    {% endif %}
+                    />
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with filterset.form.certifier as field %}
+        <div class="form-group {{ field.html_name }}">
+            <h4>{{ field.label }}</h4>
+            <div class="filter no-range">
+                {{ field }}
+            </div>
+        </div>
+    {% endwith %}
+    </fieldset>
 </form>

@@ -7,6 +7,85 @@
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_builder/js/add_to_builder.js"></script>
     <script type="text/javascript">
         DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
+        COLORS = [{% for color in colors %}"{{ color.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        GRADINGS = [{% for grading in gradings %}"{{ grading.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        CLARTIIES = [{% for clarity in clarities %}"{{ clarity.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        FLUORESCENCES = [{% for fluorescence in fluorescences %}"{{ fluorescence.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+
+        $("#price").ionRangeSlider({
+            min: {{ prices.min }},
+            max: {{ prices.max }},
+            from: {{ filterset.data.price_0 }},
+            to: {{ filterset.data.price_1 }},
+            hide_min_max: true,
+            hide_from_to: true,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+        var price_slider = $('#price').data('ionRangeSlider');
+
+        $("#carat_weight").ionRangeSlider({
+            min: {{ carat_weights.min }},
+            max: {{ carat_weights.max }},
+            from: {{ filterset.data.carat_weight_0 }},
+            to: {{ filterset.data.carat_weight_1 }},
+            hide_min_max: true,
+            hide_from_to: true,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+        var carat_weight_slider = $('#carat_weight').data('ionRangeSlider');
+
+        $('#color').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: COLORS,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
+        $('#cut_grade').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
+        $('#clarity').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: CLARTIIES,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
+        $('#polish').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
+        $('#symmetry').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
+        $('#fluorescence').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: FLUORESCENCES,
+            onFinish: function(data) {
+                update_results();
+            }
+        });
     </script>
 {% endblock js %}
 
@@ -19,7 +98,7 @@
         {% include "tsj_gemstone/includes/filterset_site.html" %}
     </div>
     <section class="section-content">
-        <div class="table-wrapper row">
+        <div class="section-gemstones row">
             {% include "tsj_gemstone/includes/gemstones.html" %}
         </div>
         <div class="section-pagination bottom">

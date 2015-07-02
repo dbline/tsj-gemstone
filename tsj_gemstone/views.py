@@ -1,9 +1,11 @@
 import json
 
+from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext
+from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
@@ -31,17 +33,47 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(GemstoneListView, self).get_context_data(**kwargs)
 
+        q = self.request.GET
+
+        # Sorting
+        try:
+            sort = q.__getitem__('sort')
+        except KeyError:
+            sort = None
+
+        queryset = self.model.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
+
+        try:
+            opts = self.model._meta
+            opts.get_field(sort)
+            queryset = queryset.order_by(sort)
+        except FieldDoesNotExist:
+            queryset = queryset.order_by('carat_weight', 'color', 'clarity')
+
+        # Minimum and Maximum Values
+        context['cuts'] = Cut.objects.all().order_by('order')
+        context['colors'] = Color.objects.all().order_by('-abbr')
+        carat_weights = queryset.aggregate(min=Min('carat_weight'), max=Max('carat_weight'))
+        context['carat_weights'] = carat_weights
+        prices = queryset.aggregate(min=Min('price'), max=Max('price'))
+        prices['min'] = floatformat(prices['min'], 0)
+        prices['max'] = floatformat(prices['max'], 0)
+        context['prices'] = prices
+        context['clarities'] = Clarity.objects.all().order_by('-order')
+        context['gradings'] = Grading.objects.all().order_by('-order')
+        context['fluorescences'] = Fluorescence.objects.all().order_by('-order')
+
         initial = {
-            'price_0': '0',
-            'price_1': '100000',
-            'carat_weight_0': '0.00',
-            'carat_weight_1': '20.00',
+            'price_0': prices['min'],
+            'price_1': prices['max'],
+            'carat_weight_0': carat_weights['min'],
+            'carat_weight_1': carat_weights['max'],
             'cut_grade_0': '',
             'cut_grade_1': '',
-            'color_0': 'M',
-            'color_1': 'D',
-            'clarity_0': 'I2',
-            'clarity_1': 'FL',
+            'color_0': '',
+            'color_1': '',
+            'clarity_0': '',
+            'clarity_1': '',
             'polish_0': '',
             'polish_1': '',
             'symmetry_0': '',
@@ -50,38 +82,23 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             'fluorescence_1': '',
         }
 
-        q = self.request.GET
-
         # Initial
         if q.__contains__('carat_weight_0'):
             initial = q
         else:
             initial.update(q)
 
-        # Sorting
-        try:
-            sort = q.__getitem__('sort')
-        except KeyError:
-            sort = None
-
-        try:
-            opts = self.model._meta
-            opts.get_field(sort)
-            queryset = self.model.objects.order_by(sort)
-        except FieldDoesNotExist:
-            queryset = self.model.objects.order_by('carat_weight', 'color', 'clarity')
-
         filterset = GemstoneFilterSet(initial, queryset=queryset)
 
-        has_ring_builder = builder_prefs.get('ring')
+        print filterset.__dict__
 
-        context = {
+        context.update({
             'filterset': filterset,
-            'has_ring_builder': has_ring_builder,
+            'has_ring_builder': builder_prefs.get('ring'),
             'initial_cuts': self.request.GET.getlist('cut'),
             'show_prices': show_prices(self.request.user),
             'sort': sort,
-        }
+        })
 
         paginator = QuerySetDiggPaginator(filterset, 40, body=5, padding=2)
         try:

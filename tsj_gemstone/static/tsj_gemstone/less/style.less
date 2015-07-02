@@ -75,22 +75,102 @@
 ` Page : Diamonds : Listing
 *********************************************/
 .page-gemstone-list {
-    .section-sidebar {
-        .make-md-column(3);
+    .section-filters {
+        .make-md-column(12);
+
+        .filter-primary {
+        }
+
+        .filter-advanced {
+            .hidden();
+        }
+
+        .form-group {
+            .make-md-column(6);
+            height: 105px;
+            margin-bottom: 5px;
+
+            .filter {
+                .fields {
+                    input {
+                        .input-sm();
+                        width: 130px;
+
+                        &:first-child {
+                            .pull-left();
+                            .text-left();
+                        }
+
+                        &:last-child {
+                            .pull-right();
+                            .text-right();
+                        }
+                    }
+                }
+            }
+
+            &.cut li {
+                float: left;
+                margin-right: 10px;
+                width: 38px;
+
+                &.emerald {
+                    width: 24px;
+                }
+
+                &.marquise {
+                    width: 20px;
+                }
+
+                &.oval {
+                    width: 25px;
+                }
+
+                &.pear {
+                    width: 26px;
+                }
+
+                label {
+                    cursor: pointer;
+                    display: block;
+                    margin: 0;
+
+                    input {
+                        .hidden();
+                    }
+
+                    svg {
+                        path {
+                            stroke: #777;
+                            stroke-width: 3;
+                            stroke-miterlimit: 10;
+                        }
+                    }
+
+                    &:hover {
+                        svg {
+                            path {
+                                stroke: @themecolor-primary;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .section-content {
-        .make-md-column(9);
+        .make-md-column(12);
 
         .table-gemstone {
             .table-responsive();
         }
 
-        .table-wrapper {
+        .section-gemstones {
             .clearfix();
         }
 
-        .table-wrapper {
+        .section-gemstones {
             .clearfix();
         }
 
@@ -235,6 +315,134 @@
             }
         }
     }
+}
+
+/********************************************
+` Slider: Skin
+*********************************************/
+
+.irs {
+    height: 35px;
+}
+.irs-with-grid {
+    height: 60px;
+}
+.irs-line {
+    border: none;
+    background: #D4D4D4;
+    height: 3px;
+    top: 20px;
+}
+    .irs-line-left {
+        height: 8px;
+    }
+    .irs-line-mid {
+        height: 8px;
+    }
+    .irs-line-right {
+        height: 8px;
+    }
+
+.irs-bar {
+    background: @themecolor-primary;
+    border: none;
+    height: 3px;
+    top: 20px;
+}
+    .irs-bar-edge {
+        height: 10px; top: 20px;
+        width: 14px;
+        border: 1px solid @themecolor-primary;
+        border-right: 0;
+        background: @themecolor-primary;
+        background: linear-gradient(to top, @themecolor-primary 0%, darken(@themecolor-primary, 10%) 100%); /* W3C */
+        border-radius: 16px 0 0 16px;
+        -moz-border-radius: 16px 0 0 16px;
+    }
+
+.irs-shadow {
+    height: 2px; top: 38px;
+    background: #000;
+    opacity: 0.3;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.lt-ie9 .irs-shadow {
+    filter: alpha(opacity=30);
+}
+
+.irs-slider {
+    background: @themecolor-primary;
+    border: 0;
+    border-radius: 100%;
+    box-shadow: none;
+    cursor: pointer;
+    height: 23px;
+    top: 10px;
+    -webkit-transition: box-shadow;
+    -o-transition: box-shadow;
+    transition: box-shadow;
+    -webkit-transition-duration: 200ms;
+    transition-duration: 200ms;
+    width: 23px;
+
+    &:hover {
+        background: @themecolor-primary;
+    }
+
+    &.state_hover {
+        box-shadow: 0 0 0 13px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.irs-min, .irs-max {
+    color: #333;
+    font-size: 12px; line-height: 1.333;
+    text-shadow: none;
+    top: 0;
+    padding: 1px 5px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.lt-ie9 .irs-min, .lt-ie9 .irs-max {
+    background: #ccc;
+}
+
+.irs-from, .irs-to, .irs-single {
+    color: #fff;
+    font-size: 14px; line-height: 1.333;
+    text-shadow: none;
+    padding: 1px 5px;
+    background: #428bca;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+.lt-ie9 .irs-from, .lt-ie9 .irs-to, .lt-ie9 .irs-single {
+    background: #999;
+}
+
+.irs-grid {
+    height: 27px;
+    top: 35px;
+}
+.irs-grid-pol {
+    opacity: 0.5;
+    background: @gray;
+
+    &.small {
+        background: #999;
+        height: 0;
+    }
+}
+
+.irs-grid-text {
+    bottom: 5px;
+    color: @gray-darker;
+}
+
+.irs-disabled {
 }
 
 /********************************************

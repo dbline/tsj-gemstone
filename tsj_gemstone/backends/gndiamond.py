@@ -241,7 +241,7 @@ class Backend(BaseBackend):
         if missing_values:
             for k, v in missing_values.items():
                 import_errors += 1
-                logger.error('Missing values for %s: %s' % (k, ', '.join(v)))
+                self.report_missing_values(k, v)
 
         return import_successes, import_errors
 

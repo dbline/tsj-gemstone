@@ -1,3 +1,5 @@
+import logging
+
 class SkipDiamond(Exception):
     pass
 
@@ -6,6 +8,10 @@ class BaseBackend(object):
 
     def __init__(self, filename=None):
         self.filename = filename
+        self.logger = logging.getLogger(self.__module__)
+
+    def report_missing_values(self, field, values):
+        self.logger.error('Missing values for %s: %%s' % field, ', '.join(sorted(values)))
 
 class KeyValueError(Exception):
     def __init__(self, key, value):

@@ -13,14 +13,16 @@
                 <th><a href="?sort=cut_grade">Cut</a></th>
                 <th><a href="?sort=color">Color</a></th>
                 <th><a href="?sort=clarity">Clarity</a></th>
-                <th><a href="?sort=polish">Polish</a></th>
-                <th><a href="?sort=symmetry">Symmetry</a></th>
-                <th><a href="?sort=fluorescence">Fluorescence</a></th>
+            {% if tspages_page.get_options.page_layout != 'left' %}
+                <th class="hidden-xs"><a href="?sort=polish">Polish</a></th>
+                <th class="hidden-xs"><a href="?sort=symmetry">Symmetry</a></th>
+                <th class="hidden-xs"><a href="?sort=fluorescence">Fluorescence</a></th>
             {% comment %}
-                <th><a href="?sort=table_percent">Table</a></th>
-                <th><a href="?sort=depth_percent">Depth</a></th>
+                <th class="hidden-xs"><a href="?sort=table_percent">Table</a></th>
+                <th class="hidden-xs"><a href="?sort=depth_percent">Depth</a></th>
             {% endcomment %}
-                <th><a href="?sort=certifier">Report</a></th>
+            {% endif %}
+                <th class="hidden-xs"><a href="?sort=certifier">Report</a></th>
             {% if show_prices %}
                 <th><a href="?sort=price">Price</a></th>
             {% endif %}
@@ -28,12 +30,12 @@
         </thead>
         <tbody>
         {% for gemstone in page.object_list %}
-            <tr id="{{ gemstone.pk }}">
+            <tr id="{{ gemstone.pk }}" data-url="{% page gemstone-detail gemstone.pk %}">
                 <td class="shape">
                     <span class="icon">
                         {{ gemstone.cut.icon|safe }}
                     </span>
-                    <span class="name">
+                    <span class="name hidden-xs">
                         {{ gemstone.cut.name }}
                     </span>
                 </td>
@@ -41,14 +43,16 @@
                 <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
                 <td>{{ gemstone.color }}</td>
                 <td>{{ gemstone.clarity }}</td>
-                <td>{{ gemstone.polish }}</td>
-                <td>{{ gemstone.symmetry }}</td>
-                <td>{{ gemstone.fluorescence }}</td>
+            {% if tspages_page.get_options.page_layout != 'left' %}
+                <td class="hidden-xs">{{ gemstone.polish }}</td>
+                <td class="hidden-xs">{{ gemstone.symmetry }}</td>
+                <td class="hidden-xs">{{ gemstone.fluorescence }}</td>
             {% comment %}
-                <td>{{ gemstone.table_percent }}</td>
-                <td>{{ gemstone.depth_percent }}</td>
+                <td class="hidden-xs">{{ gemstone.table_percent }}</td>
+                <td class="hidden-xs">{{ gemstone.depth_percent }}</td>
             {% endcomment %}
-                <td>{{ gemstone.certifier }}</td>
+            {% endif %}
+                <td class="hidden-xs">{{ gemstone.certifier }}</td>
             {% if show_prices %}
                 <td>{{ gemstone.formatted_price }}</td>
             {% endif %}

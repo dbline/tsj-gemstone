@@ -94,7 +94,7 @@
     </script>
 {% endblock js %}
 
-{% block bodyclass %}{{ block.super }} page-gemstone page-gemstone-list left{% endblock %}
+{% block bodyclass %}{{ block.super }} page-gemstone page-gemstone-list {{ tspages_page.get_options.page_layout }}{% endblock %}
 
 {% block content %}
 <div class="wrapper">

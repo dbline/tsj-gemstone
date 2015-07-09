@@ -75,6 +75,61 @@
 ` Page : Diamonds : Listing
 *********************************************/
 .page-gemstone-list {
+
+    &.left {
+        .section-filters {
+            .make-md-column(3);
+            padding-left: 0;
+            padding-right: 0;
+
+            .section-filterset {
+                .filter-toggle {
+                }
+
+                .form-group {
+                    .make-md-column(12);
+                    height: auto;
+
+                    &.cut {
+                        li {
+                            margin-bottom: 10px;
+                            margin-right: 7px;
+                            width: 45px;
+
+                            @media (max-width: @screen-md-max) {
+                                font-size: 10px;
+                                margin-right: 1px;
+                                width: 41px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .toggle-filters {
+                .hidden();
+            }
+        }
+        .section-content {
+            .make-md-column(9);
+            padding-left: 0;
+            padding-right: 0;
+
+            .section-gemstones {
+                .table-gemstone {
+                    .make-md-column(8);
+                    .mp-none();
+                }
+
+                .table-gemstone-detail {
+                    .make-md-column(4);
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+
     .section-filters {
         .make-md-column(12);
         border-bottom: 1px solid #ededed;

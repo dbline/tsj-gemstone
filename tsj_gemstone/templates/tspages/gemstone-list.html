@@ -94,7 +94,7 @@
     </script>
 {% endblock js %}
 
-{% block bodyclass %}{{ block.super }} page-gemstone page-gemstone-list{% endblock %}
+{% block bodyclass %}{{ block.super }} page-gemstone page-gemstone-list left{% endblock %}
 
 {% block content %}
 <div class="wrapper">
@@ -102,13 +102,13 @@
     <div class="section-filters">
         {% include "tsj_gemstone/includes/filterset_site.html" %}
     </div>
-    <section class="section-content">
+    <div class="section-content">
         <div class="section-gemstones">
             {% include "tsj_gemstone/includes/gemstones.html" %}
         </div>
         <div class="section-pagination bottom">
             {% include "tsj_gemstone/includes/pagination.html" %}
         </div>
-    </section>
+    </div>
 </div>
 {% endblock content %}

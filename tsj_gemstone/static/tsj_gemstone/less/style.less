@@ -202,6 +202,18 @@
                                 .hidden();
                             }
 
+                            input[type="checkbox"]:checked ~ span.icon {
+                                svg {
+                                    path {
+                                        stroke: @themecolor-primary;
+                                    }
+                                }
+                            }
+
+                            input[type="checkbox"]:checked ~ span.name {
+                                font-weight: 700;
+                            }
+
                             svg {
                                 height: 38px;
                                 margin-bottom: 3px;
@@ -218,13 +230,25 @@
                             }
 
                             &:hover {
-                                svg {
-                                    path {
-                                        stroke: @themecolor-primary;
+                                span.icon {
+                                    svg {
+                                        path {
+                                            stroke: @themecolor-primary;
+                                        }
                                     }
+                                }
+                                span.name {
+                                    font-weight: 700;
                                 }
                             }
                         }
+                    }
+                }
+
+                &.certifier {
+                    ul {
+                        .list-inline();
+                        padding: 10px 0;
                     }
                 }
             }
@@ -347,7 +371,7 @@
                     .text-center();
 
                     i {
-                        color: @gray-light;
+                        color: @gray-lighter;
                         font-size: 100px;
                     }
 

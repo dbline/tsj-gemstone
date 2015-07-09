@@ -109,8 +109,9 @@ class GemstoneFilterSet(django_filters.FilterSet):
     fluorescences = Fluorescence.objects.all()
     fluorescence = RangeChoiceFilter(queryset=fluorescences, to_field_name='name')
 
-    certifiers = Certifier.objects.all().exclude(disabled=True)
-    certifier = django_filters.ModelMultipleChoiceFilter(queryset=certifiers, label='Certificate')
+    distinct_certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct('certifier__id')
+    certifiers = Certifier.objects.filter(id__in=distinct_certifiers).exclude(disabled=True)
+    certifier = django_filters.ModelMultipleChoiceFilter(queryset=certifiers, widget=forms.CheckboxSelectMultiple, label='Certificate')
 
     depth_percent = django_filters.RangeFilter(label='Depth')
     table_percent = django_filters.RangeFilter(label='Table')

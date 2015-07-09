@@ -14,7 +14,7 @@
                             {% with field.value|in_value:cut.pk as checked %}
                                 <input type="checkbox" id="{{ field.auto_id }}_{{ forloop.counter0 }}" value="{{ cut.pk }}" name="{{ field.html_name }}" {% if checked %}checked{% endif %}>
                                 <span class="icon">{{ cut.icon|safe }}</span>
-                                {{ cut.name }}
+                                <span class="name">{{ cut.name }}</span>
                             {% endwith %}
                             </label>
                         </li>

@@ -10,11 +10,17 @@ $(document).ready(function() {
         $.ajax({
             url: State.hash,
             dataType: 'json',
-            success: function(json) {
-                $('.section-gemstones').html(json['gemstones']);
-                $('.section-pagination').html(json['pagination']);
-                affixDetails();
+            beforeSend: function() {
+                $('.overlay').show();
             }
+        })
+        .done(function(json) {
+            $('.section-gemstones').html(json['gemstones']);
+            $('.section-pagination').html(json['pagination']);
+            affixDetails();
+        })
+        .always(function() {
+            $('.overlay').hide();
         });
     });
 
@@ -25,13 +31,9 @@ $(document).ready(function() {
     // DETAILS
     affixDetails();
 
-    $('body').on('click', '.table-gemstone tr', function() {
-        if ($(this).hasClass('hidden-xs') || $(this).hasClass('hidden-sm')) {
-            $('.table-gemstone tr.active').removeClass('active');
-            $(this).addClass('active');
-            $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
-            $('#' + this.id + '-detail').addClass('active').removeClass('hide');
-        }
+    $('body').on('mouseover', '.table-gemstone tbody tr', function() {
+        $('.table-gemstone-detail .active').removeClass('active').addClass('hidden');
+        $('#' + this.id + '-detail').addClass('active').removeClass('hidden');
     });
 
     $('.slider').on('change', function() {
@@ -84,8 +86,31 @@ $(document).ready(function() {
     });
 
     // ADVANCED
-    $('.filter-advanced-toggle a').on('click', function(e) {
-        $('.filter-advanced').toggleClass('hide');
+    $('.toggle-advanced').on('click', function(e) {
+        $(this).toggleClass('open');
+        $('.filter-advanced').slideToggle(400, function() {
+            if ($('.toggle-advanced').hasClass('open')) {
+                $('.toggle-advanced').html('Advanced Options<i class="fa fa-caret-up"></i>');
+            } else {
+                $('.toggle-advanced').html('Advanced Options<i class="fa fa-caret-down"></i>');
+            }
+            affixDetails();
+        });
+        e.preventDefault();
+    });
+
+    // SHOW/HIDE FILTERS
+    $('.toggle-filters').click(function(e) {
+        $('.section-filterset').slideToggle(400, function() {
+            if ($('.section-filterset').is(':visible')) {
+                $('.section-filters').removeClass('collapsed');
+                $('.toggle-filters').html('Hide <i class="fa fa-caret-up"></i>');
+            } else {
+                $('.section-filters').addClass('collapsed')
+                $('.toggle-filters').html('Filters <i class="fa fa-caret-down"></i>');
+            }
+            affixDetails();
+        });
         e.preventDefault();
     });
 
@@ -98,12 +123,19 @@ $(document).ready(function() {
     // PAGINATION
     $('body').on('click', '.paginator_link', function() {
         updateResults($(this).attr('href'));
+        $('html, body').animate({
+            scrollTop: $('.table-gemstone').offset().top
+        }, 500);
         return false;
     });
 
 });
 
 function affixDetails() {
+    // Reset
+    $(window).off('.affix');
+    $('.detail-affix').removeData('bs.affix').removeClass('affix affix-top affix-bottom');
+
     var details = $('.detail-affix').height();
     var results = $('.table-gemstone').height();
 

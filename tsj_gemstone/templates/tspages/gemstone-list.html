@@ -43,47 +43,52 @@
             hide_from_to: true,
             values: COLORS,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
+
         $('#cut_grade').ionRangeSlider({
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
+
         $('#clarity').ionRangeSlider({
             hide_min_max: true,
             hide_from_to: true,
             values: CLARTIIES,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
+
         $('#polish').ionRangeSlider({
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
+
         $('#symmetry').ionRangeSlider({
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
+
         $('#fluorescence').ionRangeSlider({
             hide_min_max: true,
             hide_from_to: true,
             values: FLUORESCENCES,
             onFinish: function(data) {
-                update_results();
+                updateResults();
             }
         });
     </script>
@@ -98,7 +103,7 @@
         {% include "tsj_gemstone/includes/filterset_site.html" %}
     </div>
     <section class="section-content">
-        <div class="section-gemstones row">
+        <div class="section-gemstones">
             {% include "tsj_gemstone/includes/gemstones.html" %}
         </div>
         <div class="section-pagination bottom">

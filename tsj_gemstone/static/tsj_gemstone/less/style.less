@@ -77,243 +77,347 @@
 .page-gemstone-list {
     .section-filters {
         .make-md-column(12);
+        border-bottom: 1px solid #ededed;
+        margin-bottom: 20px;
+        min-height: 34px;
+        padding-left: 0;
+        padding-right: 0;
+        position: relative;
 
-        .filter-primary {
+        &.collapsed {
+            border-bottom: none;
+            border-top: 1px solid #ededed;
+            margin-bottom: -15px;
         }
 
-        .filter-advanced {
-            .hidden();
-        }
+        .section-filterset {
 
-        .form-group {
-            .make-md-column(6);
-            height: 105px;
-            margin-bottom: 5px;
+            .filter-primary {
+                clear: both;
+            }
 
-            .filter {
-                .fields {
-                    input {
-                        .input-sm();
-                        width: 130px;
+            .filter-toggle {
+                clear: both;
+                padding-bottom: 20px;
 
-                        &:first-child {
-                            .pull-left();
-                            .text-left();
-                        }
+                a {
+                    .btn();
+                    padding: 6px 15px;
 
-                        &:last-child {
-                            .pull-right();
-                            .text-right();
+                    &.toggle-advanced {
+                        .btn-link();
+                        .font-family-heading();
+                        font-weight: 700;
+
+                        i {
+                            margin-left: 6px;
                         }
                     }
                 }
             }
 
-            &.cut li {
-                float: left;
-                margin-right: 10px;
-                width: 38px;
+            .filter-advanced {
+                margin-top: -10px;
+            }
 
-                &.emerald {
-                    width: 24px;
+            .form-group {
+                .make-md-column(6);
+                height: 105px;
+                margin-bottom: 5px;
+
+                h4 {
+                    margin-bottom: 0;
                 }
 
-                &.marquise {
-                    width: 20px;
-                }
+                .filter {
+                    .fields {
+                        margin-top: 3px;
 
-                &.oval {
-                    width: 25px;
-                }
+                        input {
+                            .input-sm();
+                            width: 100px;
 
-                &.pear {
-                    width: 26px;
-                }
+                            &:first-child {
+                                .pull-left();
+                                .text-left();
+                            }
 
-                label {
-                    cursor: pointer;
-                    display: block;
-                    margin: 0;
-
-                    input {
-                        .hidden();
-                    }
-
-                    svg {
-                        path {
-                            stroke: #777;
-                            stroke-width: 3;
-                            stroke-miterlimit: 10;
+                            &:last-child {
+                                .pull-right();
+                                .text-right();
+                            }
                         }
                     }
+                }
 
-                    &:hover {
-                        svg {
-                            path {
-                                stroke: @themecolor-primary;
+                &.cut {
+                    h4 {
+                        margin-bottom: 15px;
+                    }
+
+                    li {
+                        float: left;
+                        font-size: 11px;
+                        margin-right: 9px;
+                        .text-center();
+                        width: 45px;
+
+                        @media (max-width: @screen-md-max) {
+                            font-size: 10px;
+                            margin-right: 1px;
+                            width: 43px;
+                        }
+
+                        &.emerald {
+                            svg {
+                                width: 24px;
+                            }
+                        }
+
+                        &.marquise {
+                            svg {
+                                width: 20px;
+                            }
+                        }
+
+                        &.oval {
+                            svg {
+                                width: 25px;
+                            }
+                        }
+
+                        &.pear {
+                            svg {
+                                width: 26px;
+                            }
+                        }
+
+                        label {
+                            cursor: pointer;
+                            display: block;
+                            font-weight: 400;
+                            margin: 0;
+
+                            input {
+                                .hidden();
+                            }
+
+                            svg {
+                                height: 38px;
+                                margin-bottom: 3px;
+
+                                @media (max-width: @screen-md-max) {
+                                    height: 32px;
+                                }
+
+                                path {
+                                    stroke: #777;
+                                    stroke-width: 3;
+                                    stroke-miterlimit: 10;
+                                }
+                            }
+
+                            &:hover {
+                                svg {
+                                    path {
+                                        stroke: @themecolor-primary;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
+        .toggle-filters {
+            .btn();
+            .btn-primary();
+            bottom: 0;
+            position: absolute;
+            right: 15px;
+            text-transform: uppercase;
+        }
     }
 
     .section-content {
         .make-md-column(12);
 
-        .table-gemstone {
-            .table-responsive();
-        }
-
         .section-gemstones {
             .clearfix();
-        }
 
-        .section-gemstones {
-            .clearfix();
-        }
+            .toolbar {
+                color: @gray-light;
+                padding-bottom: 15px;
 
-        .table-striped > tbody {
-            font-size: 12px;
-        }
+                .results {
+                    .font-family-heading(700);
+                }
+            }
 
-        .table-striped > tbody > tr > td,
-        .table-striped > tbody > tr > th {
-            background-color: #F8F7F5;
-        }
+            table {
+                .table();
+                font-size: 0.9em;
+            }
 
-        .table-striped > tbody > tr:nth-child(2n+1) > td,
-        .table-striped > tbody > tr:nth-child(2n+1) > th {
-            background-color: #F0EFED;
-        }
+            .table-gemstone {
+                .make-md-column(9);
+                .mp-none();
+                .table-responsive();
 
-        .table-striped > tbody > tr.active > td {
-            background-color: #FFF;
-            font-weight: bold;
-        }
+                table {
+                    .table-hover();
+                    .table-striped();
 
-        table > tbody > tr:hover {
-            cursor: pointer;
-        }
+                    th {
+                        font-size: 0.85em;
+                        text-transform: uppercase;
 
-        @media(max-width: @screen-sm-max) {
-            .table td {
-                padding: 0;
+                        a {
+                            font-weight: 700;
+                        }
+                    }
 
-                a {
-                    color: @gray;
-                    display: inline-block;
-                    padding: 10px 5px;
+                    tbody {
+                        tr:hover {
+                            background: #EAEAEA;
+                            color: @themecolor-primary;
+                        }
+                    }
+
+                    td {
+                        vertical-align: middle;
+
+                        &.shape {
+                            .icon {
+                                .pull-left();
+                                .text-center();
+                                display: block;
+                                padding: 3px 0 0;
+                                vertical-align: middle;
+                                width: 24px;
+
+                                svg {
+                                    height: 20px;
+                                    width: auto;
+
+                                    path {
+                                        stroke: #777;
+                                        stroke-width: 3;
+                                        stroke-miterlimit: 10;
+                                    }
+                                }
+                            }
+
+                            .name {
+                                .pull-left();
+                                display: block;
+                                padding: 4px 0 0 8px;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                }
+            }
+            .table-gemstone-detail {
+                .make-md-column(3);
+                .hidden-xs();
+                .hidden-sm();
+                padding-left: 0;
+                padding-right: 0;
+
+                .affix {
+                    position: fixed !important;
+                    top: 0;
+                }
+
+                th {
+                    font-size: 0.85em;
+                    .text-center();
+                    text-transform: uppercase;
+                }
+
+                td {
+                    border: none;
+                    padding: 10px;
+                }
+
+                .icon {
+                    margin: 10px 0;
+                    .text-center();
+
+                    i {
+                        color: @gray-light;
+                        font-size: 100px;
+                    }
+
+                    svg {
+                        height: 150px;
+                    }
+                }
+
+                .name {
+                    .font-family-heading();
+                    font-size: 1.1em;
+                    font-weight: 700;
+                    margin-bottom: 10px;
+                    .text-center();
+                }
+
+                .actions {
+                    clear: both;
+                    margin-bottom: 10px;
+                    text-align: center;
+
+                    .dropdown-menu {
+                        font-size: 12px;
+                        min-width: auto;
+                        width: 100%;
+                    }
+
+                    .btn-add-cart {
+                        .btn();
+                        .btn-block();
+                        .btn-primary();
+                        margin-bottom: 10px;
+                    }
+
+                    .btn-select-diamond {
+                        .btn();
+                        .btn-block();
+                        .btn-primary();
+                        margin-bottom: 10px;
+                    }
+                    .btn-view-diamond {
+                        .btn();
+                        .btn-block();
+                        .btn-default();
+                    }
+                }
+
+                .list {
+                    .make-md-column(6);
+                    font-size: 12px;
+                    padding-left: 0px;
+                    padding-right: 0px;
+
+                    dt {
+                    }
+
+                    dd {
+                        margin-bottom: 5px;
+
+                    }
+
+                    .price {
+                        border-bottom: 1px solid @gray-lighter;
+                        margin-bottom: 10px;
+                        padding-bottom: 10px;
+                    }
                 }
             }
         }
 
-        .table-gemstone-detail {
-            .hidden-xs();
-            .hidden-sm();
-        }
-
-        .table-gemstone-detail .affix {
-            position: fixed !important;
-            top: 20px;
-        }
-
-        .table-gemstone-detail .image {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .table-gemstone-detail .image span {
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 200px 200px;
-            display: block;
-            height: 200px;
-            text-indent: -9999px;
-        }
-
-        .table-gemstone-detail .image span.asscher {
-            background-image: url("/static/tsj_gemstone/images/asscher.png");
-        }
-
-        .table-gemstone-detail .image span.baguette {
-            background-image: url("/static/tsj_gemstone/images/baguette.png");
-        }
-
-        .table-gemstone-detail .image span.cushion {
-            background-image: url("/static/tsj_gemstone/images/cushion.png");
-        }
-
-        .table-gemstone-detail .image span.emerald {
-            background-image: url("/static/tsj_gemstone/images/emerald.png");
-        }
-
-        .table-gemstone-detail .image span.heart {
-            background-image: url("/static/tsj_gemstone/images/heart.png");
-        }
-
-        .table-gemstone-detail .image span.marquise {
-            background-image: url("/static/tsj_gemstone/images/marquise.png");
-        }
-
-        .table-gemstone-detail .image span.oval {
-            background-image: url("/static/tsj_gemstone/images/oval.png");
-        }
-
-        .table-gemstone-detail .image span.pear {
-            background-image: url("/static/tsj_gemstone/images/pear.png");
-        }
-
-        .table-gemstone-detail .image span.princess {
-            background-image: url("/static/tsj_gemstone/images/princess.png");
-        }
-
-        .table-gemstone-detail .image span.radiant {
-            background-image: url("/static/tsj_gemstone/images/radiant.png");
-        }
-
-        .table-gemstone-detail .image span.round {
-            background-image: url("/static/tsj_gemstone/images/round.png");
-        }
-
-        .table-gemstone-detail .image span.trilliant {
-            background-image: url("/static/tsj_gemstone/images/trilliant.png");
-        }
-
-        .dl-horizontal {
-            font-size: 12px;
-        }
-
-        .dl-horizontal dt {
-            width: 48%;
-        }
-
-        .dl-horizontal dd {
-            margin-left: 52%;
-        }
-
-        .table-gemstone-detail .actions {
-            text-align: center;
-
-            .dropdown-menu {
-                font-size: 12px;
-                min-width: auto;
-                width: 100%;
-            }
-
-            .btn-select-diamond {
-                .btn();
-                .btn-block();
-                .btn-primary();
-                margin-bottom: 10px;
-            }
-            .btn-view-diamond {
-                .btn();
-                .btn-block();
-                .btn-default();
-            }
-        }
     }
 }
 
@@ -378,7 +482,7 @@
     box-shadow: none;
     cursor: pointer;
     height: 23px;
-    top: 10px;
+    top: 9px;
     -webkit-transition: box-shadow;
     -o-transition: box-shadow;
     transition: box-shadow;

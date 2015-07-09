@@ -90,8 +90,6 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         filterset = GemstoneFilterSet(initial, queryset=queryset)
 
-        print filterset.__dict__
-
         context.update({
             'filterset': filterset,
             'has_ring_builder': builder_prefs.get('ring'),

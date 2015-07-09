@@ -8,7 +8,6 @@ import django_filters
 class RangeChoiceWidget(forms.MultiWidget):
     def decompress(self, value):
         if value:
-            print value
             return [value.start, value.stop]
         return [None, None]
 
@@ -92,9 +91,9 @@ class RangeDecimalFilter(django_filters.Filter):
         return qs
 
 class GemstoneFilterSet(django_filters.FilterSet):
-    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple)
+    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple, label='Shape')
     price = RangeDecimalFilter()
-    carat_weight = RangeDecimalFilter(label='Size')
+    carat_weight = RangeDecimalFilter(label='Carat')
 
     colors = Color.objects.all()
     color = RangeChoiceFilter(queryset=colors, to_field_name='abbr')

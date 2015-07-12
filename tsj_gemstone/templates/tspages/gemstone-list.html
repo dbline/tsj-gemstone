@@ -9,7 +9,7 @@
         DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
         COLORS = [{% for color in colors %}"{{ color.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
         GRADINGS = [{% for grading in gradings %}"{{ grading.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
-        CLARTIIES = [{% for clarity in clarities %}"{{ clarity.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        CLARTIIES = [{% for clarity in clarities %}"{{ clarity.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
         FLUORESCENCES = [{% for fluorescence in fluorescences %}"{{ fluorescence.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
 
         $("#price").ionRangeSlider({

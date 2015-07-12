@@ -152,6 +152,10 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
         has_ring_builder = builder_prefs.get('ring')
 
+        context['colors'] = Color.objects.all().order_by('-abbr')
+        context['clarities'] = Clarity.objects.all().order_by('-order')
+        context['gradings'] = Grading.objects.all().order_by('-order')
+
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,

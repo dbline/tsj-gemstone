@@ -104,7 +104,7 @@ class GemstoneFilterSet(django_filters.FilterSet):
     symmetry = RangeChoiceFilter(queryset=gradings, to_field_name='name')
 
     clarities = Clarity.objects.all()
-    clarity = RangeChoiceFilter(queryset=clarities, to_field_name='name')
+    clarity = RangeChoiceFilter(queryset=clarities, to_field_name='abbr')
 
     fluorescences = Fluorescence.objects.all()
     fluorescence = RangeChoiceFilter(queryset=fluorescences, to_field_name='name')

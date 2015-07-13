@@ -182,11 +182,15 @@ class IdexHandler(xml.sax.ContentHandler):
 class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/idex.xml')
 
+    @property
+    def enabled(self):
+        return prefs.get('idex_access_key')
+
     def get_fp(self):
         if self.filename:
             return open(self.filename, 'rb')
 
-        if settings.DEBUG:
+        if settings.DEBUG and not self.nodebug:
             return open(self.debug_filename, 'rb')
 
         key = prefs.get('idex_access_key')

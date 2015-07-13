@@ -104,7 +104,7 @@ class Backend(BaseBackend):
 
         # TODO: We should put a couple paginated JSON files in ../tests/data
         #       so that we can run through the loop below when debugging
-        if settings.DEBUG:
+        if settings.DEBUG and not self.nodebug:
             return json.load(open(self.debug_filename, 'rb'))['Diamonds']
 
         user = settings.STULLER_USER
@@ -200,7 +200,7 @@ class Backend(BaseBackend):
                     fluorescence_color_aliases,
                     certifier_aliases,
                     markup_list,
-                    added_date, 
+                    added_date,
                     pref_values
                 )
             except SkipDiamond as e:
@@ -213,7 +213,7 @@ class Backend(BaseBackend):
                 import_errors += 1
                 logger.info('KeyError', exc_info=e)
             except ValueError as e:
-                import_errors += 1 
+                import_errors += 1
                 logger.info('ValueError', exc_info=e)
             except Exception as e:
                 # Create an error log entry and increment the import_errors counter
@@ -224,7 +224,7 @@ class Backend(BaseBackend):
                 break
             else:
                 if len(row_buffer) > buffer_size:
-                    writer.writerows(row_buffer) 
+                    writer.writerows(row_buffer)
                     row_buffer = []
                 else:
                     row_buffer.append(diamond_row)
@@ -379,7 +379,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     else:
         fluorescence_id = None
         fluorescence_color_id = None
-        
+
     measurements = clean(data.get('Measurements'))
     length, width, depth = split_measurements(measurements)
 

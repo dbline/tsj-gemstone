@@ -1,6 +1,11 @@
 import logging
 
-logger = logging.getLogger('tsj_gemstone.backends')
+from django.conf import settings
+
+from ..prefs import prefs
+
+logger = logging.getLogger(__name__)
+summary_logger = logging.getLogger('tsj_gemstone.backends')
 
 class SkipDiamond(Exception):
     pass
@@ -8,18 +13,52 @@ class SkipDiamond(Exception):
 class BaseBackend(object):
     filename = None
 
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, nodebug=False):
         self.filename = filename
         self.backend_module = self.__module__.split('.')[-1]
+        self.nodebug = nodebug
+
+    @property
+    def enabled(self):
+        try:
+            return prefs.get(self.backend_module)
+        except KeyError:
+            return False
+
+    def get_fp(self):
+        fn = ''
+        if self.filename:
+            fn = self.filename
+
+        if settings.DEBUG and not self.nodebug:
+            fn = self.debug_filename
+
+        if self.default_filename:
+            fn = self.default_filename
+
+        if fn:
+            try:
+                return open(fn, 'rb')
+            except IOError:
+                logger.exception(
+                    'Error loading file',
+                    extra={
+                        'tags': {
+                            'backend': self.backend_module,
+                        },
+                    },
+                )
+        else:
+            raise NotImplementedError
 
     def report_missing_values(self, field, values):
-        logger.error(
+        summary_logger.error(
             'Missing values for %s' % field,
             extra={
                 'tags': {
                     'backend': self.backend_module,
                 },
-                'missing_values': ', '.join(sorted(values)),
+                'summary_detail': ', '.join(sorted(values)),
             },
         )
 

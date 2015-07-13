@@ -104,8 +104,8 @@ class Backend(BaseBackend):
         if self.filename:
             return open(self.filename, 'rb')
 
-        #if settings.DEBUG:
-        #    return open(self.debug_filename, 'rb')
+        if settings.DEBUG and not self.nodebug:
+            return open(self.debug_filename, 'rb')
 
         # TODO: Do we need a feed per-site?
         #url = prefs.get('mid_api_url')

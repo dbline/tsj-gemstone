@@ -100,69 +100,7 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mgeller.csv')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
-
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
-
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
-
-        # TODO: Short-ciruciting until we know how retrieving GN data will work
-        if True or not username or not password:
-            logger.warning('Missing credentials, aborting import.')
-            return
-
-        # Post the username and password to the auth_url and save the resulting ticket
-        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-        auth_data = urllib.urlencode({
-            'username': username,
-            'password': password})
-        auth_request = Request(auth_url, auth_data)
-        try:
-            ticket = urlopen(auth_request).read()
-        except HTTPError as e:
-            logger.error('Rapaport auth failure: %s' % e)
-            return
-
-        # Download the CSV
-        if prefs.get('rapaport_url'):
-            url = prefs.get('rapaport_url')
-            parsed = urlparse(url)
-            data = urllib.urlencode({'ticket': ticket})
-            if parsed.query:
-                # We rely on the default set of columns, so we strip out any
-                # custom column definition.
-                # TODO: Slicing like this assumes a particular order of query
-                #       string arguments, that's bad.
-                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
-                if '&UseCheckedCulommns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedCulommns=1')]
-                # ...In case they ever spellcheck it
-                elif '&UseCheckedColumns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedColumns=1')]
-                url += '&' + data
-            elif url.endswith('?'):
-                url += data
-            else:
-                url += '?' + data
-            rap_list_request = Request(url)
-        else:
-            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-            data = urllib.urlencode({
-                'SortBy': 'Owner',
-                'White': '1',
-                'Programmatically': 'yes',
-                'Version': '1.0',
-                'ticket': ticket
-            })
-            rap_list_request = Request(url + '?' + data)
-
-        rap_list = urlopen(rap_list_request)
-
-        return rap_list
+    default_filename = '/glusterfs/ftp_home/mgellerftp/mgeller.csv'
 
     def run(self):
         fp = self.get_fp()

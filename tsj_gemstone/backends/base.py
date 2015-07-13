@@ -4,8 +4,8 @@ from django.conf import settings
 
 from ..prefs import prefs
 
-logger = logging.getLogger(__name__)
-summary_logger = logging.getLogger('tsj_gemstone.backends')
+logger = logging.getLogger('tsj_gemstone.backends')
+summary_logger = logging.getLogger('tsj_gemstone.backends.summary')
 
 class SkipDiamond(Exception):
     pass
@@ -59,6 +59,17 @@ class BaseBackend(object):
                     'backend': self.backend_module,
                 },
                 'summary_detail': ', '.join(sorted(values)),
+            },
+        )
+
+    def report_skipped_diamonds(self, count):
+        summary_logger.warning(
+            'Skipped diamonds',
+            extra={
+                'tags': {
+                    'backend': self.backend_module,
+                },
+                'summary_detail': count,
             },
         )
 

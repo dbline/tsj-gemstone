@@ -31,6 +31,7 @@ class GemstonePreferencesForm(PreferencesForm):
     polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
 
     #gndiamond = forms.BooleanField(required=False, help_text='Enable the GN Diamond feed')
+    hasenfeld = forms.BooleanField(required=False, help_text='Enable the Hasenfeld-Stein feed')
     mgeller = forms.BooleanField(required=False, help_text='Enable the M. Geller Diamonds feed')
     mid = forms.BooleanField(required=False, help_text='Enable the MID House of Diamonds feed')
     rdi = forms.BooleanField(required=False, help_text='Enable the RDI Diamonds feed')
@@ -77,7 +78,7 @@ class GemstonePreferences(AppPreferences):
         }),
         (_('Additional feeds'), {
             'fields': (
-                'mgeller', 'mid', 'rdi', 'stuller',
+                'hasenfeld', 'mgeller', 'mid', 'rdi', 'stuller',
             ),
         }),
     )

@@ -1,5 +1,6 @@
 __all__ = (
     #'gndiamond',
+    'hasenfeld',
     'idex',
     'mgeller',
     'mid',

@@ -25,20 +25,23 @@ class BaseBackend(object):
         except KeyError:
             return False
 
+    def get_default_filename(self):
+        return self.default_filename
+
     def get_fp(self):
         fn = ''
         if self.filename:
             fn = self.filename
 
-        if settings.DEBUG and not self.nodebug:
+        elif settings.DEBUG and not self.nodebug:
             fn = self.debug_filename
 
-        if self.default_filename:
-            fn = self.default_filename
+        else:
+            fn = self.get_default_filename()
 
         if fn:
             try:
-                return open(fn, 'rb')
+                return open(fn, 'rU')
             except IOError:
                 logger.exception(
                     'Error loading file',

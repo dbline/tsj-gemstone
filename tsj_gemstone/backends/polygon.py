@@ -104,13 +104,7 @@ class Backend(BaseBackend):
     def enabled(self):
         return prefs.get('polygon_id')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
-
-        if settings.DEBUG and not self.nodebug:
-            return open(self.debug_filename, 'rb')
-
+    def get_default_filename(self):
         polygon_id = prefs.get('polygon_id')
 
         if not polygon_id:
@@ -121,7 +115,7 @@ class Backend(BaseBackend):
         if len(files):
             fn = files[-1]
 
-        return open(fn, 'rU')
+        return fn
 
     def run(self):
         fp = self.get_fp()

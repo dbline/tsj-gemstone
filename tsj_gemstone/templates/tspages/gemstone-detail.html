@@ -1,11 +1,36 @@
 {% extends 'base_page.html' %}
 {% load humanize thinkspace_pages thinkspace_social thumbnail tsj_builder_tags tsj_commerce_local_tags %}
 
+{% block extra_head %}
+{% comment %}
+    <meta property="og:site_name" content="{{ COMPANY }}" />
+    <meta property="og:title" content="{{ object.brand }} {% firstof object.name object.stock_number %}" />
+    <meta property="og:type" content="product" />
+    <meta property="og:description" content="{{ object.description }}" />
+    <meta property="og:image" content="{{ image.image|thumbnail_url:"large800" }}" />
+{% endcomment %}
+{% endblock extra_head %}
+
 {% block js %}{{ block.super }}
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_builder/js/add_to_builder.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}tsj_jewelrybox/js/ajaxsubmit.js"></script>
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function() {
+            var slider = $('.slider').owlCarousel({
+                dots: false,
+                items: 1,
+                lazyLoad: true,
+                loop: false,
+                touchDrag: false,
+                nav: false
+            });
+            $('.carousel a').click(function(e) {
+                e.preventDefault();
+                var thumbnail = $(this);
+                slider.trigger('to.owl.carousel', [thumbnail.data('index'), 500, true]);
+                carousel.find('.active').removeClass('active');
+                thumbnail.addClass('active');
+            });
             // Inquiry
             $('.section-info-questions').jewelrybox_inquiry();
         });
@@ -29,17 +54,21 @@
     <div class="wrapper">
         <div class="section-slideshow">
             <div class="slider">
-                {{ object.cut.icon|safe }}
+                <div class="item">
+                    {{ object.cut.icon|safe }}
+                </div>
+                <div class="item">
+                    <img src="{{ object.cut.image.url }}" />
+                </div>
             </div>
-        {% comment %}
             <div class="carousel">
-            {% for image in images %}
-                <a data-index="{{ forloop.counter0 }}" href="#"{% if forloop.first %} class="active"{% endif %}>
-                    <img src="{{ image.image|thumbnail_url:"thumbnail" }}" alt="{{ object.brand }} {% firstof object.name object.stock_number %}" />
+                <a data-index="0" href="#" class="active">
+                    {{ object.cut.icon|safe }}
                 </a>
-            {% endfor %}
+                <a data-index="1" href="#">
+                    <img src="{{ object.cut.image.url }}" />
+                </a>
             </div>
-        {% endcomment %}
         </div>
         <div class="section-info">
             <div class="title">
@@ -47,27 +76,31 @@
                 <p>
                     This {{ object.carat_weight }} carat, {{ object.cut|lower }} shaped
                     {% if object.manmade %} lab grown {% else %} natural {% endif %}
-                    diamond comes rated as {{ object.cut_grade|lower }} in cut, 
+                    diamond comes rated as {{ object.cut_grade }} in cut,
                     {% firstof object.color object.fancy_color %} in color,
                     and {{ object.clarity }} in clarity by {{ object.certifier }}.
+                    <span class="stock-number">Stock Number: {{ object.stock_number }}</span>
                 </p>
             </div>
             <div class="price">
             {% if show_prices %}
-                <h3>${{ object.price|floatformat:"0"|intcomma }}</h4>
+                <h3>${{ object.price|floatformat:"0"|intcomma }}</h3>
             {% endif %}
-                <div class="actions">
-                {% if has_ring_builder %}
-                    {% add_to_builder 'tsj_object.Diamond' diamond %}
-                {% else %}
-                    {% add_to_cart 'tsj_object.Diamond' diamond %}
-                {% endif %}
-                    <div class="social">
-                        <a class="email" href="#" data-toggle="modal" data-target="#modal-share" title="Email">
-                            <i class="fa fa-envelope"></i>
-                        </a>
-                        {% addthis 'test' %}
-                    </div>
+            </div>
+            <div class="actions">
+            {% if has_ring_builder %}
+                {% add_to_builder 'tsj_object.Diamond' diamond %}
+            {% else %}
+                {% add_to_cart 'tsj_object.Diamond' diamond %}
+            {% endif %}
+                <div class="social">
+                    <a class="email" href="#" data-toggle="modal" data-target="#modal-share" title="Email">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    {% addthis 'test' %}
+                </div>
+                <div class="contact">
+                    <em>Have Questions? <a href="#">Talk to one of our Diamond Experts</a></em>
                 </div>
             </div>
         </div>
@@ -140,7 +173,7 @@
                 {% if object.girdle %}
                     <tr>
                         <th>Girdle:</th>
-                        <td>{{ object.girdle }}</td>
+                        <td>{{ object.girdle|title }}</td>
                     </tr>
                 {% endif %}
                 {% if object.cutlet %}
@@ -179,11 +212,23 @@
                 {% else %}
                     <h5>{{ object.certifier.name }}</h5>
                 {% endif %}
-                {% if object.get_cert_image_type == 'image' %}
-                    <a class="" href="{% page gemstone-print object.pk %}" target="_blank"><i class="fa fa-print"></i> Print Report</a>
-                {% endif %}
-                {% if object.get_cert_image_type == 'image' or object.get_cert_image_type == 'other' %}
-                    <a class="" href="{{ object.cert_image }}" target="_blank">View Report</a>
+                {% if object.certifier.url %}
+                    {% if object.certifier.url and object.cert_num %}
+                        <a href="{{ object.certifier.url }}{{ object.cert_num|cut:"US"|cut:"us"|cut:"D"|cut:"d" }}{% if object.certifier.abbr == 'AGS' %}&Weight={{ object.carat_weight }}{% endif %}" target="_blank">
+                            View Report <i class="fa fa-external-link"></i>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {% if object.get_cert_image_type == 'image' or object.get_cert_image_type == 'other' %}
+                        <a href="{{ object.cert_image }}" target="_blank">
+                            View Report <i class="fa fa-external-link"></i>
+                        </a>
+                    {% endif %}
+                    {% if object.get_cert_image_type == 'image' %}
+                        <a href="{% page gemstone-print object.pk %}" target="_blank">
+                            Print Report <i class="fa fa-print"></i>
+                        </a>
+                    {% endif %}
                 {% endif %}
                 </div>
             </div>
@@ -191,8 +236,9 @@
     </div>
     <div class="wrapper">
         <div class="section-education">
+        {% if object.cut_grade %}
             <div class="cut">
-                <h4>Cut: {{ object.cut_grade}}</h4>
+                <h4>Cut: <span>{{ object.cut_grade}}</span></h4>
                 <ul class="legend">
                 {% for cut in gradings %}
                     <li{% if cut == object.cut_grade %} class="active"{% endif %}>{{ cut }}</li>
@@ -202,8 +248,10 @@
                     {{ object.cut_grade.description }}
                 </p>
             </div>
-            <div class="color">
-                <h4>Color: {{ object.color }}</h4>
+        {% endif %}
+        {% if object.color %}
+            <div class="color{% if not object.cut_grade %} lg{% endif %}">
+                <h4>Color: <span>{{ object.color }}</span></h4>
                 <ul class="legend">
                 {% for color in colors %}
                     <li{% if color == object.color %} class="active"{% endif %}>{{ color }}</li>
@@ -213,8 +261,10 @@
                     {{ object.color.description }}
                 </p>
             </div>
-            <div class="clarity">
-                <h4>Clarity: {{ object.clarity }}</h4>
+        {% endif %}
+        {% if object.clarity %}
+            <div class="clarity{% if not object.cut_grade %} lg{% endif %}">
+                <h4>Clarity: <span>{{ object.clarity }}</span></h4>
                 <ul class="legend">
                 {% for clarity in clarities %}
                     <li{% if clarity == object.clarity %} class="active"{% endif %}>{{ clarity }}</li>
@@ -224,6 +274,63 @@
                     {{ object.clarity.description }}
                 </p>
             </div>
+        {% endif %}
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="section-similar">
+            <h4>You May Also Like</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="shape">Shape</th>
+                        <th>Carat</th>
+                        <th>Cut</th>
+                        <th>Color</th>
+                        <th>Clarity</th>
+                        <th class="hidden-xs">Polish</th>
+                        <th class="hidden-xs">Symmetry</th>
+                        <th class="hidden-xs">Fluorescence</th>
+                    {% comment %}
+                        <th class="hidden-xs">Table</th>
+                        <th class="hidden-xs">Depth</th>
+                    {% endcomment %}
+                        <th class="hidden-xs">Report</th>
+                    {% if show_prices %}
+                        <th>Price</th>
+                    {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for gemstone in similar %}
+                    <tr id="{{ gemstone.pk }}" data-url="{% page gemstone-detail gemstone.pk %}">
+                        <td class="shape">
+                            <span class="icon">
+                                {{ gemstone.cut.icon|safe }}
+                            </span>
+                            <span class="name hidden-xs">
+                                {{ gemstone.cut.name }}
+                            </span>
+                        </td>
+                        <td>{{ gemstone.carat_weight }}</td>
+                        <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
+                        <td>{{ gemstone.color }}</td>
+                        <td>{{ gemstone.clarity }}</td>
+                        <td class="hidden-xs">{{ gemstone.polish }}</td>
+                        <td class="hidden-xs">{{ gemstone.symmetry }}</td>
+                        <td class="hidden-xs">{{ gemstone.fluorescence }}</td>
+                    {% comment %}
+                        <td class="hidden-xs">{{ gemstone.table_percent }}</td>
+                        <td class="hidden-xs">{{ gemstone.depth_percent }}</td>
+                    {% endcomment %}
+                        <td class="hidden-xs">{{ gemstone.certifier }}</td>
+                    {% if show_prices %}
+                        <td>{{ gemstone.formatted_price }}</td>
+                    {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock content %}

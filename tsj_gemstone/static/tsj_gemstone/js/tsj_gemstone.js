@@ -131,9 +131,7 @@ $(document).ready(function() {
 
     // Mobile
     $('body').on('click', 'tr', function() {
-        if ($(document).width() < 992) {
-            window.location.href = $(this).data('url');
-        }
+        window.location.href = $(this).data('url');
     });
 });
 

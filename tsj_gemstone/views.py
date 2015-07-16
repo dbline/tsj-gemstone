@@ -1,3 +1,4 @@
+from decimal import *
 import json
 
 from django.db.models import Min, Max
@@ -156,10 +157,22 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context['clarities'] = Clarity.objects.all().order_by('-order')
         context['gradings'] = Grading.objects.all().order_by('-order')
 
+        similar_lt = float(self.object.carat_weight) - .15
+        similar_gt = float(self.object.carat_weight) + .15
+
+        similar = Diamond.objects.filter(
+                    carat_weight__range=(similar_lt, similar_gt),
+                    cut=self.object.cut,
+                    color=self.object.color,
+                    clarity=self.object.clarity).\
+                    exclude(pk=self.object.pk).\
+                    order_by('carat_weight', 'color', 'clarity')[:10]
+
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
             'show_prices': show_prices(self.request.user),
+            'similar': similar,
         })
         return context
 

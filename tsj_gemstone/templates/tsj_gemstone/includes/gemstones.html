@@ -89,6 +89,7 @@
                         <div class="name">
                             {{ gemstone.carat_weight }} Carat {{ gemstone.cut }} Diamond
                         </div>
+                    {% comment %}
                         <div class="actions">
                         {% if has_ring_builder %}
                             {% add_to_builder 'tsj_gemstone.Diamond' gemstone %}
@@ -97,15 +98,14 @@
                         {% endif %}
                             <a href="{% page gemstone-detail gemstone.pk %}" class="btn-view-diamond">View Details</a>
                         </div>
+                    {% endcomment %}
                         <div class="list">
                             <dl>
-                            {% if show_prices %}
-                                <dt class="price">Price</dt>
-                            {% endif %}
                                 <dt>Shape</dt><dd>{{ gemstone.cut }}</dd>
                                 <dt>Cut</dt><dd>{{ gemstone.cut_grade }}</dd>
                                 <dt>Color</dt><dd>{{ gemstone.color }}</dd>
                                 <dt>Symmetry</dt><dd>{{ gemstone.symmetry }}</dd>
+                                <dt>Fluorescence</dt><dd>{{ gemstone.fluorescence }}</dd>
                                 <dt>Report</dt><dd>{{ gemstone.certifier }}</dd>
                                 <dt>Table</dt><dd>{{ gemstone.table_percent }}</dd>
                                 <dt>Measurements</dt><dd>{{ gemstone.length }} &times; {{ gemstone.width }} &times; {{ gemstone.depth }}</dd>
@@ -114,15 +114,15 @@
                         <div class="list">
                             <dl>
                             {% if show_prices %}
-                                <dd class="price">{{ gemstone.formatted_price }}</dd>
+                                <dt>Price</dt><dd>{{ gemstone.formatted_price }}</dd>
                             {% endif %}
                                 <dt>Carat</dt><dd>{{ gemstone.carat_weight }}</dd>
                                 <dt>Clarity</dt><dd>{{ gemstone.clarity }}</dd>
                                 <dt>Polish</dt><dd>{{ gemstone.polish }}</dd>
-                                <dt>Fluorescence</dt><dd>{{ gemstone.fluorescence }}</dd>
+                                <dt>Fluorescence Color</dt><dd>{{ gemstone.fluorescence_color }}</dd>
                                 <dt>Report #</dt><dd>{{ gemstone.cert_num }}</dd>
                                 <dt>Depth</dt><dd>{{ gemstone.depth_percent }}</dd>
-                                <dt>Girdle</dt><dd>{{ gemstone.girdle }}</dd>
+                                <dt>Girdle</dt><dd>{{ gemstone.girdle|title }}</dd>
                             </dl>
                         </div>
                     </td>

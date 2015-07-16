@@ -164,6 +164,8 @@ class DiamondBase(TimeStampedModel):
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
     owner = models.CharField('Owner', max_length=255, blank=True)
+    image = models.CharField('Image', max_length=255, blank=True)
+    image_local = models.FileField('Image', upload_to='tsj_gemstone/images/', blank=True)
     cut = models.ForeignKey(Cut, verbose_name='Cut', related_name='%(class)s_cut_set')
     cut_grade = models.ForeignKey(Grading, verbose_name='Cut Grade', null=True, blank=True, related_name='%(class)s_cut_grade_set')
     color = models.ForeignKey(Color, verbose_name='Color', null=True, blank=True, related_name='%(class)s_color_set')

@@ -146,8 +146,11 @@ class Backend(BaseBackend):
 
         reader = csv.reader(fp)
 
-        # Skip the first line because it contains row names that we don't care about
-        reader.next()
+        # Check header row for an error about DLS authorization
+        headers = reader.next()
+        if headers and 'not authorized' in headers[0]:
+            logger.error('Not authorized for DLS')
+            return 0, 1
 
         # Prepare a temp file to use for writing our output CSV to
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')

@@ -234,7 +234,7 @@ class Backend(BaseBackend):
 
         IdexParser = xml.sax.make_parser()
         IdexParser.setContentHandler(IdexHandler(
-            writer, missing_values, import_successes, import_errors
+            writer, missing_values, import_successes, import_errors, import_skip
         ))
         IdexParser.parse(fp)
 

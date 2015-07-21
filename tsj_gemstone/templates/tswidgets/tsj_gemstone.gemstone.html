@@ -3,7 +3,9 @@
 
 {% block content %}
     {% if widget.get_title %}
-        <h2>{{ widget.get_title }}</h2>
+        <div class="widget-title">
+            <h2>{{ widget.get_title }}</h2>
+        </div>
     {% endif %}
 
     {% comment %}
@@ -14,11 +16,14 @@
     {{ widget_style }}
     {% endcomment %}
 
-    <div class="gemstone-widget">
+    <div class="widget-content gemstone-widget">
         <ul class="cuts">
         {% for cut in widget_object_list %}
-            <li class="{{ cut.name|slugify }}">
-                <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}">{{ cut.name }}</a>
+            <li>
+                <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}" class="{{ cut.name|slugify }}">
+                    <span class="image">{{ cut.name }}</span>
+                    <span class="text">{{ cut.name }}</span>
+                </a>
             </li>
         {% endfor %}
         </ul>

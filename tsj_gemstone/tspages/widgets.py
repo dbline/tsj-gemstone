@@ -11,7 +11,7 @@ register = WidgetLibrary()
 
 STYLE_CHOICES = (
     ('simple', 'Simple'),
-    ('advanced', 'Advanced'),
+    #('advanced', 'Advanced'),
 )
 class GemstoneWidgetForm(PreferencesForm):
     style = forms.ChoiceField(choices=STYLE_CHOICES,
@@ -48,7 +48,7 @@ class GemstoneWidget(TemplatedWidget):
             qs = models.Cut.objects.all()
 
         context['widget_style'] = self.preferences.get('style', STYLE_CHOICES[0][0])
-        context['header'] = self.preferences.get('header'),
+        context['header'] = self.preferences.get('header')
         context['widget_object_list'] = qs
         return super(GemstoneWidget, self).render(context)
 

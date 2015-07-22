@@ -16,6 +16,12 @@
     {{ widget_style }}
     {% endcomment %}
 
+    {% if header %}
+        <div class="widget-header">
+            {{ header|safe }}
+        </div>
+    {% endif %}
+
     <div class="widget-content gemstone-widget">
         <ul class="cuts">
         {% for cut in widget_object_list %}

@@ -151,6 +151,9 @@ class Backend(BaseBackend):
         if headers and 'not authorized' in headers[0]:
             logger.error('Not authorized for DLS')
             return 0, 1
+        elif headers and 'File not found' in headers[0]:
+            logger.error('No rapnet feed found')
+            return 0, 1
 
         # Prepare a temp file to use for writing our output CSV to
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')

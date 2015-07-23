@@ -31,11 +31,11 @@ class GemstonePreferencesForm(PreferencesForm):
     polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
 
     #gndiamond = forms.BooleanField(required=False, help_text='Enable the GN Diamond feed')
-    hasenfeld = forms.BooleanField(required=False, help_text='Enable the Hasenfeld-Stein feed')
-    mgeller = forms.BooleanField(required=False, help_text='Enable the M. Geller Diamonds feed')
-    mid = forms.BooleanField(required=False, help_text='Enable the MID House of Diamonds feed')
-    rdi = forms.BooleanField(required=False, help_text='Enable the RDI Diamonds feed')
-    stuller = forms.BooleanField(required=False, help_text='Enable the Stuller feed')
+    hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
+    mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
+    mid = forms.BooleanField(required=False, label='MID House of Diamonds')
+    rdi = forms.BooleanField(required=False, label='RDI Diamonds')
+    stuller = forms.BooleanField(required=False)
     
     PRICE_CHOICES = (
         ('anon', 'All Users'),

@@ -97,11 +97,15 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-1.0.csv')
 
+    @property
+    def enabled(self):
+        return prefs.get('rapaport_username') and prefs.get('rapaport_password')
+
     def get_fp(self):
         if self.filename:
             return open(self.filename, 'rU')
 
-        if settings.DEBUG:
+        if settings.DEBUG and not self.nodebug:
             return open(self.debug_filename, 'rU')
 
         username = prefs.get('rapaport_username')
@@ -142,8 +146,14 @@ class Backend(BaseBackend):
 
         reader = csv.reader(fp)
 
-        # Skip the first line because it contains row names that we don't care about
-        reader.next()
+        # Check header row for an error about DLS authorization
+        headers = reader.next()
+        if headers and 'not authorized' in headers[0]:
+            logger.error('Not authorized for DLS')
+            return 0, 1
+        elif headers and 'File not found' in headers[0]:
+            logger.error('No rapnet feed found')
+            return 0, 1
 
         # Prepare a temp file to use for writing our output CSV to
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
@@ -166,6 +176,7 @@ class Backend(BaseBackend):
         # Prepare some needed variables
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
         cut_aliases = models.Cut.objects.as_dict()
         color_aliases = models.Color.objects.as_dict()
@@ -202,9 +213,9 @@ class Backend(BaseBackend):
             try:
                 diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
+                import_skip += 1
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
-                # TODO: Increment import_errors?
             except KeyValueError as e:
                 missing_values[e.key].add(e.value)
             except KeyError as e:
@@ -251,6 +262,9 @@ class Backend(BaseBackend):
             for k, v in missing_values.items():
                 import_errors += 1
                 self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 
@@ -521,4 +535,3 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     )
 
     return ret
-

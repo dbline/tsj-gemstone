@@ -100,13 +100,11 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/polygon.csv')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
+    @property
+    def enabled(self):
+        return prefs.get('polygon_id')
 
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
-
+    def get_default_filename(self):
         polygon_id = prefs.get('polygon_id')
 
         if not polygon_id:
@@ -117,7 +115,7 @@ class Backend(BaseBackend):
         if len(files):
             fn = files[-1]
 
-        return open(fn, 'rU')
+        return fn
 
     def run(self):
         fp = self.get_fp()
@@ -155,6 +153,7 @@ class Backend(BaseBackend):
         # Prepare some needed variables
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
         cut_aliases = models.Cut.objects.as_dict()
         color_aliases = models.Color.objects.as_dict()
@@ -216,9 +215,9 @@ class Backend(BaseBackend):
                     blank_columns=blank_columns,
                 )
             except SkipDiamond as e:
+                import_skip += 1
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
-                # TODO: Increment import_errors?
             except KeyValueError as e:
                 missing_values[e.key].add(e.value)
             except KeyError as e:
@@ -267,6 +266,9 @@ class Backend(BaseBackend):
             for k, v in missing_values.items():
                 import_errors += 1
                 self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 

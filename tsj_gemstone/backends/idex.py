@@ -97,7 +97,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class IdexHandler(xml.sax.ContentHandler):
-    def __init__(self, writer, missing_values, import_successes, import_errors):
+    def __init__(self, writer, missing_values, import_successes, import_errors, import_skip):
         # ContentHandler is an old-style class
         xml.sax.ContentHandler.__init__(self)
 
@@ -150,9 +150,9 @@ class IdexHandler(xml.sax.ContentHandler):
                 self.pref_values,
             )
         except SkipDiamond as e:
+            import_skip += 1
             #logger.info('SkipDiamond: %s' % e.message)
             return
-            # TODO: Increment import_errors?
         except KeyValueError as e:
             self.missing_values[e.key].add(e.value)
         except KeyError as e:
@@ -182,11 +182,15 @@ class IdexHandler(xml.sax.ContentHandler):
 class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/idex.xml')
 
+    @property
+    def enabled(self):
+        return prefs.get('idex_access_key')
+
     def get_fp(self):
         if self.filename:
             return open(self.filename, 'rb')
 
-        if settings.DEBUG:
+        if settings.DEBUG and not self.nodebug:
             return open(self.debug_filename, 'rb')
 
         key = prefs.get('idex_access_key')
@@ -221,6 +225,7 @@ class Backend(BaseBackend):
 
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
         # TODO: We shouldn't need KeyError or ValueError if we're correctly
         #       accounting for the possible failure conditions with SkipDiamond
@@ -229,7 +234,7 @@ class Backend(BaseBackend):
 
         IdexParser = xml.sax.make_parser()
         IdexParser.setContentHandler(IdexHandler(
-            writer, missing_values, import_successes, import_errors
+            writer, missing_values, import_successes, import_errors, import_skip
         ))
         IdexParser.parse(fp)
 
@@ -254,6 +259,9 @@ class Backend(BaseBackend):
             for k, v in missing_values.items():
                 import_errors += 1
                 self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 

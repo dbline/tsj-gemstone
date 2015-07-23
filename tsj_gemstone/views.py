@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView, ListView
 
+from .prefs import prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.utils import show_prices
@@ -23,6 +24,12 @@ from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, Fluores
 # TODO: Move to thinkspace, probably also bring up to date with the
 #       current paginator code in Django.
 from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
+
+def show_gemstone_prices(user):
+    if show_prices(user) or prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
+        return True
+    else:
+        return False
 
 class GemstoneListView(PagesTemplateResponseMixin, ListView):
     model = Diamond
@@ -95,7 +102,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             'filterset': filterset,
             'has_ring_builder': builder_prefs.get('ring'),
             'initial_cuts': self.request.GET.getlist('cut'),
-            'show_prices': show_prices(self.request.user),
+            'show_prices': show_gemstone_prices(self.request.user),
             'sort': sort,
         })
 
@@ -171,8 +178,8 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
-            'show_prices': show_prices(self.request.user),
             'similar': similar,
+            'show_prices': show_gemstone_prices(self.request.user),
         })
         return context
 

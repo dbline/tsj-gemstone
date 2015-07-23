@@ -36,6 +36,7 @@ Row = namedtuple('Row', (
     'created',
     'modified',
     'active',
+    #'availability',
     'source',
     'lot_num',
     'stock_number',
@@ -99,68 +100,7 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/hasenfeld.csv')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rU')
-
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rU')
-
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
-
-        if not username or not password:
-            logger.warning('Missing rapaport credentials, aborting import.')
-            return
-
-        # Post the username and password to the auth_url and save the resulting ticket
-        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-        auth_data = urllib.urlencode({
-            'username': username,
-            'password': password})
-        auth_request = Request(auth_url, auth_data)
-        try:
-            ticket = urlopen(auth_request).read()
-        except HTTPError as e:
-            logger.error('Rapaport auth failure: %s' % e)
-            return
-
-        # Download the CSV
-        if prefs.get('rapaport_url'):
-            url = prefs.get('rapaport_url')
-            parsed = urlparse(url)
-            data = urllib.urlencode({'ticket': ticket})
-            if parsed.query:
-                # We rely on the default set of columns, so we strip out any
-                # custom column definition.
-                # TODO: Slicing like this assumes a particular order of query
-                #       string arguments, that's bad.
-                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
-                if '&UseCheckedCulommns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedCulommns=1')]
-                # ...In case they ever spellcheck it
-                elif '&UseCheckedColumns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedColumns=1')]
-                url += '&' + data
-            elif url.endswith('?'):
-                url += data
-            else:
-                url += '?' + data
-            rap_list_request = Request(url)
-        else:
-            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-            data = urllib.urlencode({
-                'SortBy': 'Owner',
-                'White': '1',
-                'Programmatically': 'yes',
-                'Version': '1.0',
-                'ticket': ticket
-            })
-            rap_list_request = Request(url + '?' + data)
-
-        rap_list = urlopen(rap_list_request)
-
-        return rap_list
+    default_filename = '/glusterfs/ftp_home/hasenfeldftp/Fire and Ice Upload.csv'
 
     def run(self):
         fp = self.get_fp()
@@ -194,7 +134,9 @@ class Backend(BaseBackend):
         # Prepare some needed variables
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
+        #availability_options = [x[0] for x in models.Diamond.AVAILABILITY_CHOICES]
         cut_aliases = models.Cut.objects.as_dict()
         color_aliases = models.Color.objects.as_dict()
         clarity_aliases = models.Clarity.objects.as_dict()
@@ -210,10 +152,10 @@ class Backend(BaseBackend):
 
         # Preload prefs that write_diamond_row needs to filter out diamonds
         pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
-            Decimal(prefs.get('rapaport_minimum_price', '1500')),
-            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.000002')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '500000')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '20000000000')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
@@ -230,9 +172,9 @@ class Backend(BaseBackend):
             try:
                 diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
+                import_skip += 1
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
-                # TODO: Increment import_errors?
             except KeyValueError as e:
                 missing_values[e.key].add(e.value)
             except KeyError as e:
@@ -250,10 +192,10 @@ class Backend(BaseBackend):
             else:
                 if len(row_buffer) > buffer_size:
                     writer.writerows(row_buffer)
-                    row_buffer = []
+                    row_buffer = [diamond_row]
                 else:
                     row_buffer.append(diamond_row)
-                import_successes += 1
+                    import_successes += 1
 
         if row_buffer:
             writer.writerows(row_buffer)
@@ -261,17 +203,18 @@ class Backend(BaseBackend):
         tmp_file.flush()
         tmp_file = open(tmp_file.name)
 
-        with transaction.commit_manually():
+        with transaction.atomic():
             # FIXME: Don't truncate/replace the table if the import returned no data
             try:
                 cursor = connection.cursor()
                 cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source=%s", (SOURCE_NAME,))
                 cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
             except Exception as e:
-                transaction.rollback()
-                raise
-            else:
-                transaction.commit()
+                logger.exception("Error on copy_from for %s" % SOURCE_NAME)
+            # In features/standalone (F&I) we have matviews to refresh
+            #else:
+            #    refresh_diamondmaterializedview(cursor=cursor)
+            #    refresh_diamondmarkuppriceview(cursor=cursor)
 
         tmp_file.close()
 
@@ -279,6 +222,9 @@ class Backend(BaseBackend):
             for k, v in missing_values.items():
                 import_errors += 1
                 self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 
@@ -290,29 +236,39 @@ def nvl(data):
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     # Order must match structure of CSV spreadsheet
-    (
-        cut, # shape in CSV
-        carat_weight, # size in CSV
-        color,
-        clarity,
-        carat_price,
-        certifier, # lab in CSV
-        depth_percent,
-        table_percent,
-        girdle,
-        culet,
-        polish,
-        symmetry,
-        fluorescence,
-        stock_number, # inventory in CSV
-        measurements,
-        cert_num,
-        unused_disc,
-        cut_grade,
-        cert_image,
-    ) = line
+    try:
+        (
+            cut, # shape in CSV
+            carat_weight, # size in CSV
+            color,
+            clarity,
+            carat_price,
+            certifier, # lab in CSV
+            depth_percent,
+            table_percent,
+            girdle,
+            culet,
+            polish,
+            symmetry,
+            fluorescence,
+            stock_number, # inventory in CSV
+            measurements,
+            cert_num,
+            unused_disc,
+            cut_grade,
+            availability,
+            cert_image,
+        ) = line
+    except ValueError:
+        raise SkipDiamond("Columns (%d) didn't match expected count for line" % len(line))
 
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
+
+    #availability = cached_clean(availability.lower())
+    #if not availability in availability_options:
+    #    if not availability: availability = 'available'
+    #    if availability == 'g': availability = 'guaranteed'
+    #    if availability == 'm': availability = 'memo'
 
     #owner = cached_clean(owner).title()
     #comment = cached_clean(comment)
@@ -447,6 +403,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         added_date,
         added_date,
         't', # active
+        #availability,
         SOURCE_NAME,
         '', # lot_num
         stock_number,

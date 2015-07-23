@@ -29,6 +29,13 @@ class GemstonePreferencesForm(PreferencesForm):
             required=False, help_text="If a certificate image URL is provided, confirm the URL. This will slow the import process down considerably as each defined certificate image is independently confirmed. If the image doesn't exist, the URL is removed from the diamond being imported but the rest of the diamond will be imported as expected.")
     idex_access_key = forms.CharField(help_text="Your IDEX access key", required=False)
     polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
+
+    #gndiamond = forms.BooleanField(required=False, help_text='Enable the GN Diamond feed')
+    hasenfeld = forms.BooleanField(required=False, help_text='Enable the Hasenfeld-Stein feed')
+    mgeller = forms.BooleanField(required=False, help_text='Enable the M. Geller Diamonds feed')
+    mid = forms.BooleanField(required=False, help_text='Enable the MID House of Diamonds feed')
+    rdi = forms.BooleanField(required=False, help_text='Enable the RDI Diamonds feed')
+    stuller = forms.BooleanField(required=False, help_text='Enable the Stuller feed')
     
     PRICE_CHOICES = (
         ('anon', 'All Users'),
@@ -67,6 +74,11 @@ class GemstonePreferences(AppPreferences):
         (_('Polygon'), {
             'fields': (
                 'polygon_id',
+            ),
+        }),
+        (_('Additional feeds'), {
+            'fields': (
+                'hasenfeld', 'mgeller', 'mid', 'rdi', 'stuller',
             ),
         }),
     )

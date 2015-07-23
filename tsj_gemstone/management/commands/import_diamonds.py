@@ -25,9 +25,14 @@ class Command(BaseCommand):
             dest='async',
             help='Run this command asynchronously as a Celery task'
         ),
+        make_option('--nodebug',
+            action='store_true',
+            dest='nodebug',
+            help='Skip the "debug" test data and load real data instead',
+        ),
     )
 
     def handle(self, *args, **options):
         # TODO: Start Celery task if async=True
         backend = get_backend(options.get('backend'))
-        backend.Backend(filename=options.get('file')).run()
+        backend.Backend(filename=options.get('file'), nodebug=options.get('nodebug')).run()

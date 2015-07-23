@@ -4,27 +4,27 @@ from .. import models
 
 class CutAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class ColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('abbr', 'aliases') 
+    list_display = ('abbr', 'aliases')
 
 class ClarityAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class GradingAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class FluorescenceAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class FluorescenceColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases') 
+    list_display = ('name', 'abbr', 'aliases')
 
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
@@ -33,7 +33,7 @@ class CertifierAdmin(ModelAdmin):
 class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('percent', 'start_price', 'end_price')
-    
+
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
@@ -51,25 +51,26 @@ class DiamondAdmin(ModelAdmin):
                     ('lot_num', 'stock_number', 'owner'),
                 ]
             }),
+            ('Image', {
+                'fields': (
+                    ['image', 'image_local'],
+                )
+            }),
             ('Data', {
                 'fields': (
                     ('carat_weight', 'carat_price', 'price'),
                     ('cut', 'color', 'clarity'),
                     ('cut_grade'),
+                    ('polish', 'symmetry'),
+                    ('girdle', 'culet'),
+                    ('fluorescence', 'fluorescence_color'),
+                    ('manmade',),
                 )
             }),
             ('Measurements', {
                 'fields': (
                     ('depth_percent', 'table_percent'),
                     ('length', 'width', 'depth'),
-                )
-            }),
-            ('Misc', {
-                'fields': (
-                    ('polish', 'symmetry'),
-                    ('girdle', 'culet'),
-                    ('fluorescence', 'fluorescence_color'),
-                    ('manmade',),
                 )
             }),
             ('Certificate', {
@@ -116,4 +117,3 @@ site.register(models.FluorescenceColor, FluorescenceColorAdmin)
 site.register(models.Certifier, CertifierAdmin)
 site.register(models.DiamondMarkup, DiamondMarkupAdmin)
 site.register(models.Diamond, DiamondAdmin)
-

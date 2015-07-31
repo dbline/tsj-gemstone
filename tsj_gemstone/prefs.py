@@ -15,19 +15,27 @@ class GemstonePreferencesForm(PreferencesForm):
     rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True))
     rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
     rapaport_version = forms.ChoiceField(required=False, choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), initial='rapaport')
-    rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight',
-            initial='.2', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
-    rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight',
-            initial='5', help_text="The maximum carat weight to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
-    rapaport_minimum_price = forms.DecimalField(label='Min Price',
-            initial='1500', help_text="The minimum price to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all prices to be accepted.")
-    rapaport_maximum_price = forms.DecimalField(label='Max Price',
-            initial='200000', help_text="The maximum price to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all prices to be accepted.")
+    rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,
+            initial='0', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
+    rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput, 
+            initial='0', help_text="The maximum carat weight to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
+    rapaport_minimum_price = forms.DecimalField(label='Min Price', widget=forms.TextInput, 
+            initial='0', help_text="The minimum price to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all prices to be accepted.")
+    rapaport_maximum_price = forms.DecimalField(label='Max Price', widget=forms.TextInput, 
+            initial='0', help_text="The maximum price to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all prices to be accepted.")
     rapaport_must_be_certified = forms.BooleanField(label='Must Be Certified',
             required=False, initial=True, help_text="Every imported diamond must be certified. If the certifier doesn't exist in the database, an entry will be automatically created by the import tool. If the diamond being imported isn't certified, it will be discarded. If the certifier of the diamond being imported exists but is disabled, it will be discarded.")
     rapaport_verify_cert_images = forms.BooleanField(label='Verify Cert. Images',
             required=False, help_text="If a certificate image URL is provided, confirm the URL. This will slow the import process down considerably as each defined certificate image is independently confirmed. If the image doesn't exist, the URL is removed from the diamond being imported but the rest of the diamond will be imported as expected.")
     idex_access_key = forms.CharField(help_text="Your IDEX access key", required=False)
+    polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
+
+    #gndiamond = forms.BooleanField(required=False, help_text='Enable the GN Diamond feed')
+    hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
+    mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
+    mid = forms.BooleanField(required=False, label='MID House of Diamonds')
+    rdi = forms.BooleanField(required=False, label='RDI Diamonds')
+    stuller = forms.BooleanField(required=False)
     
     PRICE_CHOICES = (
         ('anon', 'All Users'),
@@ -61,6 +69,16 @@ class GemstonePreferences(AppPreferences):
         (_('IDEX'), {
             'fields': (
                 'idex_access_key',
+            ),
+        }),
+        (_('Polygon'), {
+            'fields': (
+                'polygon_id',
+            ),
+        }),
+        (_('Additional feeds'), {
+            'fields': (
+                'hasenfeld', 'mgeller', 'mid', 'rdi', 'stuller',
             ),
         }),
     )

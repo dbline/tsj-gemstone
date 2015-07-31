@@ -241,7 +241,7 @@ class Backend(BaseBackend):
         if missing_values:
             for k, v in missing_values.items():
                 import_errors += 1
-                logger.error('Missing values for %s: %s' % (k, ', '.join(v)))
+                self.report_missing_values(k, v)
 
         return import_successes, import_errors
 
@@ -411,7 +411,6 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         pass
 
     fluorescence = cached_clean_upper(fluorescence)
-    #print 'FL', fluorescence
     if fluorescence in FLUORESCENCE_MAP:
         f, c = FLUORESCENCE_MAP[fluorescence]
         fluorescence_id = fluorescence_aliases[f]

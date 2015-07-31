@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import glob
 import logging
 import os
 import re
@@ -26,6 +27,8 @@ logger = logging.getLogger(__name__)
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
 SOURCE_NAME = 'polygon'
+
+INFILE_GLOB = '/glusterfs/ftp_home/polygonftp/{id}*.csv'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
 # of the id column which is excluded when doing an import.
@@ -97,69 +100,22 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/polygon.csv')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
+    @property
+    def enabled(self):
+        return prefs.get('polygon_id')
 
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
+    def get_default_filename(self):
+        polygon_id = prefs.get('polygon_id')
 
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
-
-        # TODO: Short-ciruciting until we know how retrieving GN data will work
-        if True or not username or not password:
-            logger.warning('Missing credentials, aborting import.')
+        if not polygon_id:
+            logger.warning('Missing Polygon ID, aborting import.')
             return
 
-        # Post the username and password to the auth_url and save the resulting ticket
-        auth_url = 'https://technet.rapaport.com/HTTP/Authenticate.aspx'
-        auth_data = urllib.urlencode({
-            'username': username,
-            'password': password})
-        auth_request = Request(auth_url, auth_data)
-        try:
-            ticket = urlopen(auth_request).read()
-        except HTTPError as e:
-            logger.error('Rapaport auth failure: %s' % e)
-            return
+        files = sorted(glob.glob(INFILE_GLOB.format(id=polygon_id)))
+        if len(files):
+            fn = files[-1]
 
-        # Download the CSV
-        if prefs.get('rapaport_url'):
-            url = prefs.get('rapaport_url')
-            parsed = urlparse(url)
-            data = urllib.urlencode({'ticket': ticket})
-            if parsed.query:
-                # We rely on the default set of columns, so we strip out any
-                # custom column definition.
-                # TODO: Slicing like this assumes a particular order of query
-                #       string arguments, that's bad.
-                # NOTE: Yes, the URL generator at rapnet.com spells 'columns' wrong.
-                if '&UseCheckedCulommns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedCulommns=1')]
-                # ...In case they ever spellcheck it
-                elif '&UseCheckedColumns=1' in parsed.query:
-                    url = url[:url.find('&UseCheckedColumns=1')]
-                url += '&' + data
-            elif url.endswith('?'):
-                url += data
-            else:
-                url += '?' + data
-            rap_list_request = Request(url)
-        else:
-            url = 'http://technet.rapaport.com/HTTP/RapLink/download.aspx'
-            data = urllib.urlencode({
-                'SortBy': 'Owner',
-                'White': '1',
-                'Programmatically': 'yes',
-                'Version': '1.0',
-                'ticket': ticket
-            })
-            rap_list_request = Request(url + '?' + data)
-
-        rap_list = urlopen(rap_list_request)
-
-        return rap_list
+        return fn
 
     def run(self):
         fp = self.get_fp()
@@ -197,6 +153,7 @@ class Backend(BaseBackend):
         # Prepare some needed variables
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
         cut_aliases = models.Cut.objects.as_dict()
         color_aliases = models.Color.objects.as_dict()
@@ -214,7 +171,6 @@ class Backend(BaseBackend):
         # Preload prefs that write_diamond_row needs to filter out diamonds
         # TODO: Do we have a way to send pref values to GN, or do we do all the
         #       filtering locally?
-        """
         pref_values = (
             Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
             Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
@@ -223,7 +179,6 @@ class Backend(BaseBackend):
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
-        """
 
         # To cut down on disk writes, we buffer the rows
         row_buffer = []
@@ -233,7 +188,17 @@ class Backend(BaseBackend):
         #       accounting for the possible failure conditions with SkipDiamond
         #       and KeyValueError.
         missing_values = defaultdict(set)
+        x = 0
         for line in reader:
+            x += 1
+            # Sometimes the feed has blank lines
+            if not line:
+                continue
+
+            # And sometimes there's one too many columns between J (cert #) and M (dimensions)
+            if len(line) > 42:
+                continue
+
             try:
                 diamond_row = write_diamond_row(
                     line,
@@ -246,14 +211,13 @@ class Backend(BaseBackend):
                     certifier_aliases,
                     markup_list,
                     added_date,
-                    # TODO:
-                    #pref_values
+                    pref_values,
                     blank_columns=blank_columns,
                 )
             except SkipDiamond as e:
+                import_skip += 1
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
-                # TODO: Increment import_errors?
             except KeyValueError as e:
                 missing_values[e.key].add(e.value)
             except KeyError as e:
@@ -301,7 +265,10 @@ class Backend(BaseBackend):
         if missing_values:
             for k, v in missing_values.items():
                 import_errors += 1
-                logger.error('Missing values for %s: %s' % (k, ', '.join(v)))
+                self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 
@@ -312,9 +279,7 @@ def nvl(data):
     return data
 
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date,
-                      #pref_values,
-                      blank_columns=None
-                      ):
+                      pref_values, blank_columns=None):
     if blank_columns:
         line = line[:-blank_columns]
     # Order must match structure of CSV spreadsheet
@@ -366,14 +331,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if active != 'Y':
         raise SkipDiamond('Diamond is not active')
 
-    #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
-    # TODO: Until we have prefs
-    minimum_carat_weight = 0
-    maximum_carat_weight = None
-    minimum_price = 0
-    maximum_price = False
-    must_be_certified = True
-    verify_cert_images = False
+    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)

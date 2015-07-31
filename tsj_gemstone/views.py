@@ -1,39 +1,23 @@
 import json
+from decimal import Decimal
+from math import ceil
 
 from django.db.models import Min, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView
 
-try:
-    from thinkspace.apps.pages.views import PagesTemplateResponseMixin
-    IN_TS = True
-except ImportError as e:
-    IN_TS = False
-
-    class PagesTemplateResponseMixin(object):
-        pass
-
-from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
-if IN_TS:
-    from .prefs import prefs
-# TODO: Once we get ts-prefs abstracted out of thinkspace, we can use it
-#       on its own instead of hardcoding these prefs
-else:
-    prefs = {
-        'show_prices': True,
-    }
-
-# TODO: Move to thinkspace, probably also bring up to date with the
-#       current paginator code in Django.
-from .digg_paginator import QuerySetDiggPaginator
-
-# TODO: Move to common location.
-# TODO: cache instead of thread local.
-from decimal import Decimal
-from math import ceil
+from .prefs import prefs
+from thinkspace.apps.pages.views import PagesTemplateResponseMixin
+from tsj_builder.prefs import prefs as builder_prefs
+from tsj_commerce_local.utils import show_prices
+from tsj_gemstone.models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
+from tsj_gemstone.digg_paginator import QuerySetDiggPaginator
+from tsj_jewelrybox.forms import InquiryForm
 
 _min_max = {}
 def min_max(force_update=False):
@@ -83,7 +67,6 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
             count = store[store_key].count()
             store_min_max = (store[store_key][0][model_field_name], store[store_key][count-1][model_field_name])
         else:
-            print store[store_key], model_field_name
             raise Exception('Model field name is required for filter processing {0} form field.'.format(get_key))
 
         # Order is reversed.
@@ -109,24 +92,54 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
             return diamonds.filter(**params)
     return diamonds
 
-def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html',
+def show_gemstone_prices(user):
+    if show_prices(user) or prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
+        return True
+    else:
+        return False
+
+@csrf_protect
+def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):
 
+    has_ring_builder = builder_prefs.get('ring')
+
     context = {
+        'has_ring_builder': has_ring_builder,
         'initial_cuts': request.GET.getlist('cut'),
-        'show_prices': prefs['show_prices'],
+        'show_prices': show_gemstone_prices(request.user),
     }
 
-    diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by('carat_weight')
+    q = request.GET
+
+    # Sorting
+    try:
+        sort = q.__getitem__('sort')
+    except KeyError:
+        sort = None
+
+    if sort:
+        diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by(sort)
+    else:
+        diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by('carat_weight', 'color', 'clarity')
 
     min_maxs = min_max()
 
     if not request.is_ajax():
         #Send all of the available filter data to the template
         context.update(min_maxs)
-    
+        context['show_lab_grown_filter'] = Diamond.objects.filter(manmade=True).exists()
+
+    # Show lab-grown only
+    if request.GET.get('manmade') == '1':
+        diamonds = diamonds.filter(manmade=True)
+    # Show natural only by default (0 means 'show all')
+    elif request.GET.get('manmade') != '0':
+        diamonds = diamonds.exclude(manmade=True)
+        context['only_natural'] = True
+
     diamonds = set_match(diamonds, request.GET, 'cut', min_maxs, 'cuts', 'abbr')
     diamonds = full_range_match(diamonds, request.GET, 'price', min_maxs, 'prices', floor_ceil=True)
     diamonds = full_range_match(diamonds, request.GET, 'carat_weight', min_maxs, 'carat_weights')
@@ -142,7 +155,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
     paginator = QuerySetDiggPaginator(diamonds, 40, body=5, padding=2)
     try: paginator_page = paginator.page(request.GET.get('page', 1))
     except: paginator_page = paginator.page(paginator.num_pages)
-    
+
     context.update(dict(
         paginator = paginator,
         page = paginator_page,
@@ -162,7 +175,6 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/gemstone-list.html
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
-    template_name = 'tsj_gemstone/gemstone-detail.html'
 
     def get_queryset(self):
         qs = super(GemstoneDetailView, self).get_queryset()
@@ -171,7 +183,32 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GemstoneDetailView, self).get_context_data(**kwargs)
+
+        initial = {
+            'item_selection': self.object.stock_number,
+            'type': 'gemstone',
+        }
+
+        if self.request.user.is_authenticated():
+            try:
+                inquiry_form = InquiryForm(account=self.request.user.account_set.all()[0], initial=initial)
+            except IndexError:
+                inquiry_form = InquiryForm(initial=initial)
+        else:
+            inquiry_form = InquiryForm(initial=initial)
+
+        has_ring_builder = builder_prefs.get('ring')
+
         context.update({
-            'show_prices': prefs['show_prices'],
+            'has_ring_builder': has_ring_builder,
+            'inquiry_form': inquiry_form,
+            'show_prices': show_gemstone_prices(self.request.user),
         })
         return context
+
+    @method_decorator(requires_csrf_token)
+    def dispatch(self, *args, **kwargs):
+        return super(GemstoneDetailView, self).dispatch(*args, **kwargs)
+
+class GemstonePrintView(PagesTemplateResponseMixin, DetailView):
+    model = Diamond

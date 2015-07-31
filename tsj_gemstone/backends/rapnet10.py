@@ -97,12 +97,16 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rapnet-1.0.csv')
 
+    @property
+    def enabled(self):
+        return prefs.get('rapaport_username') and prefs.get('rapaport_password')
+
     def get_fp(self):
         if self.filename:
             return open(self.filename, 'rU')
 
-        #if settings.DEBUG:
-        #    return open(self.debug_filename, 'rU')
+        if settings.DEBUG and not self.nodebug:
+            return open(self.debug_filename, 'rU')
 
         username = prefs.get('rapaport_username')
         password = prefs.get('rapaport_password')
@@ -142,8 +146,14 @@ class Backend(BaseBackend):
 
         reader = csv.reader(fp)
 
-        # Skip the first line because it contains row names that we don't care about
-        reader.next()
+        # Check header row for an error about DLS authorization
+        headers = reader.next()
+        if headers and 'not authorized' in headers[0]:
+            logger.error('Not authorized for DLS')
+            return 0, 1
+        elif headers and 'File not found' in headers[0]:
+            logger.error('No rapnet feed found')
+            return 0, 1
 
         # Prepare a temp file to use for writing our output CSV to
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond.')
@@ -166,6 +176,7 @@ class Backend(BaseBackend):
         # Prepare some needed variables
         import_successes = 0
         import_errors = 0
+        import_skip = 0
 
         cut_aliases = models.Cut.objects.as_dict()
         color_aliases = models.Color.objects.as_dict()
@@ -182,10 +193,10 @@ class Backend(BaseBackend):
 
         # Preload prefs that write_diamond_row needs to filter out diamonds
         pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
-            Decimal(prefs.get('rapaport_minimum_price', '1500')),
-            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '0')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
@@ -202,9 +213,9 @@ class Backend(BaseBackend):
             try:
                 diamond_row = write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values)
             except SkipDiamond as e:
+                import_skip += 1
                 #logger.info('SkipDiamond: %s' % e.message)
                 continue
-                # TODO: Increment import_errors?
             except KeyValueError as e:
                 missing_values[e.key].add(e.value)
             except KeyError as e:
@@ -250,7 +261,10 @@ class Backend(BaseBackend):
         if missing_values:
             for k, v in missing_values.items():
                 import_errors += 1
-                logger.error('Missing values for %s: %s' % (k, ', '.join(v)))
+                self.report_missing_values(k, v)
+
+        if import_skip:
+            self.report_skipped_diamonds(import_skip)
 
         return import_successes, import_errors
 
@@ -263,9 +277,9 @@ def nvl(data):
 def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     # Order must match structure of CSV spreadsheet
     (
-        unused_owner_name, # seller in CSV
-        unused_owner_account_id, # seller in CSV
-        owner, # seller code in CSV
+        owner, # seller in CSV
+        unused_owner_account_id, # seller id in CSV
+        unused_owner_code, # seller code in CSV
         cut, # shape in CSV
         carat_weight,
         color,
@@ -348,7 +362,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     lot_num = clean(lot_num)
-    owner = cached_clean(owner).title()
+    owner = cached_clean(owner)
     # Rapnet has started putting the literal value 'null' in the comment field
     """
     if comment.strip() == 'null':
@@ -357,7 +371,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     """
     comment = ''
     stock_number = clean(stock_number, upper=True)
-    rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
+    from dateutil.parser import parse
+    rap_date = parse(clean(rap_date))
+    #rap_date = datetime(*strptime(clean(rap_date), '%m/%d/%Y %I:%M:%S %p')[0:6])
     city = cached_clean(city)
     state = cached_clean(state)
     country = cached_clean(country)
@@ -519,4 +535,3 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     )
 
     return ret
-

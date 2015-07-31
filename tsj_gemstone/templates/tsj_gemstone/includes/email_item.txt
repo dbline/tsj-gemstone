@@ -1,0 +1,3 @@
+{{ item.carat_weight }} Carat {{ item.cut }} Diamond
+{{ item.stock_number }}
+Cut: {{ item.cut_grade }}, Color: {{ item.color }}, Clarity: {{ item.clarity }}

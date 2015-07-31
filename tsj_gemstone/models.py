@@ -1,11 +1,14 @@
 from django.db import models
+from django.template import Context, loader
 
 from model_utils.models import TimeStampedModel
 
+from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
 
 from .managers import DictManager
 from .utils import moneyfmt
+import mimetypes
 
 class Cut(models.Model):
     name = models.CharField(max_length=100)
@@ -155,12 +158,12 @@ class DiamondBase(TimeStampedModel):
     source = models.CharField(max_length=64, choices=SOURCE_CHOICES)
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
-    owner = models.CharField('Owner', max_length=100, blank=True)
+    owner = models.CharField('Owner', max_length=255, blank=True)
     cut = models.ForeignKey(Cut, verbose_name='Cut', related_name='%(class)s_cut_set')
     cut_grade = models.ForeignKey(Grading, verbose_name='Cut Grade', null=True, blank=True, related_name='%(class)s_cut_grade_set')
     color = models.ForeignKey(Color, verbose_name='Color', null=True, blank=True, related_name='%(class)s_color_set')
     clarity = models.ForeignKey(Clarity, verbose_name='Clarity', null=True, blank=True, related_name='%(class)s_clarity_set')
-    carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2)
+    carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2, db_index=True)
     carat_price = models.DecimalField('Price / Ct.', max_digits=10, decimal_places=2)
     price = models.DecimalField('Price', max_digits=10, decimal_places=2)
     certifier = models.ForeignKey(Certifier, verbose_name='Certifier', null=True, blank=True, related_name='%(class)s_certifier_set')
@@ -182,6 +185,7 @@ class DiamondBase(TimeStampedModel):
     city = models.CharField('City', max_length=255, blank=True)
     state = models.CharField('State', max_length=255, blank=True)
     country = models.CharField('Country', max_length=255, blank=True)
+    manmade = models.NullBooleanField(default=False, verbose_name='Man-made')
 
     # TODO: Abstract Rapaport information to a different model
     rap_date = models.DateTimeField('Date added to Rapaport', blank=True, null=True)
@@ -195,6 +199,36 @@ class DiamondBase(TimeStampedModel):
         return moneyfmt(self.carat_price, dp='', places=0)
     formatted_carat_price.short_description = 'Price / Ct.'
     formatted_carat_price.admin_order_field = 'carat_price'
+
+    def get_absolute_url(self):
+        return reverse('gemstone-detail', kwargs={'pk': self.pk})
+
+    def get_price(self):
+        return self.price
+
+    def handle_order_item(self, orderitem):
+        orderitem.name = '%s Diamond' % self.cut
+        orderitem.sku = self.stock_number
+
+    def display_order_item(self, order_item):
+        t = loader.get_template('tsj_gemstone/includes/order_item.html')
+        c = Context({'item': self, 'order_item': order_item})
+        return t.render(c)
+
+    def display_email_item(self, order_item):
+        t = loader.get_template('tsj_gemstone/includes/email_item.txt')
+        c = Context({'item': self, 'order_item': order_item})
+        return t.render(c)
+
+    def get_cert_image_type(self):
+        if self.cert_image: 
+            type, encoding = mimetypes.guess_type(self.cert_image)
+            if type in ('image/jpeg', 'image/png', 'image/gif'):
+                return 'image'
+            else:
+                return 'other'
+        else:
+            return None
 
     def __unicode__(self):
         return u'%s' % (self.lot_num)

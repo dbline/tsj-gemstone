@@ -215,7 +215,7 @@ class DiamondBase(TimeStampedModel):
         c = Context({'item': self, 'order_item': order_item})
         return t.render(c)
 
-    def display_email_item(self, order_item):
+    def display_email_item(self, order_item=None):
         t = loader.get_template('tsj_gemstone/includes/email_item.txt')
         c = Context({'item': self, 'order_item': order_item})
         return t.render(c)

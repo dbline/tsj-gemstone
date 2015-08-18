@@ -102,7 +102,7 @@ class IdexHandler(xml.sax.ContentHandler):
         xml.sax.ContentHandler.__init__(self)
 
         # Passed in from Backend.run so that we can still access them there
-        self.writer, self.missing_values, self.import_successes, self.import_errors = writer, missing_values, import_successes, import_errors
+        self.writer, self.missing_values, self.import_successes, self.import_errors, self.import_skip = writer, missing_values, import_successes, import_errors, import_skip
 
         self.cut_aliases = models.Cut.objects.as_dict()
         self.color_aliases = models.Color.objects.as_dict()
@@ -150,7 +150,7 @@ class IdexHandler(xml.sax.ContentHandler):
                 self.pref_values,
             )
         except SkipDiamond as e:
-            import_skip += 1
+            self.import_skip += 1
             #logger.info('SkipDiamond: %s' % e.message)
             return
         except KeyValueError as e:

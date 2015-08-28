@@ -33,7 +33,7 @@ class CutView(View):
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
     desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
-    is_local = models.BooleanField()
+    is_local = models.BooleanField(default=False)
     objects = DictManager()
 
     class Meta(View.Meta):

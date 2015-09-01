@@ -36,9 +36,9 @@ class Command(LabelCommand):
 
         cursor = connection.cursor()
         cursor.execute("""
-            SELECT db_schema FROM tsj_catalog_central_site
+            SELECT DISTINCT db_schema FROM tsj_sites_siteinstance
             INNER JOIN information_schema.schemata ON db_schema=schema_name
-            WHERE fastrouter=%s
+            WHERE process_pool=%s
         """, (router,))
 
         for row in cursor.fetchall():

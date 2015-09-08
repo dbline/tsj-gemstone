@@ -2,13 +2,13 @@ from django.db import models
 from django.template import Context, loader
 
 from model_utils.models import TimeStampedModel
+import mimetypes
 
 from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
-
-from .managers import DictManager
-from .utils import moneyfmt
-import mimetypes
+from ts_company.prefs import prefs as company_prefs
+from tsj_gemstone.managers import DictManager
+from tsj_gemstone.utils import moneyfmt
 
 class Cut(models.Model):
     name = models.CharField(max_length=100)
@@ -217,11 +217,11 @@ class DiamondBase(TimeStampedModel):
 
     def display_email_item(self, order_item=None):
         t = loader.get_template('tsj_gemstone/includes/email_item.txt')
-        c = Context({'item': self, 'order_item': order_item})
+        c = Context({'item': self, 'order_item': order_item, 'prefs': company_prefs})
         return t.render(c)
 
     def get_cert_image_type(self):
-        if self.cert_image: 
+        if self.cert_image:
             type, encoding = mimetypes.guess_type(self.cert_image)
             if type in ('image/jpeg', 'image/png', 'image/gif'):
                 return 'image'

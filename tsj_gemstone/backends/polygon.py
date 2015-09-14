@@ -114,6 +114,9 @@ class Backend(BaseBackend):
         files = sorted(glob.glob(INFILE_GLOB.format(id=polygon_id)))
         if len(files):
             fn = files[-1]
+        else:
+            logger.warning('No Polygon file for ID {}, aborting import.'.format(polygon_id))
+            return
 
         return fn
 

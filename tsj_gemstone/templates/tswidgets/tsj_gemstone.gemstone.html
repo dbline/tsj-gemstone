@@ -1,7 +1,7 @@
 {% extends 'tswidgets/widget.html' %}
 {% load thinkspace_pages %}
 
-{% block section-widget-type %} widget-gemstones{% if widget_style == "advanced" %} widget-gemstones-images{% else %}widget-gemstones-vectors{{% endif %}{% endblock %}
+{% block section-widget-type %} widget-gemstones{% if widget_style == "advanced" %} widget-gemstones-images{% else %} widget-gemstones-vectors{% endif %}{% endblock %}
 
 {% block content %}
     {% if widget.get_title %}

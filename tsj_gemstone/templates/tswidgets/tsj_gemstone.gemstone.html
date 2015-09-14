@@ -1,6 +1,8 @@
 {% extends 'tswidgets/widget.html' %}
 {% load thinkspace_pages %}
 
+{% block section-widget-type %} widget-gemstones{% if widget_style == "images" %} widget-gemstones-images{% endif %}{% endblock %}
+
 {% block content %}
     {% if widget.get_title %}
         <div class="widget-title">
@@ -8,22 +10,14 @@
         </div>
     {% endif %}
 
-    {% comment %}
-    TODO: Make use of testimonial widget style.
-    {% if widget_style == "carousel" %}Around and around{% else %}down and down{% endif %}
-    {% if widget_style == "list" %}down and down{% else %}Around and around{% endif %}
-
-    {{ widget_style }}
-    {% endcomment %}
-
     {% if header %}
         <div class="widget-header">
             {{ header|safe }}
         </div>
     {% endif %}
 
-    <div class="widget-content gemstone-widget">
-        <ul class="cuts">
+    <div class="widget-content">
+        <ul class="cuts"
         {% for cut in widget_object_list %}
             <li>
                 <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}" class="{{ cut.name|slugify }}">
@@ -34,5 +28,10 @@
         {% endfor %}
         </ul>
     </div>
+    {% if show_view_all %}
+        <div class="viewall">
+            <a href="{{ show_view_all_link }}" title="{{ object }}" class="btn btn-primary">{{ show_view_all_name }}</a>
+        </div>
+    {% endif %}
 
 {% endblock content %}

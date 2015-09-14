@@ -10,12 +10,12 @@ from tsj_gemstone import models
 register = WidgetLibrary()
 
 STYLE_CHOICES = (
-    ('simple', 'Simple'),
-    #('advanced', 'Advanced'),
+    ('simple', 'Vector'),
+    ('advanced', 'Images'),
 )
 class GemstoneWidgetForm(PreferencesForm):
     style = forms.ChoiceField(choices=STYLE_CHOICES,
-                        required=False, help_text='Affects how the gemstones are displayed')
+		required=False, help_text='Affects how the gemstones are displayed')
     header = forms.CharField(widget=TinyMCE(attrs={'cols': 80},mce_attrs={
         'width': '100%',
         'plugins': 'paste,searchreplace,style,fullscreen,nonbreaking',
@@ -30,16 +30,39 @@ class GemstoneWidgetForm(PreferencesForm):
     }),
         required=False,
         help_text='Header content to put above the gemstones')
+    show_view_all = forms.BooleanField(
+        label='Show View All Button',
+        required=False)
+    show_view_all_name = forms.CharField(
+        required=False,
+        label='Button Name',
+        help_text='View All Button Name')
+    show_view_all_link = forms.CharField(
+        required=False,
+        label='URL',
+        help_text='View All URL')
     class_attr = forms.CharField(
-                        required=False,
-                        label='CSS Class',
-                        help_text='Separate multiple classes by spaces')
+		required=False,
+		label='CSS Class',
+		help_text='Separate multiple classes by spaces')
     template_name = forms.CharField(
-                        required=False,
-                        help_text='Custom template file, include path and name')
+		required=False,
+		help_text='Custom template file, include path and name')
 
 class GemstoneWidget(TemplatedWidget):
     verbose_name = 'Gemstones'
+
+    def get_template_names(self, context, extra_template_names=None):
+        template_names = super(GemstoneWidget, self).get_template_names(
+            context, extra_template_names=extra_template_names)
+
+        style = self.preferences.get('style')
+        if style == 'simple':
+            template_names.insert(0, 'tswidgets/tsj_gemstone.gemstone.html')
+        elif style == 'advanced':
+            template_names.insert(0, 'tswidgets/tsj_gemstone.gemstone.html')
+        return template_names
+
     def render(self, context):
         cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
         if cuts:
@@ -47,8 +70,9 @@ class GemstoneWidget(TemplatedWidget):
         else:
             qs = models.Cut.objects.all()
 
+        for option in ('header', 'show_view_all', 'show_view_all_name', 'show_view_all_link'):
+            context[option] = self.preferences.get(option)
         context['widget_style'] = self.preferences.get('style', STYLE_CHOICES[0][0])
-        context['header'] = self.preferences.get('header')
         context['widget_object_list'] = qs
         return super(GemstoneWidget, self).render(context)
 

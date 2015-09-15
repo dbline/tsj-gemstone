@@ -1,7 +1,7 @@
 {% extends 'tswidgets/widget.html' %}
 {% load thinkspace_pages %}
 
-{% block section-widget-type %} widget-gemstones{% if widget_style == "advanced" %} widget-gemstones-images{% else %} widget-gemstones-vectors{% endif %}{% endblock %}
+{% block section-widget-type %} widget-gemstones{% if icon_style == "images" %} widget-gemstones-images{% else %} widget-gemstones-vectors{% endif %}{% endblock %}
 
 {% block content %}
     {% if widget.get_title %}
@@ -21,9 +21,9 @@
         {% for cut in widget_object_list %}
             <li>
                 <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}" class="{{ cut.name|slugify }}">
-                    {% if widget_style == "simple" %}
+                    {% if icon_style == "vectors" %}
                         <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ cut.name|lower }}.png" />
-                    {% elif widget_style == "advanced" %}
+                    {% elif icon_style == "images" %}
                         <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ cut.name|lower }}.jpg" />
                     {% endif %}
                     <span>{{ cut.name }}</span>

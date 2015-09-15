@@ -10,12 +10,18 @@ from tsj_gemstone import models
 register = WidgetLibrary()
 
 STYLE_CHOICES = (
-    ('simple', 'Vector'),
-    ('advanced', 'Images'),
+    ('simple', 'Default'),
+    ('advanced', 'Advanced'),
+)
+ICON_CHOICES = (
+    ('vectors', 'Vector'),
+    ('images', 'Images'),
 )
 class GemstoneWidgetForm(PreferencesForm):
     style = forms.ChoiceField(choices=STYLE_CHOICES,
-		required=False, help_text='Affects how the gemstones are displayed')
+		required=False, help_text='Gemstone display style')
+    icon_style = forms.ChoiceField(choices=ICON_CHOICES,
+		required=False, help_text='Gemstone icon style')
     header = forms.CharField(widget=TinyMCE(attrs={'cols': 80},mce_attrs={
         'width': '100%',
         'plugins': 'paste,searchreplace,style,fullscreen,nonbreaking',
@@ -70,7 +76,7 @@ class GemstoneWidget(TemplatedWidget):
         else:
             qs = models.Cut.objects.all()
 
-        for option in ('header', 'show_view_all', 'show_view_all_name', 'show_view_all_link'):
+        for option in ('header', 'show_view_all', 'show_view_all_name', 'show_view_all_link', 'icon_style'):
             context[option] = self.preferences.get(option)
         context['widget_style'] = self.preferences.get('style', STYLE_CHOICES[0][0])
         context['widget_object_list'] = qs

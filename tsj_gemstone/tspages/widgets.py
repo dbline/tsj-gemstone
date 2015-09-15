@@ -11,7 +11,7 @@ register = WidgetLibrary()
 
 STYLE_CHOICES = (
     ('simple', 'Default'),
-    ('advanced', 'Advanced'),
+    #('advanced', 'Advanced'),
 )
 ICON_CHOICES = (
     ('vectors', 'Vector'),

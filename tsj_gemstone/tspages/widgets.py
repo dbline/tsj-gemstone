@@ -14,7 +14,7 @@ STYLE_CHOICES = (
     #('advanced', 'Advanced'),
 )
 ICON_CHOICES = (
-    ('vectors', 'Vector'),
+    ('vectors', 'Vectors'),
     ('images', 'Images'),
 )
 class GemstoneWidgetForm(PreferencesForm):

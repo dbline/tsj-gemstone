@@ -10,6 +10,9 @@ summary_logger = logging.getLogger('tsj_gemstone.backends.summary')
 class SkipDiamond(Exception):
     pass
 
+class SkipImport(Exception):
+    pass
+
 class BaseBackend(object):
     filename = None
 
@@ -52,7 +55,7 @@ class BaseBackend(object):
                     },
                 )
         else:
-            raise NotImplementedError
+            raise SkipImport
 
     def report_missing_values(self, field, values):
         summary_logger.error(

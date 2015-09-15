@@ -5,6 +5,7 @@ from django.core.management.base import LabelCommand
 from django.db import connection
 
 from tsj_gemstone import backends, prefs
+from tsj_gemstone.backends.base import SkipImport
 from tsj_gemstone.utils import get_backend
 
 from poc_command_overrides.management.utils import set_site
@@ -65,4 +66,9 @@ class Command(LabelCommand):
                         else:
                             print 'Running {}'.format(bname)
                     if not dry_run:
-                        backend.run()
+                        try:
+                            backend.run()
+                        except SkipImport:
+                            if verbosity > 1:
+                                print 'Skipping {}'.format(bname)
+                            continue

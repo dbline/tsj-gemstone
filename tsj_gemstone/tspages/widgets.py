@@ -79,6 +79,7 @@ class GemstoneWidget(TemplatedWidget):
         for option in ('header', 'show_view_all', 'show_view_all_name', 'show_view_all_link', 'icon_style'):
             context[option] = self.preferences.get(option)
         context['widget_style'] = self.preferences.get('style', STYLE_CHOICES[0][0])
+        context['icon_style'] = self.preferences.get('icon_style', ICON_CHOICES[0][0])
         context['widget_object_list'] = qs
         return super(GemstoneWidget, self).render(context)
 

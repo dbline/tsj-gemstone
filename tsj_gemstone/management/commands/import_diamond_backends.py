@@ -10,6 +10,8 @@ from tsj_gemstone.utils import get_backend
 
 from poc_command_overrides.management.utils import set_site
 
+logger = logging.getLogger('tsj_gemstone.backends')
+
 class Command(LabelCommand):
     args = "[router]"
     label = 'router name'
@@ -46,7 +48,7 @@ class Command(LabelCommand):
             schema = row[0]
             if verbosity > 1:
                 print 'Schema: {}'.format(schema)
-            set_site({'site': row[0]})
+            set_site({'site': schema})
             if verbosity > 2:
                 print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
 
@@ -71,4 +73,6 @@ class Command(LabelCommand):
                         except SkipImport:
                             if verbosity > 1:
                                 print 'Skipping {}'.format(bname)
+                        except Exception:
+                            logger.exception('Exception from backend {} for site {}'.format(bname, schema))
                             continue

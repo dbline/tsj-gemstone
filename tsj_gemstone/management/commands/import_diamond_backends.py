@@ -8,13 +8,14 @@ from tsj_gemstone import backends, prefs
 from tsj_gemstone.backends.base import SkipImport
 from tsj_gemstone.utils import get_backend
 
-from poc_command_overrides.management.utils import set_site
+from poc_command_overrides.management.utils import MultisiteCommand, set_site
 
 logger = logging.getLogger('tsj_gemstone.backends')
 
-class Command(LabelCommand):
+class Command(MultisiteCommand, LabelCommand):
     args = "[router]"
     label = 'router name'
+    tsj_site_option_required = False
     option_list = LabelCommand.option_list + (
         make_option('--async',
             action='store_true',
@@ -34,45 +35,61 @@ class Command(LabelCommand):
     )
 
     def handle_label(self, router, **options):
-        verbosity = int(options.get('verbosity'))
-        dry_run = options.get('dry_run')
+        self.verbosity = int(options.get('verbosity'))
+        self.nodebug = options.get('nodebug')
+        self.dry_run = options.get('dry_run')
+        async = options.get('async')
 
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT DISTINCT db_schema FROM tsj_sites_siteinstance
-            INNER JOIN information_schema.schemata ON db_schema=schema_name
-            WHERE process_pool=%s
-        """, (router,))
+        # Check if a site argument was provided
+        # TODO: Can we avoid calling this twice when a site argument is provided?
+        one_site = self.set_site(options)
 
-        for row in cursor.fetchall():
-            schema = row[0]
-            if verbosity > 1:
-                print 'Schema: {}'.format(schema)
-            set_site({'site': schema})
-            if verbosity > 2:
-                print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
+        if one_site:
+            self.handle_for_site(one_site)
+        else:
+            cursor = connection.cursor()
+            cursor.execute("""
+                SELECT DISTINCT db_schema FROM tsj_sites_siteinstance
+                INNER JOIN information_schema.schemata ON db_schema=schema_name
+                WHERE process_pool=%s
+            """, (router,))
 
-            for bname in backends.__all__:
-                if verbosity > 2:
-                    print 'Checking for {}'.format(bname)
+            if async:
+                for row in cursor.fetchall():
+                    #handle_for_site.delay(row[0])
+                    pass
+            else:
+                for row in cursor.fetchall():
+                    self.handle_for_site(row[0])
 
-                backend = get_backend(bname)
-                backend = backend.Backend(
-                    nodebug=options.get('nodebug'),
-                )
+    def handle_for_site(self, schema):
+        if self.verbosity > 1:
+            print 'Schema: {}'.format(schema)
+        set_site({'site': schema})
+        if self.verbosity > 2:
+            print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
 
-                if backend.enabled:
-                    if verbosity > 1:
-                        if dry_run:
-                            print 'Would run {}'.format(bname)
-                        else:
-                            print 'Running {}'.format(bname)
-                    if not dry_run:
-                        try:
-                            backend.run()
-                        except SkipImport:
-                            if verbosity > 1:
-                                print 'Skipping {}'.format(bname)
-                        except Exception:
-                            logger.exception('Exception from backend {} for site {}'.format(bname, schema))
-                            continue
+        for bname in backends.__all__:
+            if self.verbosity > 2:
+                print 'Checking for {}'.format(bname)
+
+            backend = get_backend(bname)
+            backend = backend.Backend(
+                nodebug=self.nodebug,
+            )
+
+            if backend.enabled:
+                if self.verbosity > 1:
+                    if self.dry_run:
+                        print 'Would run {}'.format(bname)
+                    else:
+                        print 'Running {}'.format(bname)
+                if not self.dry_run:
+                    try:
+                        backend.run()
+                    except SkipImport:
+                        if self.verbosity > 1:
+                            print 'Skipping {}'.format(bname)
+                    except Exception:
+                        logger.exception('Exception from backend {} for site {}'.format(bname, schema))
+                        continue

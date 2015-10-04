@@ -58,7 +58,7 @@ class BaseBackend(object):
             raise SkipImport
 
     def report_missing_values(self, field, values):
-        summary_logger.error(
+        summary_logger.warning(
             'Missing values for %s' % field,
             extra={
                 'tags': {

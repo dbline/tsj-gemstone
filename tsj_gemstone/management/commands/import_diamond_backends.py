@@ -2,11 +2,8 @@ import logging
 from optparse import make_option
 
 from django.core.management.base import LabelCommand
-from django.db import connection
 
-from tsj_gemstone import backends, prefs
-from tsj_gemstone.backends.base import SkipImport
-from tsj_gemstone.utils import get_backend
+from tsj_gemstone import tasks
 
 from poc_command_overrides.management.utils import MultisiteCommand, set_site
 
@@ -35,61 +32,30 @@ class Command(MultisiteCommand, LabelCommand):
     )
 
     def handle_label(self, router, **options):
-        self.verbosity = int(options.get('verbosity'))
-        self.nodebug = options.get('nodebug')
-        self.dry_run = options.get('dry_run')
+        # We don't want to simply rely on CELERY_ALWAYS_EAGER here because
+        # even in production (where the setting would be False) we may want
+        # to run the command on the console (e.g, to see synchronous
+        # verbose output)
         async = options.get('async')
 
-        # Check if a site argument was provided
-        # TODO: Can we avoid calling this twice when a site argument is provided?
-        one_site = self.set_site(options)
+        task_kwargs = {
+            'dry_run': options.get('dry_run'),
+            'nodebug': options.get('nodebug'),
+            'verbosity': int(options.get('verbosity')),
+        }
 
-        if one_site:
-            self.handle_for_site(one_site)
-        else:
-            cursor = connection.cursor()
-            cursor.execute("""
-                SELECT DISTINCT db_schema FROM tsj_sites_siteinstance
-                INNER JOIN information_schema.schemata ON db_schema=schema_name
-                WHERE process_pool=%s
-            """, (router,))
+        if options.get('site'):
+            # TODO: Can we avoid calling this twice when a site argument is provided?
+            #       Probably, if we use the forthcoming get_schema_and_slug instead
+            #       of set_site.
+            one_site = self.set_site(options)
 
             if async:
-                for row in cursor.fetchall():
-                    #handle_for_site.delay(row[0])
-                    pass
+                tasks.import_site_gemstone_backends.delay(one_site, **task_kwargs)
             else:
-                for row in cursor.fetchall():
-                    self.handle_for_site(row[0])
-
-    def handle_for_site(self, schema):
-        if self.verbosity > 1:
-            print 'Schema: {}'.format(schema)
-        set_site({'site': schema})
-        if self.verbosity > 2:
-            print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
-
-        for bname in backends.__all__:
-            if self.verbosity > 2:
-                print 'Checking for {}'.format(bname)
-
-            backend = get_backend(bname)
-            backend = backend.Backend(
-                nodebug=self.nodebug,
-            )
-
-            if backend.enabled:
-                if self.verbosity > 1:
-                    if self.dry_run:
-                        print 'Would run {}'.format(bname)
-                    else:
-                        print 'Running {}'.format(bname)
-                if not self.dry_run:
-                    try:
-                        backend.run()
-                    except SkipImport:
-                        if self.verbosity > 1:
-                            print 'Skipping {}'.format(bname)
-                    except Exception:
-                        logger.exception('Exception from backend {} for site {}'.format(bname, schema))
-                        continue
+                tasks.import_site_gemstone_backends(one_site, **task_kwargs)
+        else:
+            if async:
+                tasks.import_gemstone_backends.delay(router, **task_kwargs)
+            else:
+                tasks.import_gemstone_backends(router, **task_kwargs)

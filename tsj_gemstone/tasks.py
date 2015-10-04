@@ -1,8 +1,10 @@
+import logging
+
 from django.db import connection
 
 from celery import task, current_task
 
-# FIXME: Logger.  get_task_logger or default?  Conditional on current_task?  Can we even do that?
+logger = logging.getLogger(__name__)
 
 # FIXME: Loading prefs here means values will persist until the worker process dies,
 #        changes made in the admin won't be reflected.  What if we added a setting

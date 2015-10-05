@@ -93,7 +93,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
     return diamonds
 
 def show_gemstone_prices(user):
-    if show_prices(user) or prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
+    if prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
         return True
     else:
         return False

@@ -29,18 +29,20 @@ def import_gemstone_backends(router, dry_run=False, nodebug=False, verbosity=1):
 
     if current_task.request.called_directly:
         for row in cursor.fetchall():
-            import_site_gemstone_backends(row[0], dry_run=dry_run, nodebug=nodebug, verbosity=verbosity)
+            import_site_gemstone_backends(schema=row[0], dry_run=dry_run, nodebug=nodebug, verbosity=verbosity)
     else:
         for row in cursor.fetchall():
-            import_site_gemstone_backends.delay(row[0], dry_run=dry_run, nodebug=nodebug, verbosity=verbosity)
+            import_site_gemstone_backends.delay(schema=row[0], dry_run=dry_run, nodebug=nodebug, verbosity=verbosity)
 
 @task
-def import_site_gemstone_backends(schema, dry_run=False, nodebug=False, verbosity=1):
-    assert set_site, "Failed to import set_site, is this MT?"
+def import_site_gemstone_backends(schema=None, dry_run=False, nodebug=False, verbosity=1):
+    if set_site and not schema:
+        assert schema, "Schema required for MT"
 
-    if verbosity > 1:
-        print 'Schema: {}'.format(schema)
-    set_site({'site': schema})
+    if set_site:
+        if verbosity > 1:
+            print 'Schema: {}'.format(schema)
+        set_site({'site': schema})
     if verbosity > 2:
         print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
 

@@ -148,14 +148,8 @@ class DiamondMarkup(models.Model):
         ordering = ['percent']
 
 class DiamondBase(TimeStampedModel):
-    SOURCE_CHOICES = (
-        ('local', 'Local'),
-        ('rapaport', 'Rapaport'),
-        ('rapnet10', 'Rapaport 1.0'),
-    )
-
     active = models.BooleanField(default=True)
-    source = models.CharField(max_length=64, choices=SOURCE_CHOICES)
+    source = models.CharField(max_length=64)
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
     owner = models.CharField('Owner', max_length=255, blank=True)

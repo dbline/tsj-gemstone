@@ -2,8 +2,9 @@ from functools import update_wrapper
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin import site, ModelAdmin
+from django.contrib.admin import site, ModelAdmin, SimpleListFilter
 from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
 
 from .. import models
 from ..tasks import import_site_gemstone_backends
@@ -39,13 +40,27 @@ class CertifierAdmin(ModelAdmin):
 class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('percent', 'start_price', 'end_price')
-    
+
+class SourceFilter(SimpleListFilter):
+    parameter_name = 'source'
+    title = _('source')
+
+    def lookups(self, request, model_admin):
+        qs = models.Diamond.objects.order_by().values_list('source', flat=True).distinct()
+        ret = [(s, s) for s in qs]
+        return ret
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val:
+            return queryset.filter(source=val)
+
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
-    list_display = ('lot_num', 'stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner')
-    list_display_links = ('lot_num', 'stock_number')
-    list_filter = ('cut', 'color', 'clarity', 'certifier', 'source', 'owner')
+    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner')
+    list_display_links = ('stock_number',)
+    list_filter = ('cut', 'color', 'clarity', 'certifier', SourceFilter)
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
 
     def get_fieldsets(self, request, obj=None):

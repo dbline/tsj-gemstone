@@ -22,9 +22,9 @@
             <li>
                 <a href="{% page gemstone-list %}?cut={{ cut.abbr }}" title="{{ cut.name }}" class="{{ cut.name|slugify }}">
                     {% if icon_style == "vectors" %}
-                        <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ cut.name|lower }}.png" />
+                        <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ cut.name|lower }}.png" alt="{{ cut.name }}" />
                     {% elif icon_style == "images" %}
-                        <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ cut.name|lower }}.jpg" />
+                        <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ cut.name|lower }}.jpg" alt="{{ cut.name }}" />
                     {% endif %}
                     <span>{{ cut.name }}</span>
                 </a>

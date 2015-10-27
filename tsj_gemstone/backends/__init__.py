@@ -1,5 +1,5 @@
 __all__ = (
-    #'gndiamond',
+    'gndiamond',
     'hasenfeld',
     'idex',
     'mgeller',

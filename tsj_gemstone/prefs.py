@@ -30,7 +30,7 @@ class GemstonePreferencesForm(PreferencesForm):
     idex_access_key = forms.CharField(help_text="Your IDEX access key", required=False)
     polygon_id = forms.CharField(help_text="Your Polygon ID", required=False)
 
-    gndiamond = forms.BooleanField(required=False, help_text='GN Diamond')
+    gndiamond = forms.BooleanField(required=False, label='GN Diamond')
     hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
     mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')

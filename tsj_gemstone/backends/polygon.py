@@ -292,7 +292,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         carat_weight,
         color,
         clarity,
-        carat_price,
+        price_before_markup,
         lot_num, # But not really, appears to be a different carat_weight
         stock_number,
         certifier,
@@ -381,10 +381,12 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         raise KeyValueError('clarity', e.args[0])
 
     cut_grade = grading_aliases.get(cached_clean_upper(cut_grade))
-    carat_price = clean(carat_price.replace(',', ''))
-    if carat_price:
-        carat_price = Decimal(carat_price)
+    price_before_markup = clean(price_before_markup.replace(',', ''))
+    if price_before_markup:
+        price_before_markup = Decimal(price_before_markup)
+        carat_price = price_before_markup / carat_weight
     else:
+        price_before_markup = None
         carat_price = None
 
     try:
@@ -452,11 +454,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
         cert_image = ''
 
-    if carat_price is None:
-        raise SkipDiamond('No carat_price specified')
-
-    # Initialize price after all other data has been initialized
-    price_before_markup = carat_price * carat_weight
+    if price_before_markup is None:
+        raise SkipDiamond('No price specified')
 
     if minimum_price and price_before_markup < minimum_price:
         raise SkipDiamond("Price before markup '%s' is less than the minimum of %s." % (price_before_markup, minimum_price))

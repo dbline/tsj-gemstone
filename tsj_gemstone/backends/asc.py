@@ -87,16 +87,6 @@ _clean_upper_cache = {}
 cached_clean = memoize(clean, _clean_cache, 2)
 cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
-def split_measurements(measurements):
-    try:
-        length, width, depth = measurements.split('x')
-        if length > 100 or width > 100 or depth > 100:
-            raise ValueError
-    except ValueError:
-        length, width, depth = None, None, None
-
-    return length, width, depth
-
 class ASCHandler(xml.sax.ContentHandler):
     def __init__(self, writer, missing_values, import_successes, import_errors, import_skip):
         # ContentHandler is an old-style class
@@ -133,7 +123,10 @@ class ASCHandler(xml.sax.ContentHandler):
         self.buffer_size = 1000
 
     def startElement(self, name, attrs):
+        for (k,v) in attrs.items():
+            logger.info('%s: %s' % (k, v))
 
+        """
         if name != 'item':
             return
         try:
@@ -175,49 +168,25 @@ class ASCHandler(xml.sax.ContentHandler):
             else:
                 self.row_buffer.append(diamond_row)
             self.import_successes += 1
+        """
 
-    def endDocument(self):
-        if self.row_buffer:
-            self.writer.writerows(self.row_buffer)
+    #def endDocument(self):
+    #    if self.row_buffer:
+    #        self.writer.writerows(self.row_buffer)
 
 class Backend(BaseBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/idex.xml')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
-    @property
-    def enabled(self):
-        return prefs.get('idex_access_key')
-
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
-
-        if settings.DEBUG and not self.nodebug:
-            return open(self.debug_filename, 'rb')
-
-        key = prefs.get('idex_access_key')
-        if not key:
-            logger.error('No IDEX key found')
-            return
-
-        data = urllib.urlencode({'String_Access': key, 'Show_Empty': 1})
-
-        url = 'http://idexonline.com/ASC_Feed_API-Full_Inventory'
-        try:
-            idex_request = Request(url + '?' + data)
-        except HTTPError as e:
-            logger.error('IDEX download failure: %s' % e)
-            return
-
-        # Response objects don't support seeking, which ZipFile expects
-        response = urlopen(idex_request)
-        zipbytes = io.BytesIO(response.read())
-        z = zipfile.ZipFile(zipbytes)
-        fp = z.open(z.infolist()[0])
-
-        return fp
+    def get_default_filename(self):
+        files = sorted(glob.glob(INFILE_GLOB))
+        if len(files):
+            fn = files[-1]
+            logger.info('Importing ASC file "%s"' % fn)
+            return fn
 
     def run(self):
         fp = self.get_fp()
+        print fp
         if not fp:
             return 0, 1
 
@@ -273,7 +242,6 @@ def nvl(data):
     return data
 
 def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
-
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
     stock_number = clean(data.get('sr'))

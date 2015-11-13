@@ -122,16 +122,27 @@ class ASCHandler(xml.sax.ContentHandler):
         self.row_buffer = []
         self.buffer_size = 1000
 
-    def startElement(self, name, attrs):
-        for (k,v) in attrs.items():
-            logger.info('%s: %s' % (k, v))
+        self.key = ''
+        self.row = {}
+        self.rows = []
 
-        """
-        if name != 'item':
+    def startElement(self, name, attrs):
+        name = name.encode('utf-8').strip()
+        if name:
+            self.key = name
+
+    def characters(self, data):
+        data = data.encode('utf-8').strip()
+        if data:
+            self.row[self.key] = data
+
+    def endElement(self, name):
+        name = name.encode('utf-8').strip()
+        if name != 'ItemNum':
             return
         try:
             diamond_row = write_diamond_row(
-                attrs,
+                self.row,
                 self.cut_aliases,
                 self.color_aliases,
                 self.clarity_aliases,
@@ -168,11 +179,8 @@ class ASCHandler(xml.sax.ContentHandler):
             else:
                 self.row_buffer.append(diamond_row)
             self.import_successes += 1
-        """
 
-    #def endDocument(self):
-    #    if self.row_buffer:
-    #        self.writer.writerows(self.row_buffer)
+        self.row = {}
 
 class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
@@ -244,23 +252,21 @@ def nvl(data):
 def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading_aliases, fluorescence_aliases, fluorescence_color_aliases, certifier_aliases, markup_list, added_date, pref_values):
     minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
 
-    stock_number = clean(data.get('sr'))
-    comment = cached_clean(data.get('rm'))
-    owner = cached_clean(data.get('sup'))
+    stock_number = clean(data.get('WEBITEM'))
     try:
-        cut = cut_aliases[cached_clean_upper(data.get('cut'))]
+        cut = cut_aliases[cached_clean_upper(data.get('Stone1Shape'))]
     except KeyError as e:
         raise KeyValueError('cut_aliases', e.args[0])
 
-    carat_weight = Decimal(str(cached_clean(data.get('ct'))))
+    carat_weight = Decimal(str(cached_clean(data.get('Stone1Wt'))))
     if carat_weight < minimum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
     elif maximum_carat_weight and carat_weight > maximum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
 
-    color = color_aliases.get(cached_clean_upper(data.get('col')))
+    color = color_aliases.get(cached_clean_upper(data.get('Stone1Color')))
 
-    certifier = cached_clean_upper(data.get('lab'))
+    certifier = cached_clean_upper(data.get('StoneCertLab1'))
     # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
     if must_be_certified:
         if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -282,7 +288,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     else:
         certifier = certifier_id
 
-    clarity = cached_clean_upper(data.get('cl'))
+    clarity = cached_clean_upper(data.get('Stone1Clarity'))
     if not clarity:
         raise SkipDiamond('No clarity specified')
     try:
@@ -290,25 +296,26 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     except KeyError as e:
         raise KeyValueError('clarity', e.args[0])
 
-    cut_grade = grading_aliases.get(cached_clean_upper(data.get('mk')))
-    try:
-        carat_price = clean(data.get('ap').replace(',', ''))
-        if carat_price:
-            carat_price = Decimal(carat_price)
-        else:
-            carat_price = None
-    except AttributeError:
-        carat_price = None
+    cut_grade = grading_aliases.get(cached_clean_upper(data.get('StoneCutGrade1')))
 
     try:
-        depth_percent = Decimal(str(clean(data.get('dp'))))
+        price = clean(data.get('LastCost').replace(',', ''))
+        if price:
+            price = Decimal(price)
+        else:
+            price = None
+    except AttributeError:
+        price = None
+
+    try:
+        depth_percent = Decimal(str(clean(data.get('StoneDepthPct1'))))
         if depth_percent > 100:
             raise InvalidOperation
     except InvalidOperation:
         depth_percent = 'NULL'
 
     try:
-        table_percent = Decimal(str(cached_clean(data.get('tb'))))
+        table_percent = Decimal(str(cached_clean(data.get('StoneTablePct1'))))
         if table_percent > 100:
             raise InvalidOperation
     except InvalidOperation:
@@ -319,10 +326,10 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         girdle = ''
 
     culet = cached_clean_upper(data.get('cs'))
-    polish = grading_aliases.get(cached_clean_upper(data.get('pol')))
-    symmetry = grading_aliases.get(cached_clean_upper(data.get('sym')))
+    polish = grading_aliases.get(cached_clean_upper(data.get('StonePolish1')))
+    symmetry = grading_aliases.get(cached_clean_upper(data.get('StoneSymmetry1')))
 
-    fluorescence = cached_clean_upper(data.get('fl'))
+    fluorescence = cached_clean_upper(data.get('StoneFluorescence1'))
     fluorescence_id = None
     fluorescence_color = cached_clean_upper(data.get('fc'))
     fluorescence_color_id = None
@@ -340,26 +347,21 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         if not fluorescence_color_id: fluorescence_color_id = None
     fluorescence_color = fluorescence_color_id
 
-    measurements = clean(data.get('mes'))
-    length, width, depth = split_measurements(measurements)
+    length = clean(data.get('StoneMmSize1_1'))
+    width = clean(data.get('StoneMmSize2_1'))
+    depth = clean(data.get('StoneMmSize3_1'))
 
-    cert_num = clean(data.get('cn'))
+    cert_num = clean(data.get('CertificateNum'))
     if not cert_num:
         cert_num = ''
 
-    # TODO: Diamond image is data['ip']
-
-    cert_image = data.get('cp')
-    if not cert_image:
-        cert_image = ''
-    elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
-        cert_image = ''
-
-    if carat_price is None:
-        raise SkipDiamond('No carat_price specified')
+    if price is None:
+        raise SkipDiamond('No price specified')
 
     # Initialize price after all other data has been initialized
-    price_before_markup = carat_price * carat_weight
+    # ASC already includes total price
+    price_before_markup = price
+    carat_price = price / carat_weight
 
     if minimum_price and price_before_markup < minimum_price:
         raise SkipDiamond("Price before markup '%s' is less than the minimum of %s." % (price_before_markup, minimum_price))
@@ -374,11 +376,6 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     if not price:
         raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of '%s'." % price_before_markup)
 
-    state = cached_clean(data.get('st'))
-    country = cached_clean(data.get('cty'))
-
-    # TODO: Matching pair stock number is data['psr']
-
     ret = Row(
         added_date,
         added_date,
@@ -386,7 +383,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         SOURCE_NAME,
         '', # lot_num
         stock_number,
-        owner,
+        '', # owner
         cut,
         nvl(cut_grade),
         nvl(color),
@@ -396,23 +393,23 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         moneyfmt(Decimal(price), curr='', sep=''),
         certifier,
         cert_num,
-        cert_image,
+        '', # cert_image
         '', # cert_image_local
         depth_percent,
         table_percent,
-        girdle,
-        culet,
+        '', # girdle
+        '', # culet
         nvl(polish),
         nvl(symmetry),
         nvl(fluorescence_id),
-        nvl(fluorescence_color_id),
+        '', # nvl(fluorescence_color_id)
         nvl(length),
         nvl(width),
         nvl(depth),
-        comment,
-        '', # city,
-        state,
-        country,
+        '', # comment
+        '', # city
+        '', # state
+        '', # country
         'NULL' # rap_date
     )
 

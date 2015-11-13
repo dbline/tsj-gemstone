@@ -124,7 +124,6 @@ class ASCHandler(xml.sax.ContentHandler):
 
         self.key = ''
         self.row = {}
-        self.rows = []
 
     def startElement(self, name, attrs):
         name = name.encode('utf-8').strip()
@@ -194,7 +193,6 @@ class Backend(BaseBackend):
 
     def run(self):
         fp = self.get_fp()
-        print fp
         if not fp:
             return 0, 1
 

@@ -393,7 +393,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         carat_weight,
         moneyfmt(Decimal(carat_price), curr='', sep=''),
         moneyfmt(Decimal(price), curr='', sep=''),
-        certifier,
+        nvl(certifier),
         cert_num,
         '', # cert_image
         '', # cert_image_local

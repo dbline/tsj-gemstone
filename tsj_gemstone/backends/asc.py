@@ -181,6 +181,10 @@ class ASCHandler(xml.sax.ContentHandler):
 
         self.row = {}
 
+    def endDocument(self):
+        if self.row_buffer:
+            self.writer.writerows(self.row_buffer)
+
 class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
@@ -243,7 +247,7 @@ class Backend(BaseBackend):
 
 # TODO: Move somewhere more general
 def nvl(data):
-    if data is None:
+    if data is None or data == '':
         return 'NULL'
     return data
 
@@ -400,7 +404,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         nvl(polish),
         nvl(symmetry),
         nvl(fluorescence_id),
-        '', # nvl(fluorescence_color_id)
+        'NULL', # nvl(fluorescence_color_id)
         nvl(length),
         nvl(width),
         nvl(depth),

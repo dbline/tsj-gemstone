@@ -39,6 +39,8 @@ def import_site_gemstone_backends(schema=None, dry_run=False, nodebug=False, ver
     if set_site and not schema:
         assert schema, "Schema required for MT"
 
+    delete_disabled = []
+
     if set_site:
         if verbosity > 1:
             print 'Schema: {}'.format(schema)
@@ -70,3 +72,12 @@ def import_site_gemstone_backends(schema=None, dry_run=False, nodebug=False, ver
                 except Exception:
                     logger.exception('Exception from backend {} for site {}'.format(bname, schema))
                     continue
+        else:
+            # A backend may have been enabled in the past, so we clear out
+            # any potential leftover diamonds
+            delete_disabled.append(bname)
+
+    if delete_disabled:
+        cursor = connection.cursor()
+        sql = 'DELETE FROM tsj_gemstone_diamond WHERE source IN (%s)' % ','.join(["'%s'" % bname for bname in delete_disabled])
+        cursor.execute(sql)

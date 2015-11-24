@@ -47,7 +47,11 @@
     <div class="wrapper">
         <div class="section-sidebar">
             <div class="gemstone-images">
-                <img src="{{ STATIC_URL }}tsj_gemstone/images/{{ diamond.cut|lower }}.png">
+                {% if icon_style == "images" %}
+                    <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ diamond.cut.name|lower }}.jpg" alt="{{ diamond.cut.name }}" />
+                {% else %}
+                    <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ diamond.cut.name|lower }}.png" alt="{{ diamond.cut.name }}" />
+                {% endif %}
             </div>
             <div class="section-info section-info-questions">
                 <h3>Have Questions?</h3>

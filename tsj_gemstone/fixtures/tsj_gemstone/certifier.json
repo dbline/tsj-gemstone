@@ -7,6 +7,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "AGS", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -19,6 +20,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "EGL", 
+        "logo": "", 
         "aliases": "EGL Israel\r\nEGL - ISRAEL\r\nEGL PR\r\nEGLBL\r\nEGLBLG\r\nEGLIN\r\nEGLISL\r\nEGLLA\r\nEGI\r\nEGB\r\nEG B\r\nEGL B\r\nEGL IS\r\nEGLA\r\nEGLINT\r\nEGL PRE-CERT\r\nEGP\r\nEGL BELGIUM\r\nEGL INTERNATIONAL\r\nEGL OTHER\r\nEGL PRECERT", 
         "desc": ""
     }
@@ -31,6 +33,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "GIA", 
+        "logo": "gemstone/certifiers/gia.png", 
         "aliases": "GIAF\r\nG.I.A.\r\nGIA ISRAEL", 
         "desc": ""
     }
@@ -43,6 +46,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "EGL USA", 
+        "logo": "", 
         "aliases": "EGLUSA USA\r\nEGLU\r\nEGLUSA\r\nEGLUSALA\r\nEGU\r\nEGLUSA NY\r\nEGL USA PRE-CERT", 
         "desc": ""
     }
@@ -55,6 +59,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "IGI", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -67,6 +72,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "OTHER", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -79,6 +85,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "HRD", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -91,6 +98,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "IGC", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -103,6 +111,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "PGS", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -115,6 +124,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "WGI", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -127,6 +137,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "AGA", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -139,6 +150,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "EDGL", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -151,6 +163,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "OWN", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -163,6 +176,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "DCLA", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -175,6 +189,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "NGTC", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -187,6 +202,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "ABI", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -199,6 +215,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "GS", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -211,6 +228,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "NGT", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -223,6 +241,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "GSI", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -235,6 +254,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "GCAL", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -247,6 +267,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "IGL", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }
@@ -259,6 +280,7 @@
         "url": "", 
         "disabled": false, 
         "abbr": "CGL", 
+        "logo": "", 
         "aliases": "", 
         "desc": ""
     }

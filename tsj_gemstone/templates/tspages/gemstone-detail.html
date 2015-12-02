@@ -57,17 +57,21 @@
                 <div class="item">
                     {{ object.cut.icon|safe }}
                 </div>
+            {% comment %}
                 <div class="item">
                     <img src="{{ object.cut.image.url }}" />
                 </div>
+            {% endcomment %}
             </div>
             <div class="carousel">
                 <a data-index="0" href="#" class="active">
                     {{ object.cut.icon|safe }}
                 </a>
+            {% comment %}
                 <a data-index="1" href="#">
                     <img src="{{ object.cut.image.url }}" />
                 </a>
+            {% endcomment %}
             </div>
         </div>
         <div class="section-info">

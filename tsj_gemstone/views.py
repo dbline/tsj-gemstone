@@ -26,7 +26,7 @@ from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, Fluores
 from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
 
 def show_gemstone_prices(user):
-    if show_prices(user) or prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
+    if prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
         return True
     else:
         return False

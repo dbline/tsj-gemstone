@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import glob
 import logging
 import os
 import re
@@ -18,12 +19,14 @@ from django.utils.functional import memoize
 
 from .base import BaseBackend, SkipDiamond, KeyValueError
 from .. import models
+from ..prefs import prefs
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
+INFILE_GLOB = '/glusterfs/ftp_home/gndiamond/upload/Diamond*txt'
 SOURCE_NAME = 'gndiamond'
 
 # Order must match struture of tsj_gemstone_diamond table with the exception
@@ -96,12 +99,12 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/gndiamond.csv')
 
-    def get_fp(self):
-        if self.filename:
-            return open(self.filename, 'rb')
-
-        if settings.DEBUG:
-            return open(self.debug_filename, 'rb')
+    def get_default_filename(self):
+        files = sorted(glob.glob(INFILE_GLOB))
+        if len(files):
+            fn = files[-1]
+            logger.info('Importing GN Diamond file "%s"' % fn)
+            return fn
 
     def run(self):
         fp = self.get_fp()
@@ -156,16 +159,14 @@ class Backend(BaseBackend):
         # Preload prefs that write_diamond_row needs to filter out diamonds
         # TODO: Do we have a way to send pref values to GN, or do we do all the
         #       filtering locally?
-        """
         pref_values = (
-            Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),
-            Decimal(prefs.get('rapaport_maximum_carat_weight', '5')),
-            Decimal(prefs.get('rapaport_minimum_price', '1500')),
-            Decimal(prefs.get('rapaport_maximum_price', '200000')),
+            Decimal(prefs.get('rapaport_minimum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_maximum_carat_weight', '0')),
+            Decimal(prefs.get('rapaport_minimum_price', '0')),
+            Decimal(prefs.get('rapaport_maximum_price', '0')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
         )
-        """
 
         # To cut down on disk writes, we buffer the rows
         row_buffer = []
@@ -213,10 +214,10 @@ class Backend(BaseBackend):
             else:
                 if len(row_buffer) > buffer_size:
                     writer.writerows(row_buffer)
-                    row_buffer = []
+                    row_buffer = [diamond_row]
                 else:
                     row_buffer.append(diamond_row)
-                import_successes += 1
+                    import_successes += 1
 
         if row_buffer:
             writer.writerows(row_buffer)
@@ -224,17 +225,14 @@ class Backend(BaseBackend):
         tmp_file.flush()
         tmp_file = open(tmp_file.name)
 
-        with transaction.commit_manually():
+        with transaction.atomic():
             # FIXME: Don't truncate/replace the table if the import returned no data
             try:
                 cursor = connection.cursor()
                 cursor.execute("DELETE FROM tsj_gemstone_diamond WHERE source='%s'" % SOURCE_NAME)
                 cursor.copy_from(tmp_file, 'tsj_gemstone_diamond', null='NULL', columns=Row._fields)
             except Exception as e:
-                transaction.rollback()
-                raise
-            else:
-                transaction.commit()
+                logger.exception("Error on copy_from for %s" % SOURCE_NAME)
 
         tmp_file.close()
 
@@ -303,7 +301,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         clarity,
         cut_grade,
         carat_price,
-        rap_percent, # TODO: What's this?
+        off_rap, # TODO: What's this?
         certifier,
         depth_percent,
         table_percent,
@@ -312,10 +310,10 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         polish,
         fluorescence,
         symmetry,
-        owner,
+        brand,
         crown,
         pavilion,
-        measurements, # WxHxD
+        measurements, # LxWxD
         comment,
         num_stones,
         unused_cert_num,
@@ -326,7 +324,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         trade_show,
         cert_num,
         show_cert, # Yes/No
-        fancy_color # Just Yellow so far
+        fancy # Just Yellow so far
     ) = line
 
     #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
@@ -339,6 +337,18 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
 
     comment = cached_clean(comment)
     stock_number = clean(stock_number, upper=True)
+    owner = 'GN'
+
+    # Brand (Forever After, Hearts & Arrows, Fancy Yellow)
+    if fancy:
+        brand = 'FANCY'
+        # TODO: The FancyColor model isn't in the dev branch yet
+        #fancy_color = fancy_color_aliases.get(cached_clean_upper(color))
+        color = None
+    else:
+        brand = brand
+        color = color_aliases.get(cached_clean_upper(color))
+        fancy_color = None
 
     try:
         cut = cut_aliases[cached_clean_upper(cut)]
@@ -350,8 +360,6 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
     elif maximum_carat_weight and carat_weight > maximum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
-
-    color = color_aliases.get(cached_clean_upper(color))
 
     certifier = cached_clean_upper(certifier)
     # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
@@ -406,10 +414,6 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     polish = grading_aliases.get(cached_clean_upper(polish))
     symmetry = grading_aliases.get(cached_clean_upper(symmetry))
 
-    # TODO: How do we want to distinguish Forever After diamonds?
-    if owner == 'FOREVERAFT':
-        pass
-
     fluorescence = cached_clean_upper(fluorescence)
     if fluorescence in FLUORESCENCE_MAP:
         f, c = FLUORESCENCE_MAP[fluorescence]
@@ -429,13 +433,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     if not cert_num:
         cert_num = ''
 
-    """
-    cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
-    if not cert_image:
+    show_cert = clean(show_cert)
+    if show_cert == 'Yes':
+        cert_image = 'http://gndiamond.s3.amazonaws.com/certificates/%s.jpg' % (stock_number)
+    else:
         cert_image = ''
-    elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
-        cert_image = ''
-    """
 
     if carat_price is None:
         raise SkipDiamond('No carat_price specified')
@@ -474,7 +476,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         moneyfmt(Decimal(price), curr='', sep=''),
         certifier,
         cert_num,
-        '', #cert_image,
+        cert_image,
         '', # cert_image_local
         depth_percent,
         table_percent,

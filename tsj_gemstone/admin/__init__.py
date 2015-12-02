@@ -1,6 +1,13 @@
-from django.contrib.admin import site, ModelAdmin
+from functools import update_wrapper
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.admin import site, ModelAdmin, SimpleListFilter
+from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
 
 from .. import models
+from ..tasks import import_site_gemstone_backends
 
 class CutAdmin(ModelAdmin):
     save_on_top = True
@@ -34,21 +41,34 @@ class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('percent', 'start_price', 'end_price')
 
+class SourceFilter(SimpleListFilter):
+    parameter_name = 'source'
+    title = _('source')
+
+    def lookups(self, request, model_admin):
+        qs = models.Diamond.objects.order_by().values_list('source', flat=True).distinct()
+        ret = [(s, s) for s in qs]
+        return ret
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val:
+            return queryset.filter(source=val)
+
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
-    list_display = ('lot_num', 'stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'owner')
-    list_display_links = ('lot_num', 'stock_number')
-    list_filter = ('cut', 'color', 'clarity', 'certifier', 'source', 'owner')
+    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner')
+    list_display_links = ('stock_number',)
+    list_filter = ('cut', 'color', 'clarity', 'certifier', SourceFilter)
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
-    exclude = ('source',)
 
     def get_fieldsets(self, request, obj=None):
         # Initial fields
         fieldsets = (
             ('Inventory', {
                 'fields': [
-                    ('lot_num', 'stock_number', 'owner'),
+                    ('lot_num', 'stock_number', 'owner', 'source'),
                 ]
             }),
             ('Image', {
@@ -99,6 +119,22 @@ class DiamondAdmin(ModelAdmin):
 
         return fieldsets
 
+    def get_urls(self):
+        from django.conf.urls import url, patterns
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            return update_wrapper(wrapper, view)
+
+        urls = patterns('',
+           url('^start-import/$',
+               wrap(start_import),
+               name='start-gemstone-backends-import'),
+        ) + super(DiamondAdmin, self).get_urls()
+
+        return urls
+
     def save_form(self, request, form, change):
         obj = form.save(commit=False)
 
@@ -107,6 +143,17 @@ class DiamondAdmin(ModelAdmin):
             obj.source = 'local'
 
         return obj
+
+def start_import(request):
+    sd = getattr(settings, 'SITE_DATA')
+    if sd:
+        import_site_gemstone_backends.delay(schema=sd.schema, nodebug=True)
+    else:
+        import_site_gemstone_backends.delay(nodebug=True)
+
+    messages.info(request, 'Starting gemstone import')
+    next = request.META.get('HTTP_REFERER') or '/admin/'
+    return redirect(next)
 
 site.register(models.Cut, CutAdmin)
 site.register(models.Color, ColorAdmin)

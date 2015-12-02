@@ -2,13 +2,13 @@ from django.db import models
 from django.template import Context, loader
 
 from model_utils.models import TimeStampedModel
+import mimetypes
 
 from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
-
-from .managers import DictManager
-from .utils import moneyfmt
-import mimetypes
+from ts_company.prefs import prefs as company_prefs
+from tsj_gemstone.managers import DictManager
+from tsj_gemstone.utils import moneyfmt
 
 class Cut(models.Model):
     name = models.CharField(max_length=100)
@@ -35,7 +35,7 @@ class CutView(View):
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
     desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
-    is_local = models.BooleanField()
+    is_local = models.BooleanField(default=False)
     objects = DictManager()
 
     class Meta(View.Meta):
@@ -153,14 +153,8 @@ class DiamondMarkup(models.Model):
         ordering = ['percent']
 
 class DiamondBase(TimeStampedModel):
-    SOURCE_CHOICES = (
-        ('local', 'Local'),
-        ('rapaport', 'Rapaport'),
-        ('rapnet10', 'Rapaport 1.0'),
-    )
-
     active = models.BooleanField(default=True)
-    source = models.CharField(max_length=64, choices=SOURCE_CHOICES)
+    source = models.CharField(max_length=64)
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
     owner = models.CharField('Owner', max_length=255, blank=True)
@@ -222,9 +216,9 @@ class DiamondBase(TimeStampedModel):
         c = Context({'item': self, 'order_item': order_item})
         return t.render(c)
 
-    def display_email_item(self, order_item):
+    def display_email_item(self, order_item=None):
         t = loader.get_template('tsj_gemstone/includes/email_item.txt')
-        c = Context({'item': self, 'order_item': order_item})
+        c = Context({'item': self, 'order_item': order_item, 'prefs': company_prefs})
         return t.render(c)
 
     def get_cert_image_type(self):

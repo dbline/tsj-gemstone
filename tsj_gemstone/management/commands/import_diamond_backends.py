@@ -2,16 +2,17 @@ import logging
 from optparse import make_option
 
 from django.core.management.base import LabelCommand
-from django.db import connection
 
-from tsj_gemstone import backends, prefs
-from tsj_gemstone.utils import get_backend
+from tsj_gemstone import tasks
 
-from poc_command_overrides.management.utils import set_site
+from poc_command_overrides.management.utils import MultisiteCommand, set_site
 
-class Command(LabelCommand):
+logger = logging.getLogger('tsj_gemstone.backends')
+
+class Command(MultisiteCommand, LabelCommand):
     args = "[router]"
     label = 'router name'
+    tsj_site_option_required = False
     option_list = LabelCommand.option_list + (
         make_option('--async',
             action='store_true',
@@ -31,38 +32,30 @@ class Command(LabelCommand):
     )
 
     def handle_label(self, router, **options):
-        verbosity = int(options.get('verbosity'))
-        dry_run = options.get('dry_run')
+        # We don't want to simply rely on CELERY_ALWAYS_EAGER here because
+        # even in production (where the setting would be False) we may want
+        # to run the command on the console (e.g, to see synchronous
+        # verbose output)
+        async = options.get('async')
 
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT db_schema FROM tsj_catalog_central_site
-            INNER JOIN information_schema.schemata ON db_schema=schema_name
-            WHERE fastrouter=%s
-        """, (router,))
+        task_kwargs = {
+            'dry_run': options.get('dry_run'),
+            'nodebug': options.get('nodebug'),
+            'verbosity': int(options.get('verbosity')),
+        }
 
-        for row in cursor.fetchall():
-            schema = row[0]
-            if verbosity > 1:
-                print 'Schema: {}'.format(schema)
-            set_site({'site': row[0]})
-            if verbosity > 2:
-                print 'Gemstone prefs: {}'.format(prefs.prefs.get_dict())
+        if options.get('site'):
+            # TODO: Can we avoid calling this twice when a site argument is provided?
+            #       Probably, if we use the forthcoming get_schema_and_slug instead
+            #       of set_site.
+            one_site = self.set_site(options)
 
-            for bname in backends.__all__:
-                if verbosity > 2:
-                    print 'Checking for {}'.format(bname)
-
-                backend = get_backend(bname)
-                backend = backend.Backend(
-                    nodebug=options.get('nodebug'),
-                )
-
-                if backend.enabled:
-                    if verbosity > 1:
-                        if dry_run:
-                            print 'Would run {}'.format(bname)
-                        else:
-                            print 'Running {}'.format(bname)
-                    if not dry_run:
-                        backend.run()
+            if async:
+                tasks.import_site_gemstone_backends.delay(one_site, **task_kwargs)
+            else:
+                tasks.import_site_gemstone_backends(one_site, **task_kwargs)
+        else:
+            if async:
+                tasks.import_gemstone_backends.delay(router, **task_kwargs)
+            else:
+                tasks.import_gemstone_backends(router, **task_kwargs)

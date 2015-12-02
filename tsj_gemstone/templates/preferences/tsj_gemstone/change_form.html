@@ -1,0 +1,10 @@
+{% extends "preferences/change_form.html" %}
+{% load i18n %}
+
+{% block object_tools %}{{ block.super }}
+<ul class="object-tools">
+    {% block object-tools-items %}
+        <li><a href="{% url 'admin:start-gemstone-backends-import' %}" class="btn">{% trans "Start Import" %}</a></li>
+    {% endblock %}
+</ul>
+{% endblock %}

@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView
 
-from .prefs import prefs
+from .prefs import prefs as gemstone_prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.utils import show_prices
@@ -92,12 +92,6 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
             return diamonds.filter(**params)
     return diamonds
 
-def show_gemstone_prices(user):
-    if prefs['show_prices'] == 'anon' or prefs['show_prices'] == 'auth' and user.is_authenticated:
-        return True
-    else:
-        return False
-
 @csrf_protect
 def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
@@ -109,7 +103,7 @@ def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
     context = {
         'has_ring_builder': has_ring_builder,
         'initial_cuts': request.GET.getlist('cut'),
-        'show_prices': show_gemstone_prices(request.user),
+        'show_prices': show_prices(request.user, gemstone_prefs),
     }
 
     q = request.GET
@@ -202,7 +196,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
-            'show_prices': show_gemstone_prices(self.request.user),
+            'show_prices': show_prices(self.request.user, gemstone_prefs),
         })
         return context
 

@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import Group
 
 from thinkspace.apps.preferences import AppPreferences, PreferencesForm
 
@@ -11,17 +12,25 @@ class GemstonePreferencesForm(PreferencesForm):
         ('rapnet10', '1.0'),
     )
 
+    PRICE_CHOICES = (
+        ('none', 'Off'), #TODO: Eventually change stored value to 'off' to standardize with tsj_catalog
+        ('admin', 'Admin'),
+        ('auth', 'Authenticated'),
+        ('anon', 'Everyone'), #TODO: Eventually change stored value to 'all' to standardize with tsj_catalog
+        ('group', 'Group'),
+    )
+
     rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True))
     rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
     rapaport_version = forms.ChoiceField(required=False, choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), initial='rapaport')
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
-    rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput, 
+    rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The maximum carat weight to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
-    rapaport_minimum_price = forms.DecimalField(label='Min Price', widget=forms.TextInput, 
+    rapaport_minimum_price = forms.DecimalField(label='Min Price', widget=forms.TextInput,
             initial='0', help_text="The minimum price to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all prices to be accepted.")
-    rapaport_maximum_price = forms.DecimalField(label='Max Price', widget=forms.TextInput, 
+    rapaport_maximum_price = forms.DecimalField(label='Max Price', widget=forms.TextInput,
             initial='0', help_text="The maximum price to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all prices to be accepted.")
     rapaport_must_be_certified = forms.BooleanField(label='Must Be Certified',
             required=False, initial=True, help_text="Every imported diamond must be certified. If the certifier doesn't exist in the database, an entry will be automatically created by the import tool. If the diamond being imported isn't certified, it will be discarded. If the certifier of the diamond being imported exists but is disabled, it will be discarded.")
@@ -36,20 +45,16 @@ class GemstonePreferencesForm(PreferencesForm):
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     stuller = forms.BooleanField(required=False)
-    
-    PRICE_CHOICES = (
-        ('anon', 'All Users'),
-        ('auth', 'Authenticated Users'),
-        ('none', 'No One'),
-    )
 
-    show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how prices are shown.'))
+    show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
 
 class GemstonePreferences(AppPreferences):
     fieldsets = (
         (_('General'), {
             'fields': (
                 'show_prices',
+                'group',
                 'rapaport_minimum_carat_weight',
                 'rapaport_maximum_carat_weight',
                 'rapaport_minimum_price',

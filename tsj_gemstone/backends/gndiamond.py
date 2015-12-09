@@ -300,7 +300,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         color,
         clarity,
         cut_grade,
-        price,
+        carat_price,
         off_rap, # TODO: What's this?
         certifier,
         depth_percent,
@@ -390,15 +390,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         raise KeyValueError('clarity', e.args[0])
 
     cut_grade = grading_aliases.get(cached_clean_upper(cut_grade))
-
-    try:
-        price = clean(price.replace(',', ''))
-        if price:
-            price = Decimal(price)
-        else:
-            price = None
-    except AttributeError:
-        price = None
+    carat_price = clean(carat_price.replace(',', ''))
+    if carat_price:
+        carat_price = Decimal(carat_price)
+    else:
+        carat_price = None
 
     try:
         depth_percent = Decimal(str(clean(depth_percent)))
@@ -443,13 +439,11 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     else:
         cert_image = ''
 
-    if price is None:
-        raise SkipDiamond('No price specified')
+    if carat_price is None:
+        raise SkipDiamond('No carat_price specified')
 
     # Initialize price after all other data has been initialized
-    # GN already includes total price
-    price_before_markup = price
-    carat_price = price / carat_weight
+    price_before_markup = carat_price * carat_weight
 
     if minimum_price and price_before_markup < minimum_price:
         raise SkipDiamond("Price before markup '%s' is less than the minimum of %s." % (price_before_markup, minimum_price))

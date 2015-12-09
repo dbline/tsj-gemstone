@@ -199,9 +199,8 @@ class Backend(BaseBackend):
                 continue
 
             # And sometimes there's one too many columns between J (cert #) and M (dimensions)
-            # TODO: Commented out since they seem to have resolved this issue
-            #if len(line) > 42:
-            #    continue
+            if len(line) > 42:
+                continue
 
             try:
                 diamond_row = write_diamond_row(

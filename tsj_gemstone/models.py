@@ -47,6 +47,7 @@ class CutView(View):
 class Color(models.Model):
     abbr = models.CharField(max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     objects = DictManager()
 
     def __unicode__(self):
@@ -77,6 +78,7 @@ class Grading(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=10, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -92,6 +94,7 @@ class Fluorescence(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -107,6 +110,7 @@ class FluorescenceColor(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     objects = DictManager()
 
     def __unicode__(self):
@@ -153,6 +157,8 @@ class DiamondBase(TimeStampedModel):
     lot_num = models.CharField('Lot #', max_length=100, blank=True)
     stock_number = models.CharField('Stock #', max_length=100, blank=True)
     owner = models.CharField('Owner', max_length=255, blank=True)
+    image = models.CharField('Image URL', max_length=255, blank=True, null=True)
+    image_local = models.FileField('Upload Image', upload_to='tsj_gemstone/images/', blank=True, null=True)
     cut = models.ForeignKey(Cut, verbose_name='Cut', related_name='%(class)s_cut_set')
     cut_grade = models.ForeignKey(Grading, verbose_name='Cut Grade', null=True, blank=True, related_name='%(class)s_cut_grade_set')
     color = models.ForeignKey(Color, verbose_name='Color', null=True, blank=True, related_name='%(class)s_color_set')
@@ -160,10 +166,10 @@ class DiamondBase(TimeStampedModel):
     carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2, db_index=True)
     carat_price = models.DecimalField('Price / Ct.', max_digits=10, decimal_places=2)
     price = models.DecimalField('Price', max_digits=10, decimal_places=2)
-    certifier = models.ForeignKey(Certifier, verbose_name='Certifier', null=True, blank=True, related_name='%(class)s_certifier_set')
-    cert_num = models.CharField('Cert Report #', max_length=255, blank=True)
-    cert_image = models.CharField('Cert Image', max_length=255, blank=True)
-    cert_image_local = models.FileField('Cert Image', upload_to='tsj_gemstone/certificates/', blank=True)
+    certifier = models.ForeignKey(Certifier, verbose_name='Lab', null=True, blank=True, related_name='%(class)s_certifier_set')
+    cert_num = models.CharField('Lab Report #', max_length=255, blank=True)
+    cert_image = models.CharField('Lab Report URL', max_length=255, blank=True)
+    cert_image_local = models.FileField('Upload Cert Image', upload_to='tsj_gemstone/certificates/', blank=True)
     depth_percent = models.DecimalField('Depth %', max_digits=5, decimal_places=2, null=True, blank=True)
     table_percent = models.DecimalField('Table %', max_digits=5, decimal_places=2, null=True, blank=True)
     girdle = models.CharField('Girdle', max_length=50, blank=True)
@@ -182,7 +188,7 @@ class DiamondBase(TimeStampedModel):
     manmade = models.NullBooleanField(default=False, verbose_name='Man-made')
 
     # TODO: Abstract Rapaport information to a different model
-    rap_date = models.DateTimeField('Date added to Rapaport', blank=True, null=True)
+    rap_date = models.DateTimeField('Date Added', blank=True, null=True)
 
     def formatted_price(self):
         return moneyfmt(self.price, dp='', places=0)

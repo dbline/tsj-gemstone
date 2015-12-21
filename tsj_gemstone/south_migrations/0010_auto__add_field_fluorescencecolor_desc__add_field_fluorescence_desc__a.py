@@ -8,14 +8,56 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'FluorescenceColor.desc'
+        db.add_column(u'tsj_gemstone_fluorescencecolor', 'desc',
+                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
+                      keep_default=False)
 
-        # Changing field 'Diamond.image_local'
-        db.alter_column(u'tsj_gemstone_diamond', 'image_local', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True))
+        # Adding field 'Fluorescence.desc'
+        db.add_column(u'tsj_gemstone_fluorescence', 'desc',
+                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
+                      keep_default=False)
+
+        # Adding field 'Grading.desc'
+        db.add_column(u'tsj_gemstone_grading', 'desc',
+                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
+                      keep_default=False)
+
+        # Adding field 'Diamond.image'
+        db.add_column(u'tsj_gemstone_diamond', 'image',
+                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Diamond.image_local'
+        db.add_column(u'tsj_gemstone_diamond', 'image_local',
+                      self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Color.desc'
+        db.add_column(u'tsj_gemstone_color', 'desc',
+                      self.gf('django.db.models.fields.TextField')(default='', blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
+        # Deleting field 'FluorescenceColor.desc'
+        db.delete_column(u'tsj_gemstone_fluorescencecolor', 'desc')
 
-        # Changing field 'Diamond.image_local'
-        db.alter_column(u'tsj_gemstone_diamond', 'image_local', self.gf('django.db.models.fields.files.FileField')(default='', max_length=100))
+        # Deleting field 'Fluorescence.desc'
+        db.delete_column(u'tsj_gemstone_fluorescence', 'desc')
+
+        # Deleting field 'Grading.desc'
+        db.delete_column(u'tsj_gemstone_grading', 'desc')
+
+        # Deleting field 'Diamond.image'
+        db.delete_column(u'tsj_gemstone_diamond', 'image')
+
+        # Deleting field 'Diamond.image_local'
+        db.delete_column(u'tsj_gemstone_diamond', 'image_local')
+
+        # Deleting field 'Color.desc'
+        db.delete_column(u'tsj_gemstone_color', 'desc')
+
 
     models = {
         u'tsj_gemstone.certifier': {
@@ -25,7 +67,6 @@ class Migration(SchemaMigration):
             'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'disabled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'logo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
@@ -33,7 +74,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['order', 'name']", 'object_name': 'Clarity'},
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '9999'})
@@ -42,7 +83,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['abbr']", 'object_name': 'Color'},
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         u'tsj_gemstone.cut': {
@@ -50,9 +91,7 @@ class Migration(SchemaMigration):
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'icon': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '9999'})
         },
@@ -62,7 +101,7 @@ class Migration(SchemaMigration):
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_local': ('django.db.models.fields.BooleanField', [], {}),
+            'is_local': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '9999'})
         },
@@ -118,6 +157,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['order', 'name']", 'object_name': 'Fluorescence'},
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '9999'})
@@ -126,6 +166,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'FluorescenceColor'},
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
@@ -133,7 +174,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['order', 'name']", 'object_name': 'Grading'},
             'abbr': ('django.db.models.fields.CharField', [], {'max_length': '10', 'db_index': 'True'}),
             'aliases': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'desc': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '9999'})

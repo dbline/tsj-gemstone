@@ -15,8 +15,6 @@ class Cut(models.Model):
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
     desc = models.TextField('Description', blank=True)
-    image = models.ImageField(blank=True, upload_to='gemstone/cuts')
-    icon = models.TextField(blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -49,7 +47,7 @@ class CutView(View):
 class Color(models.Model):
     abbr = models.CharField(max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
-    description = models.TextField(blank=True)
+    desc = models.TextField('Description', blank=True)
     objects = DictManager()
 
     def __unicode__(self):
@@ -64,7 +62,7 @@ class Clarity(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
-    description = models.TextField(blank=True)
+    desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -80,7 +78,7 @@ class Grading(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=10, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
-    description = models.TextField(blank=True)
+    desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -96,6 +94,7 @@ class Fluorescence(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     order = models.PositiveSmallIntegerField(default=9999)
     objects = DictManager()
 
@@ -111,6 +110,7 @@ class FluorescenceColor(models.Model):
     name = models.CharField(max_length=100)
     abbr = models.CharField('Abbreviation', max_length=5, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    desc = models.TextField('Description', blank=True)
     objects = DictManager()
 
     def __unicode__(self):
@@ -125,7 +125,6 @@ class Certifier(models.Model):
     name = models.CharField(max_length=255)
     abbr = models.CharField('Abbreviation', max_length=255, db_index=True)
     aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
-    logo = models.ImageField(blank=True, upload_to='gemstone/certifiers')
     url = models.URLField('URL', blank=True)
     desc = models.TextField('Description', blank=True)
     disabled = models.BooleanField(default=False)

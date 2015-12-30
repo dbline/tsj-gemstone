@@ -100,7 +100,7 @@ class Backend(BaseBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/premier.csv')
 
-    default_filename = '/glusterfs/block/brick/ftp_home/Premier-Gem/premier.csv'
+    default_filename = '/glusterfs/ftp_home/Premier-Gem/premier.csv'
 
     def run(self):
         fp = self.get_fp()

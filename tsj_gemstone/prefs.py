@@ -45,6 +45,8 @@ class GemstonePreferencesForm(PreferencesForm):
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     stuller = forms.BooleanField(required=False)
+    premiergem = forms.BooleanField(required=False, label='Premier Gem')
+    leibish = forms.BooleanField(required=False, label='Leibish & Co.')
 
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')

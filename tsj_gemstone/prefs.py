@@ -86,6 +86,7 @@ class GemstonePreferences(AppPreferences):
         (_('Additional feeds'), {
             'fields': (
                 'gndiamond', 'hasenfeld', 'mgeller', 'mid', 'rdi', 'stuller',
+                'premiergem', 'leibish',
             ),
         }),
     )

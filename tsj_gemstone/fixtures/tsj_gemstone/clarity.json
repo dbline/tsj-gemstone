@@ -4,7 +4,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 10, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "FL", 
         "abbr": "FL"
@@ -15,7 +15,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 20, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "IF", 
         "abbr": "IF"
@@ -26,7 +26,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 30, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "VVS1", 
         "abbr": "VVS1"
@@ -37,7 +37,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 40, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "VVS2", 
         "abbr": "VVS2"
@@ -48,7 +48,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 50, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "VS1", 
         "abbr": "VS1"
@@ -59,7 +59,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 60, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "VS2", 
         "abbr": "VS2"
@@ -70,7 +70,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 70, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "SI1", 
         "abbr": "SI1"
@@ -81,7 +81,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 80, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "SI2", 
         "abbr": "SI2"
@@ -92,7 +92,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 90, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "SI3", 
         "abbr": "SI3"
@@ -103,7 +103,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 100, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "I1", 
         "abbr": "I1"
@@ -114,7 +114,7 @@
     "model": "tsj_gemstone.clarity", 
     "fields": {
         "order": 110, 
-        "description": "", 
+        "desc": "", 
         "aliases": "", 
         "name": "I2", 
         "abbr": "I2"

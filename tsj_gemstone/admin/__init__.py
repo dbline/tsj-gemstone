@@ -11,27 +11,27 @@ from ..tasks import import_site_gemstone_backends
 
 class CutAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order')
+    list_display = ('name', 'abbr', 'aliases', 'order') 
 
 class ColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('abbr', 'aliases')
+    list_display = ('abbr', 'aliases') 
 
 class ClarityAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order')
+    list_display = ('name', 'abbr', 'aliases', 'order') 
 
 class GradingAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order')
+    list_display = ('name', 'abbr', 'aliases', 'order') 
 
 class FluorescenceAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order')
+    list_display = ('name', 'abbr', 'aliases', 'order') 
 
 class FluorescenceColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases')
+    list_display = ('name', 'abbr', 'aliases') 
 
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
@@ -71,26 +71,25 @@ class DiamondAdmin(ModelAdmin):
                     ('lot_num', 'stock_number', 'owner', 'source'),
                 ]
             }),
-            ('Image', {
-                'fields': (
-                    ['image', 'image_local'],
-                )
-            }),
             ('Data', {
                 'fields': (
                     ('carat_weight', 'carat_price', 'price'),
                     ('cut', 'color', 'clarity'),
                     ('cut_grade'),
-                    ('polish', 'symmetry'),
-                    ('girdle', 'culet'),
-                    ('fluorescence', 'fluorescence_color'),
-                    ('manmade',),
                 )
             }),
             ('Measurements', {
                 'fields': (
                     ('depth_percent', 'table_percent'),
                     ('length', 'width', 'depth'),
+                )
+            }),
+            ('Misc', {
+                'fields': (
+                    ('polish', 'symmetry'),
+                    ('girdle', 'culet'),
+                    ('fluorescence', 'fluorescence_color'),
+                    ('manmade',),
                 )
             }),
             ('Certificate', {

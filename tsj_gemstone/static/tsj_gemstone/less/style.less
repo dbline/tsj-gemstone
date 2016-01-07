@@ -64,670 +64,573 @@
 		}
 	}
 }
+
+/********************************************
+` jQuery UI
+*********************************************/
+
+.ui-widget {
+    .font-family-content();
+    font-size: 1.1em;
+}
+
+.ui-widget-content {
+    background: #fff;
+    border: 1px solid #aaa;
+    color: #222;
+}
+
+.ui-widget-header {
+    background: #ccc;
+    border: 1px solid #aaa;
+    color: #222;
+    font-weight: bold;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: #e6e6e6;
+    border: 1px solid #d3d3d3;
+    color: #555;
+    font-weight: normal;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    background: #dadada;
+    border: 1px solid #999;
+    color: #212121;
+    font-weight: normal;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius: 0px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 0px;
+}
+
+.ui-slider {
+    clear: both;
+    position: relative;
+    text-align: left;
+}
+
+.ui-slider .ui-slider-handle {
+    cursor: pointer;
+    height: 1em;
+    position: absolute;
+    width: 1em;
+    z-index: 2;
+
+    @media(max-width: @screen-sm-max) {
+        height: 2em;
+        width: 2em;
+    }
+}
+
+.ui-slider .ui-slider-range {
+    background-position: 0 0;
+    border: 0 none;
+    display: block;
+    font-size: 0.7em;
+    position: absolute;
+    z-index: 1;
+}
+
+.ui-slider.ui-state-disabled .ui-slider-handle, .ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: 0.6em;
+    margin: 0 8px;
+
+    @media(max-width: @screen-sm-max) {
+        height: 1.3em;
+        margin: 2px 8px 0 16px;
+    }
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+    margin-left: -0.6em;
+    top: -0.3em;
+
+    @media(max-width: @screen-sm-max) {
+        margin-left: -1.4em;
+        top: -0.45em;
+    }
+}
+
+.ui-slider-horizontal .ui-slider-range {
+    height: 100%;
+    top: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    height: 100px;
+    width: 0.8em;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+    left: -0.3em;
+    margin-bottom: -0.6em;
+    margin-left: 0;
+}
+
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+}
+
 /********************************************
 ` Page : Diamonds : Listing
 *********************************************/
-.page-gemstone-list {
+.gemstone-list {
+    .gemstone-filters {
+        .clearfix();
+        .well();
+        padding: 10px 0;
 
-    &.left {
-        .section-filters {
-            .make-md-column(3);
-            padding-left: 0;
-            padding-right: 0;
+        .group {
+            .make-sm-column(6);
+            .make-md-column(12);
+            padding-bottom: 10px;
 
-            .section-filterset {
-                .form-group {
-                    .make-md-column(12);
-                    height: auto;
-
-                    @media (max-width: @screen-xs-max) {
-                        padding-left: 0;
-                        padding-right: 0;
-                    }
-
-                    &.cut {
-                        li {
-                            margin-bottom: 10px;
-                            margin-right: 7px;
-                            width: 45px;
-
-                            @media (max-width: @screen-md-max) or (min-width: @screen-md-min) {
-                                font-size: 10px;
-                                margin-right: 1px;
-                                width: 41px;
-                            }
-                        }
-                    }
-                }
-            }
-
-            .toggle-filters {
-                .hidden();
-
-                @media (max-width: @screen-sm-max) {
-                    .show();
-                }
-            }
         }
 
-        .section-content {
-            .make-md-column(9);
-            padding-left: 0;
-            padding-right: 0;
-
-            @media (max-width: @screen-sm-max) {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            @media (max-width: @screen-xs-max) {
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .section-gemstones {
-                .table-gemstone {
-                    .make-md-column(8);
-                    .mp-none();
-                }
-
-                .table-gemstone-detail {
-                    .make-md-column(4);
-                    padding-left: 0;
-                    padding-right: 0;
-                }
-            }
-        }
-    }
-
-    .section-filters {
-        .make-md-column(12);
-        border-bottom: 1px solid #ededed;
-        margin-bottom: 20px;
-        min-height: 34px;
-        padding-left: 0;
-        padding-right: 0;
-        position: relative;
-
-        &.collapsed {
-            border-bottom: none;
-            border-top: 1px solid #ededed;
-            margin-bottom: -15px;
-        }
-
-        .section-filterset {
-
-            .filter-primary {
-                clear: both;
-            }
-
-            .filter-toggle {
-                clear: both;
-                padding-bottom: 20px;
-
-                @media (max-width: @screen-xs-max) {
-                    padding: 10px 0;
-                }
-
-                a {
-                    .btn();
-                    padding: 6px 15px;
-
-                    &.toggle-advanced {
-                        .btn-link();
-                        .font-family-heading();
-                        font-weight: 700;
-
-                        i {
-                            margin-left: 6px;
-                        }
-                    }
-                }
-            }
-
-            .filter-advanced {
-                margin-top: -10px;
-            }
-
-            .form-group {
-                .make-sm-column(6);
-                .make-md-column(6);
-                height: 105px;
-                margin-bottom: 5px;
-
-                @media (max-width: @screen-xs-max) {
-                    height: auto;
-                    padding-left: 0;
-                    padding-right: 0;
-                }
-
-                h4 {
-                    margin-bottom: 0;
-                }
-
-                .filter {
-                    .clearfix();
-
-                    .fields {
-                        margin-top: 3px;
-
-                        input {
-                            .input-sm();
-                            width: 100px;
-
-                            &:first-child {
-                                .pull-left();
-                                .text-left();
-                            }
-
-                            &:last-child {
-                                .pull-right();
-                                .text-right();
-                            }
-                        }
-                    }
-                }
-
-                &.cut {
-                    @media (max-width: @screen-sm-max) {
-                        .make-sm-column(12);
-                    }
-
-                    @media (max-width: @screen-xs-max) {
-                        padding-left: 0;
-                        padding-right: 0;
-                    }
-
-                    h4 {
-                        margin-bottom: 15px;
-                    }
-
-                    li {
-                        float: left;
-                        font-size: 11px;
-                        margin-right: 9px;
-                        .text-center();
-                        width: 45px;
-
-                        @media (max-width: @screen-md-max) {
-                            font-size: 10px;
-                            margin-right: 1px;
-                            width: 43px;
-                        }
-
-                        @media (max-width: @screen-xs-max) {
-                            font-size: 11px;
-                            margin-bottom: 10px;
-                            margin-right: 9px;
-                            width: 46px;
-                        }
-
-                        &.emerald {
-                            svg {
-                                width: 24px;
-                            }
-                        }
-
-                        &.marquise {
-                            svg {
-                                width: 20px;
-                            }
-                        }
-
-                        &.oval {
-                            svg {
-                                width: 25px;
-                            }
-                        }
-
-                        &.pear {
-                            svg {
-                                width: 26px;
-                            }
-                        }
-
-                        label {
-                            cursor: pointer;
-                            display: block;
-                            font-weight: 400;
-                            margin: 0;
-
-                            input {
-                                .hidden();
-                            }
-
-                            input[type="checkbox"]:checked ~ span.icon {
-                                svg {
-                                    path {
-                                        stroke: @themecolor-primary;
-                                    }
-                                }
-                            }
-
-                            input[type="checkbox"]:checked ~ span.name {
-                                font-weight: 700;
-                            }
-
-                            svg {
-                                height: 38px;
-                                margin-bottom: 3px;
-
-                                @media (max-width: @screen-md-max) {
-                                    height: 32px;
-                                }
-
-                                path {
-                                    stroke: #777;
-                                    stroke-width: 3;
-                                    stroke-miterlimit: 10;
-                                }
-                            }
-
-                            &:hover {
-                                span.icon {
-                                    svg {
-                                        path {
-                                            stroke: @themecolor-primary;
-                                        }
-                                    }
-                                }
-                                span.name {
-                                    font-weight: 700;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &.certifier {
-                    ul {
-                        .list-inline();
-                        padding: 10px 0;
-                    }
-                }
-            }
-        }
-
-        .toggle-filters {
-            .btn();
-            .btn-primary();
-            bottom: 0;
-            position: absolute;
-            right: 15px;
-            text-transform: uppercase;
-        }
-    }
-
-    .section-content {
-        .make-md-column(12);
-
-        @media (max-width: @screen-xs-max) {
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        .section-gemstones {
-            .clearfix();
-
-            .toolbar {
-                color: @gray-light;
-                padding-bottom: 15px;
-
-                .results {
-                    .font-family-heading(700);
-                }
-            }
-
-            table {
-                .table();
-                font-size: 0.9em;
-            }
-
-            .table-gemstone {
-                .make-md-column(9);
-                .mp-none();
-                .table-responsive();
-
-                table {
-                    .table-hover();
-                    .table-striped();
-
-                    th {
-                        font-size: 0.85em;
-                        text-transform: uppercase;
-
-                        a {
-                            font-weight: 700;
-                        }
-                    }
-
-                    tbody {
-                        tr:hover {
-                            background: #EAEAEA;
-                            color: @themecolor-primary;
-                            cursor: pointer;
-                        }
-                    }
-
-                    td {
-                        vertical-align: middle;
-
-                        &.shape {
-                            .icon {
-                                .pull-left();
-                                .text-center();
-                                display: block;
-                                padding: 3px 0 0;
-                                vertical-align: middle;
-                                width: 24px;
-
-                                svg {
-                                    height: 20px;
-                                    width: auto;
-
-                                    path {
-                                        stroke: #777;
-                                        stroke-width: 3;
-                                        stroke-miterlimit: 10;
-                                    }
-                                }
-                            }
-
-                            .name {
-                                .pull-left();
-                                display: block;
-                                padding: 4px 0 0 8px;
-                                vertical-align: middle;
-                            }
-                        }
-                    }
-                }
-            }
-            .table-gemstone-detail {
-                .make-md-column(3);
-                .hidden-xs();
-                .hidden-sm();
-                padding-left: 0;
-                padding-right: 0;
-
-                .affix {
-                    position: fixed !important;
-                    top: 0;
-                }
-
-                th {
-                    font-size: 0.85em;
-                    .text-center();
-                    text-transform: uppercase;
-                }
-
-                td {
-                    border: none;
-                    padding: 10px;
-                }
-
-                .icon {
-                    margin: 10px 0;
-                    .text-center();
-
-                    i {
-                        color: @gray-lighter;
-                        font-size: 100px;
-                    }
-
-                    svg {
-                        height: 150px;
-                    }
-                }
-
-                .name {
-                    border-bottom: 1px solid #ddd;
-                    .font-family-heading();
-                    font-size: 1.1em;
-                    font-weight: 700;
-                    margin-bottom: 10px;
-                    padding-bottom: 10px;
-                    .text-center();
-                }
-
-                .actions {
-                    clear: both;
-                    margin-bottom: 10px;
+        .cut {
+            padding-bottom: 0px;
+
+            li {
+                display: inline-block;
+                font-size: 11px;
+
+                label {
+                    cursor: pointer;
+                    font-weight: normal;
                     text-align: center;
-
-                    .dropdown-menu {
-                        font-size: 12px;
-                        min-width: auto;
-                        width: 100%;
-                    }
-
-                    .btn-add-cart {
-                        .btn();
-                        .btn-block();
-                        .btn-primary();
-                        margin-bottom: 10px;
-                    }
-
-                    .btn-select-diamond {
-                        .btn();
-                        .btn-block();
-                        .btn-primary();
-                        margin-bottom: 10px;
-                    }
-                    .btn-view-diamond {
-                        .btn();
-                        .btn-block();
-                        .btn-default();
-                    }
+                    width: 48px;
                 }
 
-                .list {
-                    .make-md-column(6);
-                    font-size: 12px;
-                    padding-left: 0px;
-                    padding-right: 0px;
+                &:hover label,
+                input[type="checkbox"]:checked + label {
+                    font-weight: bold;
+                }
 
-                    dt {
-                    }
+                span.icon {
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: 40px 40px;
+                    display: block;
+                    margin-bottom: 5px;
+                    height: 40px;
+                }
 
-                    dd {
-                        margin-bottom: 5px;
-                    }
+                &.asscher span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/asscher.png");
+                }
+
+                &.baguette span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/baguette.png");
+                }
+
+                &.cushion span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/cushion.png");
+                }
+
+                &.emerald span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/emerald.png");
+                }
+
+                &.heart span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/heart.png");
+                }
+
+                &.marquise span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/marquise.png");
+                }
+
+                &.oval span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/oval.png");
+                }
+
+                &.pear span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/pear.png");
+                }
+
+                &.princess span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/princess.png");
+                }
+
+                &.radiant span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/radiant.png");
+                }
+
+                &.round span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/round.png");
+                }
+
+                &.trilliant span.icon {
+                    background-image: url("/static/tsj_gemstone/images/vector/trilliant.png");
+                }
+            }
+
+        }
+
+        h4 {
+            .pull-left();
+            padding: 0 0 6px;
+        }
+
+        .filter-value {
+            .pull-right();
+            color: @gray-light;
+            padding: 10px 0 0 0;
+
+            span {
+                color: @gray-dark;
+                font-weight: bold;
+            }
+        }
+
+        .cut {
+            h4 {
+                float: none !important;
+            }
+        }
+
+        .price {
+            h4 {
+                padding: 6px 0 10px;
+            }
+            .wrapper-price {
+                .pull-right();
+                padding: 10px 0 0 0;
+
+                input {
+                    background: @themecolor-offset;
+                    border: 1px solid @gray-light;
+                    float: left;
+                    font-size: 0.85em;
+                    margin-left: 5px;
+                    width: 72px;
                 }
             }
         }
 
-    }
-}
+        .carat-weight {
+            h4 {
+                padding: 6px 0 10px;
+            }
+            .wrapper-carat-weight {
+                .pull-right();
+                padding: 10px 0 0 0;
 
-/********************************************
-` Slider: Skin
-*********************************************/
+                input {
+                    background: @themecolor-offset;
+                    border: 1px solid @gray-light;
+                    float: left;
+                    font-size: 0.85em;
+                    margin-left: 5px;
+                    width: 72px;
+                }
+            }
+        }
 
-.irs {
-    height: 35px;
-}
-.irs-with-grid {
-    height: 60px;
-}
-.irs-line {
-    border: none;
-    background: #D4D4D4;
-    height: 3px;
-    top: 20px;
-}
-    .irs-line-left {
-        height: 8px;
-    }
-    .irs-line-mid {
-        height: 8px;
-    }
-    .irs-line-right {
-        height: 8px;
-    }
+        .cut-grade {
+            a {
+                .pull-left();
+                color: gray;
+                cursor: pointer;
+                font-size: 1em;
+                margin: 11px 0 0 6px;
+            }
+        }
+        .filter-primary {
+            .clearfix();
+            margin-bottom: 10px;
+        }
 
-.irs-bar {
-    background: @themecolor-primary;
-    border: none;
-    height: 3px;
-    top: 20px;
-}
-    .irs-bar-edge {
-        height: 10px; top: 20px;
-        width: 14px;
-        border: 1px solid @themecolor-primary;
-        border-right: 0;
-        background: @themecolor-primary;
-        background: linear-gradient(to top, @themecolor-primary 0%, darken(@themecolor-primary, 10%) 100%); /* W3C */
-        border-radius: 16px 0 0 16px;
-        -moz-border-radius: 16px 0 0 16px;
-    }
+        .filter-advanced-toggle {
+            .clearfix();
+            margin-bottom: 20px;
+        }
 
-.irs-shadow {
-    height: 2px; top: 38px;
-    background: #000;
-    opacity: 0.3;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-}
-.lt-ie9 .irs-shadow {
-    filter: alpha(opacity=30);
-}
+        .filter-advanced label {
+            .clearfix();
+            .pull-left();
+            font-size: 0.8em;
+            font-weight: normal;
+            margin: 0 10px 10px 0;
+        }
 
-.irs-slider {
-    background: @themecolor-primary;
-    border: 0;
-    border-radius: 100%;
-    box-shadow: none;
-    cursor: pointer;
-    height: 23px;
-    top: 9px;
-    -webkit-transition: box-shadow;
-    -o-transition: box-shadow;
-    transition: box-shadow;
-    -webkit-transition-duration: 200ms;
-    transition-duration: 200ms;
-    width: 23px;
+        .certifier {
+            h4 {
+                display: block;
+                float: none !important;
+            }
+        }
 
-    &:hover {
-        background: @themecolor-primary;
+        .manmade {
+            h4 {
+                display: block;
+                float: none !important;
+            }
+        }
     }
 
-    &.state_hover {
-        box-shadow: 0 0 0 13px rgba(0, 0, 0, 0.1);
+    .table-gemstone {
+        .table-responsive();
     }
-}
 
-.irs-min, .irs-max {
-    color: #333;
-    font-size: 12px; line-height: 1.333;
-    text-shadow: none;
-    top: 0;
-    padding: 1px 5px;
-    background: rgba(0,0,0,0.1);
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-}
-
-.lt-ie9 .irs-min, .lt-ie9 .irs-max {
-    background: #ccc;
-}
-
-.irs-from, .irs-to, .irs-single {
-    color: #fff;
-    font-size: 14px; line-height: 1.333;
-    text-shadow: none;
-    padding: 1px 5px;
-    background: #428bca;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-}
-.lt-ie9 .irs-from, .lt-ie9 .irs-to, .lt-ie9 .irs-single {
-    background: #999;
-}
-
-.irs-grid {
-    height: 27px;
-    top: 35px;
-}
-.irs-grid-pol {
-    opacity: 0.5;
-    background: @gray;
-
-    &.small {
-        background: #999;
-        height: 0;
+    .table-wrapper {
+        .clearfix();
     }
-}
 
-.irs-grid-text {
-    bottom: 5px;
-    color: @gray-darker;
-}
+    .table-wrapper {
+        .clearfix();
+    }
 
-.irs-disabled {
+    .table-striped > tbody {
+        font-size: 12px;
+    }
+
+    .table-striped > tbody > tr > td,
+    .table-striped > tbody > tr > th {
+        background-color: #F8F7F5;
+    }
+
+    .table-striped > tbody > tr:nth-child(2n+1) > td,
+    .table-striped > tbody > tr:nth-child(2n+1) > th {
+        background-color: #F0EFED;
+    }
+
+    .table-striped > tbody > tr.active > td {
+        background-color: #FFF;
+        font-weight: bold;
+    }
+
+    table > tbody > tr:hover {
+        cursor: pointer;
+    }
+
+    @media(max-width: @screen-sm-max) {
+        .table td {
+            padding: 0;
+
+            a {
+                color: @gray;
+                display: inline-block;
+                padding: 10px 5px;
+            }
+        }
+    }
+
+    .table-gemstone-detail {
+        .hidden-xs();
+        .hidden-sm();
+    }
+
+    .table-gemstone-detail .affix {
+        position: fixed !important;
+        top: 20px;
+    }
+
+    .table-gemstone-detail .image {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .table-gemstone-detail .image span {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 200px 200px;
+        display: block;
+        height: 200px;
+        text-indent: -9999px;
+    }
+
+    .table-gemstone-detail .image span.asscher {
+        background-image: url("/static/tsj_gemstone/images/vector/asscher.png");
+    }
+
+    .table-gemstone-detail .image span.baguette {
+        background-image: url("/static/tsj_gemstone/images/vector/baguette.png");
+    }
+
+    .table-gemstone-detail .image span.cushion {
+        background-image: url("/static/tsj_gemstone/images/vector/cushion.png");
+    }
+
+    .table-gemstone-detail .image span.emerald {
+        background-image: url("/static/tsj_gemstone/images/vector/emerald.png");
+    }
+
+    .table-gemstone-detail .image span.heart {
+        background-image: url("/static/tsj_gemstone/images/vector/heart.png");
+    }
+
+    .table-gemstone-detail .image span.marquise {
+        background-image: url("/static/tsj_gemstone/images/vector/marquise.png");
+    }
+
+    .table-gemstone-detail .image span.oval {
+        background-image: url("/static/tsj_gemstone/images/vector/oval.png");
+    }
+
+    .table-gemstone-detail .image span.pear {
+        background-image: url("/static/tsj_gemstone/images/vector/pear.png");
+    }
+
+    .table-gemstone-detail .image span.princess {
+        background-image: url("/static/tsj_gemstone/images/vector/princess.png");
+    }
+
+    .table-gemstone-detail .image span.radiant {
+        background-image: url("/static/tsj_gemstone/images/vector/radiant.png");
+    }
+
+    .table-gemstone-detail .image span.round {
+        background-image: url("/static/tsj_gemstone/images/vector/round.png");
+    }
+
+    .table-gemstone-detail .image span.trilliant {
+        background-image: url("/static/tsj_gemstone/images/vector/trilliant.png");
+    }
+
+    .dl-horizontal {
+        font-size: 12px;
+    }
+
+    .dl-horizontal dt {
+        width: 48%;
+    }
+
+    .dl-horizontal dd {
+        margin-left: 52%;
+    }
+
+    .table-gemstone-detail .actions {
+        text-align: center;
+
+        .dropdown-menu {
+            font-size: 12px;
+            min-width: auto;
+            width: 100%;
+        }
+
+        .btn-select-diamond {
+            .btn();
+            .btn-block();
+            .btn-primary();
+            margin-bottom: 10px;
+        }
+        .btn-view-diamond {
+            .btn();
+            .btn-block();
+            .btn-default();
+        }
+    }
 }
 
 /********************************************
 ` Page : Diamonds : Details
 *********************************************/
 
-.page-gemstone-detail {
-    .section-slideshow {
-        .make-md-column(6);
+.gemstone-detail {
+    .section-title {
+        .make-md-column(10);
+    }
+    .section-breadcrumb {
+        .make-md-column(2);
+
+        .breadcrumb {
+            margin: 10px 0 0;
+        }
+    }
+    .section-sidebar {
+        .make-sm-column(4);
+        .make-md-column(4);
         .text-center();
 
-        .slider {
-            .make-md-column(6);
-            .make-md-column-offset(3);
-        }
+        .gemstone-images {
+            margin-bottom: 20px;
 
-        .carousel {
-            clear: left;
-            margin: 0 auto;
-
-            a {
-                float: left;
-                margin-right: 10px;
-                width: 12%;
-
-                svg {
-                    .img-thumbnail();
-                }
-                img {
-                    .img-thumbnail();
-                }
-                &.active {
-                    img {
-                        border: 1px solid @themecolor-primary;
-                    }
-                }
-            }
-       }
-    }
-    .section-info {
-        .make-md-column(6);
-
-        .title {
-            .stock-number {
-                color: @gray-light;
+            img {
+                .img-responsive();
             }
         }
 
-        .price {
-            h3 {
-                font-weight: 700;
-                margin-top: 26px;
+        a {
+            .btn();
+
+            &.view-cert {
+                .btn-default();
+            }
+
+            &.add-cart {
+                .btn-primary();
             }
         }
 
-        .actions {
-            .clearfix();
+        .section-info-questions {
+            .text-left();
             margin-top: 30px;
+        }
+    }
+    .section-content {
+        .make-sm-column(8);
+        .make-md-column(8);
+
+        .group-wrapper {
+            .make-sm-column(6);
+            .make-md-column(6);
+
+            table {
+                .table();
+                .table-condensed();
+                margin-bottom: 0;
+
+                tr.stock-number th,
+                tr.stock-number td {
+                    font-weight: bold;
+                }
+            }
+        }
+        .actions-wrapper {
+            .make-sm-column(12);
+            .make-md-column(12);
+            margin-top: 20px;
+            margin-bottom: 10px;
 
             form {
                 .pull-left();
                 margin-right: 15px;
+
 
                 .dropdown-menu {
                     font-size: 12px;
@@ -741,191 +644,10 @@
                     margin-bottom: 10px;
                 }
             }
-
-            .social {
-                float: left;
-                margin-top: 1px;
-
-                @media(max-width: @screen-xs-max) {
-                    margin: 12px 0 0;
-                }
-
-                a.email {
-                    .pull-left();
-                    .text-center();
-                    background: @themecolor-primary;
-                    color: @themecolor-offset;
-                    font-size: 16px;
-                    height: 32px;
-                    width: 32px;
-                    margin-right: 3px;
-                    padding-top: 4px;
-                }
-
-                .addthis_toolbox {
-                    .pull-left();
-                }
-            }
-
-            .contact {
-                clear: left;
-                font-size: 1.1em;
-                padding-top: 30px
-            }
         }
-    }
-    .details-wrapper {
-        background: rgb(245,245,245);
-        margin-top: 30px;
-        margin-bottom: 15px;
-        padding-top: 15px;
-        padding-bottom: 20px;
-    }
-    .section-details {
-        .clearfix();
-
-        h4 {
-            font-weight: 700;
-        }
-
-        .certifier {
-            .make-md-column(3);
-            .text-center();
-
-            .report {
-                img {
-                    .img-responsive();
-                    display: block;
-                    margin: 30px auto 15px;
-                }
-            }
-        }
-        .details {
-            .make-md-column(9);
-            font-size: 0.9em;
-
-            tr {
-                .make-md-column(4);
-                padding-left: 0;
-
-                &.lg {
-                    .make-md-column(6);
-                    padding-left: 0;
-                }
-
-                th {
-                    font-weight: 400;
-                    padding: 0 4px 6px 0;
-                }
-
-                td {
-                    color: @gray;
-                    padding: 0 0 6px;
-                }
-            }
-        }
-    }
-    .section-education {
-        div {
-            .make-md-column(4);
-
-            &.lg {
-                .make-md-column(6);
-            }
-
-            h4 {
-                font-weight: 700;
-
-                span {
-                    color: @gray-light;
-                }
-            }
-
-            .legend {
-                .clearfix();
-                .list-unstyled();
-
-                li {
-                    border: 1px solid #ddd;
-                    color: @gray-dark;
-                    float: left;
-                    font-size: 0.8em;
-                    margin-left: -1px;
-                    padding: 2px 6px;
-
-                    &.active {
-                        border: 1px solid @themecolor-primary;
-                        background: @themecolor-primary;
-                        color: @themecolor-offset;
-                    }
-                }
-            }
-        }
-    }
-    .section-similar {
-        .make-md-column(12);
-
-        h4 {
-            font-weight: 700;
-        }
-
-        table {
-            .table();
-            font-size: 0.9em;
-            .table-hover();
-            .table-striped();
-
-            th {
-                font-size: 0.85em;
-                text-transform: uppercase;
-
-                a {
-                    font-weight: 700;
-                }
-            }
-
-            tbody {
-                tr {
-                    &:hover {
-                        background: #EAEAEA;
-                        color: @themecolor-primary;
-                        cursor: pointer;
-                    }
-
-                    td {
-                        vertical-align: middle;
-
-                        &.shape {
-                            .icon {
-                                .pull-left();
-                                .text-center();
-                                display: block;
-                                padding: 3px 0 0;
-                                vertical-align: middle;
-                                width: 24px;
-
-                                svg {
-                                    height: 20px;
-                                    width: auto;
-
-                                    path {
-                                        stroke: #777;
-                                        stroke-width: 3;
-                                        stroke-miterlimit: 10;
-                                    }
-                                }
-                            }
-
-                            .name {
-                                .pull-left();
-                                display: block;
-                                padding: 4px 0 0 8px;
-                                vertical-align: middle;
-                            }
-                        }
-                    }
-                }
-            }
+        .cert-wrapper {
+            .make-sm-column(12);
+            .make-md-column(12);
         }
     }
 }

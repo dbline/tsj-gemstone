@@ -268,13 +268,20 @@ function affixDetails() {
     }
 }
 
+function check_sorting() {
+}
+
 function update_results(url) {
-    // Set some defaults
     if (url) {
         var href = url += "&" + $('.form-gemstone').serialize();
     } else {
         var url = DIAMOND_LIST_URL;
         var href = "?" + $('.form-gemstone').serialize();
+    }
+
+    var sort = getParameterByName('sort');
+    if (sort) {
+        href += '&sort=' + sort
     }
 
     History.pushState(null, null, href);
@@ -314,4 +321,11 @@ function logposition(val, min, max){
     max = max / 2;
     var scale = (maxv - minv) / (max - min);
     return (Math.log(val) - minv) / scale + min;
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }

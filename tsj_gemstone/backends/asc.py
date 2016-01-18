@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
-INFILE_GLOB = '/home/vagrant/.virtualenvs/tsj-multi/document_root/data/ASC_ITEM_*XML'
+INFILE_GLOB = '/glusterfs/ftp_home/orrsftp/data/ASC_ITEM_*XML'
 SOURCE_NAME = 'asc'
 
 Row = namedtuple('Row', (

@@ -20,7 +20,7 @@ from tsj_gemstone.digg_paginator import QuerySetDiggPaginator
 from tsj_jewelrybox.forms import InquiryForm
 
 _min_max = {}
-def min_max(force_update=False):
+def min_max(force_update=True):
     if force_update or not _min_max:
         _min_max['cuts'] = Cut.objects.all().order_by('order')
         _min_max['colors'] = Color.objects.all()

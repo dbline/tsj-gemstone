@@ -189,11 +189,8 @@ class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
     def get_default_filename(self):
-        files = sorted(glob.glob(INFILE_GLOB))
-        if len(files):
-            fn = files[-1]
-            logger.info('Importing ASC file "%s"' % fn)
-            return fn
+        fn = max(glob.iglob(INFILE_GLOB), key=os.path.getctime)
+        return fn
 
     def run(self):
         fp = self.get_fp()

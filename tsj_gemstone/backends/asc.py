@@ -260,6 +260,11 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     except KeyError as e:
         raise KeyValueError('cut_aliases', e.args[0])
 
+    quantity = clean(data.get('TotalQtyOH'))
+    if not quantity:
+        print 'No quantity on hand'
+        raise SkipDiamond('No quantity on hand.')
+
     carat_weight = Decimal(str(cached_clean(data.get('Stone1Wt'))))
     if carat_weight < minimum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))

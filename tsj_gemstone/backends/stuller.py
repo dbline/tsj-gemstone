@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import hashlib
 import json
 import logging
 import os
@@ -115,6 +116,7 @@ class Backend(BaseBackend):
         session.headers.update({'Content-Type': 'application/json', 'Accept': 'application/json'})
         url = 'https://www.stuller.com/api/v2/gem/diamonds'
         next_page = None
+        next_page_hash = None
         ret = []
 
         # Accumulate paginated diamond data into ret
@@ -137,6 +139,14 @@ class Backend(BaseBackend):
 
             if 'NextPage' in data and data['NextPage']:
                 next_page = data['NextPage']
+
+                # Stuller occasionally gets stuck in an infinite loop
+                _hash = hashlib.md5(next_page).hexdigest()
+                if _hash == next_page_hash:
+                    logger.warning('Stuller infinite loop {}'.format(_hash))
+                    break
+                next_page_hash = _hash
+
                 time.sleep(3)
             else:
                 break

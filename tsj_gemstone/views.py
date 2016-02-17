@@ -114,10 +114,12 @@ def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
     except KeyError:
         sort = None
 
+    diamonds = Diamond.objects.filter(active=True).select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
+
     if sort:
-        diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by(sort)
+        diamonds = diamonds.order_by(sort)
     else:
-        diamonds = Diamond.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry').order_by('carat_weight', 'color', 'clarity')
+        diamonds = diamonds.order_by('carat_weight', 'color', 'clarity')
 
     min_maxs = min_max()
 

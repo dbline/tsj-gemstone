@@ -265,6 +265,10 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         active = 'f'
         #raise SkipDiamond('No quantity on hand.')
 
+    flag = cached_clean_upper(data.get('WebItemFlag'))
+    if flag == 'I':
+        active = 'f'
+
     carat_weight = Decimal(str(cached_clean(data.get('Stone1Wt'))))
     if carat_weight < minimum_carat_weight:
         raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))

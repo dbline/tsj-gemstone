@@ -21,7 +21,7 @@ class GemstonePreferencesForm(PreferencesForm):
     )
 
     rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
-    rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True))
+    rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
     rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
     rapaport_version = forms.ChoiceField(required=False, choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), initial='rapaport')
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,

@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import csv
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+import glob
 import io
 import logging
 import os
@@ -189,11 +190,8 @@ class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
     def get_default_filename(self):
-        files = sorted(glob.glob(INFILE_GLOB))
-        if len(files):
-            fn = files[-1]
-            logger.info('Importing ASC file "%s"' % fn)
-            return fn
+        fn = max(glob.iglob(INFILE_GLOB), key=os.path.getctime)
+        return fn
 
     def run(self):
         fp = self.get_fp()
@@ -259,6 +257,17 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
         cut = cut_aliases[cached_clean_upper(data.get('Stone1Shape'))]
     except KeyError as e:
         raise KeyValueError('cut_aliases', e.args[0])
+
+    quantity = int(data.get('TotalQtyOH'))
+    if quantity:
+        active = 't'
+    else:
+        active = 'f'
+        #raise SkipDiamond('No quantity on hand.')
+
+    flag = cached_clean_upper(data.get('WebItemFlag'))
+    if flag == 'I':
+        active = 'f'
 
     carat_weight = Decimal(str(cached_clean(data.get('Stone1Wt'))))
     if carat_weight < minimum_carat_weight:
@@ -381,7 +390,7 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     ret = Row(
         added_date,
         added_date,
-        't', # active
+        active, # active
         SOURCE_NAME,
         '', # lot_num
         stock_number,

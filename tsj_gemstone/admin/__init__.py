@@ -58,9 +58,9 @@ class SourceFilter(SimpleListFilter):
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
-    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner')
+    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner', 'active')
     list_display_links = ('stock_number',)
-    list_filter = ('cut', 'color', 'clarity', 'certifier', SourceFilter)
+    list_filter = ('cut', 'color', 'clarity', 'certifier', 'active', SourceFilter)
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
 
     def get_fieldsets(self, request, obj=None):

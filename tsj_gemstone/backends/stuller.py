@@ -117,13 +117,15 @@ class Backend(BaseBackend):
         url = 'https://www.stuller.com/api/v2/gem/diamonds'
         next_page = None
         next_page_hash = None
+        serial_numbers = set()
+        diamond_count = 0
         ret = []
 
         # Accumulate paginated diamond data into ret
         while True:
             if next_page:
                 # Stuller wants a JSON request body, not urlencoded form data
-                response = session.post(url, data=json.dumps({'NextPage': next_page}))
+                response = session.post(url, json={'NextPage': next_page})
             else:
                 response = session.get(url)
 
@@ -136,6 +138,14 @@ class Backend(BaseBackend):
                 break
 
             ret.extend(data['Diamonds'])
+            for d in data['Diamonds']:
+                serial_numbers.add(d['SerialNumber'])
+
+            # If this loop didn't add anything new, we're probably in an infinite loop
+            if diamond_count == len(serial_numbers):
+                logger.warning('Stuller infinite loop (diamond count {})'.format(diamond_count))
+                break
+            diamond_count = len(serial_numbers)
 
             if 'NextPage' in data and data['NextPage']:
                 next_page = data['NextPage']

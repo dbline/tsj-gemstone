@@ -340,16 +340,16 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
     polish = grading_aliases.get(cached_clean_upper(data.get('StonePolish1')))
     symmetry = grading_aliases.get(cached_clean_upper(data.get('StoneSymmetry1')))
 
-    fluorescence = cached_clean_upper(data.get('StoneFluorescence1'))
+    fluorescence = cached_clean_upper(data.get('StoneFluorescence1')).split()
     fluorescence_id = None
-    fluorescence_color = cached_clean_upper(data.get('fc'))
-    fluorescence_color_id = None
-    for abbr, id in fluorescence_aliases.iteritems():
-        if fluorescence.startswith(abbr.upper()):
+    for name, id in fluorescence_aliases.iteritems():
+        if name == fluorescence[0]:
             fluorescence_id = id
             continue
     fluorescence = fluorescence_id
 
+    fluorescence_color = cached_clean_upper(data.get('fc'))
+    fluorescence_color_id = None
     if fluorescence_color:
         for abbr, id in fluorescence_color_aliases.iteritems():
             if fluorescence_color.startswith(abbr.upper()):

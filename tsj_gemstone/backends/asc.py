@@ -342,10 +342,11 @@ def write_diamond_row(data, cut_aliases, color_aliases, clarity_aliases, grading
 
     fluorescence = cached_clean_upper(data.get('StoneFluorescence1')).split()
     fluorescence_id = None
-    for name, id in fluorescence_aliases.iteritems():
-        if name == fluorescence[0]:
-            fluorescence_id = id
-            continue
+    if fluorescence:
+        for name, id in fluorescence_aliases.iteritems():
+            if name == fluorescence[0]:
+                fluorescence_id = id
+                continue
     fluorescence = fluorescence_id
 
     fluorescence_color = cached_clean_upper(data.get('fc'))

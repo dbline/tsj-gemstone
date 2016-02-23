@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
-INFILE_GLOB = '/glusterfs/ftp_home/orrsftp/data/ASC_ITEM_*XML'
+INFILE_GLOB = '/glusterfs/ftp_home/{username}/data/ASC_ITEM_*XML'
 SOURCE_NAME = 'asc'
 
 Row = namedtuple('Row', (
@@ -190,7 +190,17 @@ class Backend(BaseBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
     def get_default_filename(self):
-        fn = max(glob.iglob(INFILE_GLOB), key=os.path.getctime)
+        username = prefs.get('asc')
+
+        if not username:
+            logger.warning('Missing ASC FTP username, aborting import.')
+            return
+
+        fn = max(glob.iglob(INFILE_GLOB.format(username=username)), key=os.path.getctime)
+        if not fn:
+            logger.warning('No ASC file for username {}, aborting import.'.format(username))
+            return
+
         return fn
 
     def run(self):

@@ -170,7 +170,7 @@ class IdexHandler(xml.sax.ContentHandler):
         else:
             if len(self.row_buffer) > self.buffer_size:
                 self.writer.writerows(self.row_buffer)
-                self.row_buffer = []
+                self.row_buffer = [diamond_row]
             else:
                 self.row_buffer.append(diamond_row)
             self.import_successes += 1

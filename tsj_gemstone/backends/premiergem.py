@@ -215,7 +215,7 @@ class Backend(BaseBackend):
             else:
                 if len(row_buffer) > buffer_size:
                     writer.writerows(row_buffer)
-                    row_buffer = []
+                    row_buffer = [diamond_row]
                 else:
                     row_buffer.append(diamond_row)
                 import_successes += 1

@@ -241,7 +241,7 @@ class Backend(BaseBackend):
             else:
                 if len(row_buffer) > buffer_size:
                     writer.writerows(row_buffer)
-                    row_buffer = []
+                    row_buffer = [diamond_row]
                 else:
                     row_buffer.append(diamond_row)
                 import_successes += 1
@@ -361,7 +361,10 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
     try:
         certifier_id, certifier_disabled = certifier_aliases[certifier]
     except KeyError as e:
-        raise KeyValueError('certifier_aliases', e.args[0])
+        if must_be_certified:
+            raise KeyValueError('certifier_aliases', e.args[0])
+        certifier_id = None
+        certifier_disabled = False
 
     if certifier_disabled:
         raise SkipDiamond('Certifier disabled')
@@ -487,7 +490,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         carat_weight,
         moneyfmt(Decimal(carat_price), curr='', sep=''),
         moneyfmt(Decimal(price), curr='', sep=''),
-        certifier,
+        nvl(certifier),
         cert_num,
         cert_image,
         '', # cert_image_local

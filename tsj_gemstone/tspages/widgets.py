@@ -1,6 +1,6 @@
 from django import forms
 
-from tinymce.widgets import TinyMCE
+from ckeditor.widgets import CKEditorWidget
 
 from thinkspace.apps.pages.library import WidgetLibrary
 from thinkspace.apps.pages.widgets import TemplatedWidget
@@ -22,18 +22,7 @@ class GemstoneWidgetForm(PreferencesForm):
 		required=False, help_text='Gemstone display style')
     icon_style = forms.ChoiceField(choices=ICON_CHOICES,
 		required=False, help_text='Gemstone icon style')
-    header = forms.CharField(widget=TinyMCE(attrs={'cols': 80},mce_attrs={
-        'width': '100%',
-        'plugins': 'paste,searchreplace,style,fullscreen,nonbreaking',
-        'theme_advanced_toolbar_location': 'top',
-        'theme_advanced_statusbar_location': 'bottom',
-        'theme_advanced_toolbar_align': 'left',
-        'theme_advanced_path': True,
-        'theme_advanced_buttons1': 'formatselect,bold,italic,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,|,hr',
-        'theme_advanced_buttons2': '',
-        'extended_valid_elements': 'div[*],a[*],strong,b,em[*],i[*],ul[*],li[*],span[*],td[*],input[*]',
-        'content_css': '/static/bootstrap/bootstrap/css/bootstrap.css,/static/font-awesome/css/font-awesome.css',
-    }),
+    header = forms.CharField(widget=CKEditorWidget(config_name='advanced'),
         required=False,
         help_text='Header content to put above the gemstones')
     show_view_all = forms.BooleanField(

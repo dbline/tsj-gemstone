@@ -11,11 +11,17 @@
             $.ajax({
                 url: State.hash,
                 dataType: 'json',
-                success: function(json) {
-                    $('.table-wrapper').html(json['list_partial']);
-                    $('.pagination-wrapper').html(json['paginator_full_partial']);
-                    affixDetails();
+                beforeSend: function() {
+                    $('.overlay').show();
                 }
+            })
+            .done(function(json) {
+                $('.table-wrapper').html(json['list_partial']);
+                $('.pagination-wrapper').html(json['paginator_full_partial']);
+                affixDetails();
+            })
+            .always(function() {
+                $('.overlay').hide();
             });
         });
 
@@ -250,6 +256,9 @@
         // PAGINATION
         $('body').on('click', '.paginator_link', function() {
             update_results($(this).attr('href'));
+            $('html, body').animate({
+                scrollTop: $('.table-gemstone').offset().top
+            }, 500);
             return false;
         });
 

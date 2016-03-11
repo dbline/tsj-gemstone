@@ -32,14 +32,16 @@
         // DETAILS
         affixDetails();
 
-        if(viewport.is('>=md')) {
-            $('body').on('click', '.table-gemstone tr', function() {
+        $('body').on('click', '.table-gemstone tr', function() {
+            if(viewport.is('>=md')) {
                 $('.table-gemstone tr.active').removeClass('active');
                 $(this).addClass('active');
                 $('.table-gemstone-detail .active').removeClass('active').addClass('hide');
                 $('#' + this.id + '-detail').addClass('active').removeClass('hide');
-            });
-        }
+            } else {
+                window.location.href = $(this).data('url');
+            }
+        });
 
         // UI WIDGETS
 
@@ -244,13 +246,6 @@
         $('body').on('click', 'th a', function() {
             update_results($(this).attr('href'));
             return false;
-        });
-
-        // MOBILE
-        $('body').on('click', 'tr', function() {
-            if(viewport.is('<md')) {
-                window.location.href = $(this).data('url');
-            }
         });
 
         // PAGINATION

@@ -16,7 +16,7 @@
         </thead>
         <tbody>
         {% for gemstone in page.object_list %}
-            <tr id="{{ gemstone.pk }}" class="hidden-xs hidden-sm{% if forloop.first %} active{% endif %}">
+            <tr id="{{ gemstone.pk }}" {% if forloop.first %}class="active"{% endif %} data-url="{% page gemstone-detail gemstone.pk %}">
                 <td>{{ gemstone.cut }}</td>
                 <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
                 <td>{{ gemstone.carat_weight }}</td>
@@ -25,17 +25,6 @@
                 <td>{{ gemstone.certifier }}</td>
             {% if show_prices %}
                 <td>{{ gemstone.formatted_price }}</td>
-            {% endif %}
-            </tr>
-            <tr id="{{ gemstone.pk }}" class="visible-xs visible-sm">
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.cut }}</a></td>
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.cut_grade.name|default:"N/A" }}</a></td>
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.carat_weight }}</a></td>
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.color }}</a></td>
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.clarity }}</a></td>
-                <td class="hidden-xs"><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.certifier }}</a></td>
-            {% if show_prices %}
-                <td><a href="{{ gemstone.get_absolute_url }}">{{ gemstone.formatted_price }}</a></td>
             {% endif %}
             </tr>
         {% endfor %}

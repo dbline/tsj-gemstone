@@ -16,7 +16,7 @@
         </thead>
         <tbody>
         {% for gemstone in page.object_list %}
-            <tr id="{{ gemstone.pk }}" {% if forloop.first %}class="active"{% endif %} data-url="{% page gemstone-detail gemstone.pk %}">
+            <tr id="{{ gemstone.pk }}" {% if forloop.first %}class="active"{% endif %} data-url="{% page gemstone-detail gemstone.pk %}" onClick="">
                 <td>{{ gemstone.cut }}</td>
                 <td>{{ gemstone.cut_grade.name|default:"N/A" }}</td>
                 <td>{{ gemstone.carat_weight }}</td>

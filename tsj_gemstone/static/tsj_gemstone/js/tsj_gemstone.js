@@ -257,7 +257,7 @@
         $('body').on('click', '.paginator_link', function() {
             update_results($(this).attr('href'));
             $('html, body').animate({
-                scrollTop: $('.table-gemstone').offset().top
+                scrollTop: $('.title-wrapper').offset().top
             }, 500);
             return false;
         });

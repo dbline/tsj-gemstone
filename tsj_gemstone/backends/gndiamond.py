@@ -324,7 +324,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         trade_show,
         cert_num,
         show_cert, # Yes/No
-        fancy # Just Yellow so far
+        fancy, # Just Yellow so far
+        sarine_link
     ) = line
 
     #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values

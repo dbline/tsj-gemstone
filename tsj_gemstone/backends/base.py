@@ -81,6 +81,10 @@ class BaseBackend(object):
         self.import_errors = 0
         self.import_skip = 0
 
+        # To cut down on disk writes, we buffer the rows
+        self.row_buffer = []
+        self.buffer_size = 1000
+
     @property
     def enabled(self):
         try:
@@ -167,6 +171,38 @@ class BaseBackend(object):
 
         return self.import_successes, self.import_errors
 
+    def try_write_row(self, writer, *args, **kwargs):
+        # TODO: We shouldn't need KeyError or ValueError if we're correctly
+        #       accounting for the possible failure conditions with SkipDiamond
+        #       and KeyValueError.
+        try:
+            diamond_row = self.write_diamond_row(*args, **kwargs)
+        except SkipDiamond as e:
+            self.import_skip += 1
+            #logger.info('SkipDiamond: %s' % e.message)
+            return
+        except KeyValueError as e:
+            self.missing_values[e.key].add(e.value)
+        except KeyError as e:
+            self.import_errors += 1
+            logger.info('KeyError', exc_info=e)
+        except ValueError as e:
+            self.import_errors += 1
+            logger.info('ValueError', exc_info=e)
+        except Exception as e:
+            # Create an error log entry and increment the import_errors counter
+            #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
+            #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
+            self.import_errors += 1
+            logger.error('Diamond import exception', exc_info=e)
+        else:
+            if len(self.row_buffer) > self.buffer_size:
+                writer.writerows(self.row_buffer)
+                self.row_buffer = [diamond_row]
+            else:
+                self.row_buffer.append(diamond_row)
+            self.import_successes += 1
+
     def report_missing_values(self, field, values):
         summary_logger.warning(
             'Missing values for %s' % field,
@@ -232,46 +268,10 @@ class CSVBackend(BaseBackend):
             if col_diff > 0:
                 line.extend([''] * col_diff)
 
-            # And sometimes there's one too many columns between J (cert #) and M (dimensions)
-            # TODO: Commented out since they seem to have resolved this issue
+            self.try_write_row(writer, line, blank_columns=blank_columns)
 
-            # TODO: We shouldn't need KeyError or ValueError if we're correctly
-            #       accounting for the possible failure conditions with SkipDiamond
-            #       and KeyValueError.
-            try:
-                diamond_row = self.write_diamond_row(line, blank_columns=blank_columns)
-            except SkipDiamond as e:
-                self.import_skip += 1
-                print e.message
-                #logger.info('SkipDiamond: %s' % e.message)
-                continue
-            except KeyValueError as e:
-                print e
-                self.missing_values[e.key].add(e.value)
-            except KeyError as e:
-                self.import_errors += 1
-                logger.info('KeyError', exc_info=e)
-            except ValueError as e:
-                print e
-                self.import_errors += 1
-                logger.info('ValueError', exc_info=e)
-            except Exception as e:
-                print e
-                # Create an error log entry and increment the import_errors counter
-                #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-                #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-                self.import_errors += 1
-                logger.error('Diamond import exception', exc_info=e)
-            else:
-                if len(row_buffer) > buffer_size:
-                    writer.writerows(row_buffer)
-                    row_buffer = [diamond_row]
-                else:
-                    row_buffer.append(diamond_row)
-                self.import_successes += 1
-
-        if row_buffer:
-            writer.writerows(row_buffer)
+        if self.row_buffer:
+            writer.writerows(self.row_buffer)
 
         return self.save(tmp_file)
 
@@ -286,52 +286,11 @@ class JSONBackend(BaseBackend):
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
-        # To cut down on disk writes, we buffer the rows
-        row_buffer = []
-        buffer_size = 1000
-
-        # TODO: We shouldn't need KeyError or ValueError if we're correctly
-        #       accounting for the possible failure conditions with SkipDiamond
-        #       and KeyValueError.
-        missing_values = defaultdict(set)
-
         for line in data:
-            try:
-                diamond_row = self.write_diamond_row(line)
-            except SkipDiamond as e:
-                print e
-                self.import_skip += 1
-                #logger.info('SkipDiamond: %s' % e.message)
-                continue
-            except KeyValueError as e:
-                print e
-                self.missing_values[e.key].add(e.value)
-            except KeyError as e:
-                print e
-                self.import_errors += 1
-                logger.info('KeyError', exc_info=e)
-            except ValueError as e:
-                print e
-                self.import_errors += 1
-                logger.info('ValueError', exc_info=e)
-            except Exception as e:
-                print e
-                # Create an error log entry and increment the import_errors counter
-                #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-                #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-                self.import_errors += 1
-                logger.error('Diamond import exception', exc_info=e)
-                break
-            else:
-                if len(row_buffer) > buffer_size:
-                    writer.writerows(row_buffer)
-                    row_buffer = [diamond_row]
-                else:
-                    row_buffer.append(diamond_row)
-                self.import_successes += 1
+            self.try_write_row(writer, line)
 
-        if row_buffer:
-            writer.writerows(row_buffer)
+        if self.row_buffer:
+            writer.writerows(self.row_buffer)
 
         return self.save(tmp_file)
 
@@ -341,10 +300,6 @@ class XMLHandler(xml.sax.ContentHandler):
         xml.sax.ContentHandler.__init__(self)
 
         self.backend, self.writer = backend, writer
-
-        # To cut down on disk writes, we buffer the rows
-        self.row_buffer = []
-        self.buffer_size = 1000
 
 class XMLBackend(BaseBackend):
     # An XML backend requires a subclass of XMLHandler to process the document

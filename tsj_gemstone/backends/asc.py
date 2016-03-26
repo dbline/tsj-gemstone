@@ -64,39 +64,13 @@ class ASCHandler(XMLHandler):
         name = name.encode('utf-8').strip()
         if name != 'ItemNum':
             return
-        try:
-            diamond_row = self.backend.write_diamond_row(self.row)
-        except SkipDiamond as e:
-            self.backend.import_skip += 1
-            #logger.info('SkipDiamond: %s' % e.message)
-            return
-        except KeyValueError as e:
-            self.backend.missing_values[e.key].add(e.value)
-        except KeyError as e:
-            self.backend.import_errors += 1
-            logger.info('KeyError', exc_info=e)
-        except ValueError as e:
-            self.backend.import_errors += 1
-            logger.info('ValueError', exc_info=e)
-        except Exception as e:
-            # Create an error log entry and increment the import_errors counter
-            #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-            #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-            self.backend.import_errors += 1
-            logger.error('Diamond import exception', exc_info=e)
-        else:
-            if len(self.row_buffer) > self.buffer_size:
-                self.writer.writerows(self.row_buffer)
-                self.row_buffer = [diamond_row]
-            else:
-                self.row_buffer.append(diamond_row)
-            self.backend.import_successes += 1
 
+        self.backend.try_write_row(self.writer, self.row)
         self.row = {}
 
     def endDocument(self):
-        if self.row_buffer:
-            self.writer.writerows(self.row_buffer)
+        if self.backend.row_buffer:
+            self.writer.writerows(self.backend.row_buffer)
 
 class Backend(XMLBackend):
     handler_class = ASCHandler

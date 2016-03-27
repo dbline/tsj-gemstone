@@ -12,7 +12,6 @@ from django.utils.functional import memoize
 
 from .base import CSVBackend, SkipDiamond, KeyValueError
 from .. import models
-from ..prefs import prefs
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)

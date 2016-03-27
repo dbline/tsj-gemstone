@@ -135,13 +135,14 @@ class Backend(CSVBackend):
             sarine_link
         ) = line
 
-        #minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
-        # TODO: Until we have prefs
-        minimum_carat_weight = 0
-        maximum_carat_weight = None
-        minimum_price = 0
-        maximum_price = False
-        must_be_certified = True
+        (
+            minimum_carat_weight,
+            maximum_carat_weight,
+            minimum_price,
+            maximum_price,
+            must_be_certified,
+            verify_cert_images
+        ) = self.pref_values
 
         comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)

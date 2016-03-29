@@ -431,22 +431,15 @@
     .table-striped > tbody > tr.active > td {
         background-color: #FFF;
         font-weight: bold;
+
+        @media(max-width: @screen-sm-max) {
+            background-color: #f0efed;
+            font-weight: normal;
+        }
     }
 
     table > tbody > tr:hover {
         cursor: pointer;
-    }
-
-    @media(max-width: @screen-sm-max) {
-        .table td {
-            padding: 0;
-
-            a {
-                color: @gray;
-                display: inline-block;
-                padding: 10px 5px;
-            }
-        }
     }
 
     .table-gemstone-detail {
@@ -540,6 +533,13 @@
             font-size: 12px;
             min-width: auto;
             width: 100%;
+        }
+
+        .btn-addcart {
+            .btn();
+            .btn-block();
+            .btn-primary();
+            margin-bottom: 10px;
         }
 
         .btn-select-diamond {

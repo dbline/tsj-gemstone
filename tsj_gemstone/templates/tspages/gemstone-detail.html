@@ -21,8 +21,10 @@
             // Inquiry
             $('.section-info-questions').jewelrybox_inquiry();
             // Certificate
-            $('.cert-image').smoothZoom({
-                responsive: true,
+            $('.cert-wrapper').imagesLoaded(function() {
+                $('.cert-image').smoothZoom({
+                    responsive: true,
+                });
             });
         });
     </script>

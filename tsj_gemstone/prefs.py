@@ -5,12 +5,6 @@ from django.contrib.auth.models import Group
 from thinkspace.apps.preferences import AppPreferences, PreferencesForm
 
 class GemstonePreferencesForm(PreferencesForm):
-    RAPAPORT_VERSION_CHOICES = (
-        # TODO: We could rename backends.rapaport to backends.rapnet08, but
-        #       it's not a big deal since we'll just drop the 0.8 version.
-        ('rapnet10', '1.0'),
-    )
-
     PRICE_CHOICES = (
         ('none', 'Off'), #TODO: Eventually change stored value to 'off' to standardize with tsj_catalog
         ('admin', 'Admin'),
@@ -22,7 +16,6 @@ class GemstonePreferencesForm(PreferencesForm):
     rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
     rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
-    #rapaport_version = forms.ChoiceField(required=False, choices=RAPAPORT_VERSION_CHOICES, help_text=_(u'The version of the Rapnet feed.'), initial='rapnet10')
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
     rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput,
@@ -70,7 +63,6 @@ class GemstonePreferences(AppPreferences):
                 'rapaport_username',
                 'rapaport_password',
                 'rapaport_url',
-                'rapaport_version',
             ),
         }),
         (_('IDEX'), {

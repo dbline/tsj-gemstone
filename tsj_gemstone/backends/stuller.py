@@ -63,21 +63,20 @@ class Backend(JSONBackend):
         if settings.DEBUG and not self.nodebug:
             return json.load(open(self.debug_filename, 'rb'))['Diamonds']
 
-        user = settings.STULLER_USER
-        pw = settings.STULLER_PASSWORD
-
         session = requests.Session()
-        session.auth = (user, pw)
+        session.auth = (settings.STULLER_USER, settings.STULLER_PASSWORD)
         session.headers.update({'Content-Type': 'application/json', 'Accept': 'application/json'})
         url = 'https://www.stuller.com/api/v2/gem/diamonds'
+
         next_page = None
-        next_page_hash = None
+        prev_page_hash = None
         serial_numbers = set()
-        diamond_count = 0
         ret = []
 
         # Accumulate paginated diamond data into ret
         while True:
+            new_serial_numbers = 0
+
             if next_page:
                 # Stuller wants a JSON request body, not urlencoded form data
                 response = session.post(url, json={'NextPage': next_page})
@@ -92,27 +91,27 @@ class Backend(JSONBackend):
             if 'Diamonds' not in data:
                 break
 
-            ret.extend(data['Diamonds'])
-            for d in data['Diamonds']:
-                serial_numbers.add(d['SerialNumber'])
+            for x, d in enumerate(data['Diamonds']):
+                if d['SerialNumber'] not in serial_numbers:
+                    serial_numbers.add(d['SerialNumber'])
+                    new_serial_numbers += 1
+                    ret.append(d)
 
-            # If this loop didn't add anything new, we're probably in an infinite loop
-            if diamond_count == len(serial_numbers):
-                logger.warning('Stuller infinite loop (diamond count {})'.format(diamond_count))
+            # If there aren't any new serial numbers, we're probably in an infinite loop
+            if not new_serial_numbers:
+                logger.warning('Stuller infinite loop (diamond count {})'.format(len(serial_numbers)))
                 break
-            diamond_count = len(serial_numbers)
 
             if 'NextPage' in data and data['NextPage']:
                 next_page = data['NextPage']
 
-                # Stuller occasionally gets stuck in an infinite loop
+                # Sometimes we see the same NextPage
                 _hash = hashlib.md5(next_page).hexdigest()
-                if _hash == next_page_hash:
-                    logger.warning('Stuller infinite loop {}'.format(_hash))
+                if _hash == prev_page_hash:
+                    logger.warning('Stuller infinite loop (hash {})'.format(_hash))
                     break
-                next_page_hash = _hash
-
-                time.sleep(3)
+                prev_page_hash = _hash
+                time.sleep(2)
             else:
                 break
 

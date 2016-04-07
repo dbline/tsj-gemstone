@@ -55,6 +55,7 @@ def import_site_gemstone_backends(schema=None, dry_run=False, nodebug=False, ver
         backend = get_backend(bname)
         backend = backend.Backend(
             nodebug=nodebug,
+            task_id=current_task.request.id,
         )
 
         if backend.enabled:

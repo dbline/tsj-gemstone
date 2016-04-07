@@ -11,7 +11,7 @@ import zipfile
 from django.conf import settings
 from django.utils.functional import memoize
 
-from .base import XMLBackend, XMLHandler, SkipDiamond, KeyValueError
+from .base import XMLBackend, XMLHandler, ImportSourceError, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -80,6 +80,7 @@ class Backend(XMLBackend):
 
         key = prefs.get('idex_access_key')
         if not key:
+            # TODO: We shouldn't be able to get here anymore, enabled checks the pref
             logger.error('No IDEX key found')
             return
 
@@ -89,8 +90,7 @@ class Backend(XMLBackend):
         try:
             idex_request = Request(url + '?' + data)
         except HTTPError as e:
-            logger.error('IDEX download failure: %s' % e)
-            return
+            raise ImportSourceError(str(e))
 
         # Response objects don't support seeking, which ZipFile expects
         response = urlopen(idex_request)
@@ -120,9 +120,9 @@ class Backend(XMLBackend):
 
         carat_weight = Decimal(str(cached_clean(data.get('ct'))))
         if carat_weight < minimum_carat_weight:
-            raise SkipDiamond("Carat Weight '%s' is less than the minimum of %s." % (carat_weight, minimum_carat_weight))
+            raise SkipDiamond('Carat weight is less than the minimum of %s.' % minimum_carat_weight)
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
-            raise SkipDiamond("Carat Weight '%s' is greater than the maximum of %s." % (carat_weight, maximum_carat_weight))
+            raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
         color = self.color_aliases.get(cached_clean_upper(data.get('col')))
 
@@ -130,7 +130,7 @@ class Backend(XMLBackend):
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
-                raise SkipDiamond('No valid Certifier was specified.')
+                raise SkipDiamond('No valid certifier was specified.')
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
         except KeyError as e:
@@ -228,9 +228,9 @@ class Backend(XMLBackend):
         price_before_markup = carat_price * carat_weight
 
         if minimum_price and price_before_markup < minimum_price:
-            raise SkipDiamond("Price before markup '%s' is less than the minimum of %s." % (price_before_markup, minimum_price))
+            raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
         if maximum_price and price_before_markup > maximum_price:
-            raise SkipDiamond("Price before markup '%s' is greater than the maximum of %s." % (price_before_markup, maximum_price))
+            raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
 
         price = None
         for markup in self.markup_list:
@@ -238,7 +238,7 @@ class Backend(XMLBackend):
                 price = (price_before_markup * (1 + markup[2]/100))
                 break
         if not price:
-            raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of '%s'." % price_before_markup)
+            raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
         state = cached_clean(data.get('st'))
         country = cached_clean(data.get('cty'))

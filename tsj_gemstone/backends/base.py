@@ -6,6 +6,8 @@ import logging
 import tempfile
 import xml.sax
 
+from psycopg2.extras import Json
+
 from django.conf import settings
 from django.db import connection, transaction
 
@@ -26,6 +28,10 @@ class SkipDiamond(Exception):
     pass
 
 class SkipImport(Exception):
+    pass
+
+# A failure to load source data from the backend (HTTP error, API error, missing file, etc)
+class ImportSourceError(Exception):
     pass
 
 class BaseBackend(object):
@@ -71,15 +77,25 @@ class BaseBackend(object):
         'rap_date'
     ))
 
-    def __init__(self, filename=None, nodebug=False):
+    def __init__(self, filename=None, nodebug=False, task_id=None):
         self.filename = filename
         self.backend_module = self.__module__.split('.')[-1]
         self.nodebug = nodebug
+        self.task_id = task_id
 
-        self.missing_values = defaultdict(set)
+        # PK of tsj_gemstone_central_import record that corresponds to the
+        # currently running import
+        self.import_id = None
+
+        # Outer keys are field names (cut, clarity, certifier, ..)
+        # Inner keys are the value (Round, Foggy, Bob's Lab, ..)
+        self.missing_values = defaultdict(lambda: defaultdict(int))
+
         self.import_successes = 0
-        self.import_errors = 0
-        self.import_skip = 0
+
+        # Keys are the exception message
+        self.import_skip = defaultdict(int)
+        self.import_errors = defaultdict(int)
 
         # To cut down on disk writes, we buffer the rows
         self.row_buffer = []
@@ -109,15 +125,8 @@ class BaseBackend(object):
         if fn:
             try:
                 return open(fn, 'rU')
-            except IOError:
-                logger.exception(
-                    'Error loading file',
-                    extra={
-                        'tags': {
-                            'backend': self.backend_module,
-                        },
-                    },
-                )
+            except IOError as e:
+                raise ImportSourceError(str(e))
         else:
             raise SkipImport
 
@@ -144,6 +153,52 @@ class BaseBackend(object):
             prefs.get('rapaport_verify_cert_images', False),
         )
 
+    def create_import_record(self):
+        "Add a record to tsj_gemstone_central_import to track import status"
+        cursor = connection.cursor()
+        if self.task_id:
+            cursor.execute('SELECT create_gemstone_import(%s,%s)', (self.backend_module, self.task_id))
+        else:
+            cursor.execute('SELECT create_gemstone_import(%s)', (self.backend_module,))
+        self.import_id = cursor.fetchone()[0]
+
+    def update_import_record(self, status):
+        cursor = connection.cursor()
+
+        if status in ('processed', 'error'):
+            data = {}
+            for k in ('import_successes', 'missing_values', 'import_errors', 'import_skip'):
+                if getattr(self, k):
+                    if k.startswith('import_'):
+                        dk = k[7:]
+                    elif k == 'missing_values':
+                        dk = 'missing'
+                    data[dk] = getattr(self, k)
+            cursor.execute(
+                'SELECT update_gemstone_import(%s,%s,%s)',
+                (self.import_id, status, Json(data))
+            )
+        # TODO: update states:
+        #  - Loading from source
+        #  - write_diamond_row'ing
+        #  - copy_from'ing
+
+    def run(self):
+        self.create_import_record()
+        self.populate_import_data()
+
+        try:
+            tmp_file = self._run()
+            self.save(tmp_file)
+        except ImportSourceError as e:
+            # TODO: Bit of a hack.  We should represent backend-level errors
+            #       differently from record-level errors.
+            self.import_errors[str(e)] = 1
+            self.update_import_record('error')
+            return
+
+        self.update_import_record('processed')
+
     def save(self, fp):
         # fp should be a tempfile.NamedTemporaryFile.  We currently assume
         # that it's also still open in write mode, so flush and reopen.
@@ -161,16 +216,6 @@ class BaseBackend(object):
 
         fp.close()
 
-        if self.missing_values:
-            for k, v in self.missing_values.items():
-                self.import_errors += 1
-                self.report_missing_values(k, v)
-
-        if self.import_skip:
-            self.report_skipped_diamonds(self.import_skip)
-
-        return self.import_successes, self.import_errors
-
     def try_write_row(self, writer, *args, **kwargs):
         # TODO: We shouldn't need KeyError or ValueError if we're correctly
         #       accounting for the possible failure conditions with SkipDiamond
@@ -178,22 +223,17 @@ class BaseBackend(object):
         try:
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
-            self.import_skip += 1
-            #logger.info('SkipDiamond: %s' % e.message)
-            return
+            self.import_skip[str(e)] += 1
         except KeyValueError as e:
-            self.missing_values[e.key].add(e.value)
+            self.missing_values[e.key][e.value] += 1
         except KeyError as e:
-            self.import_errors += 1
+            self.import_errors[str(e)] += 1
             logger.info('KeyError', exc_info=e)
         except ValueError as e:
-            self.import_errors += 1
+            self.import_errors[str(e)] += 1
             logger.info('ValueError', exc_info=e)
         except Exception as e:
-            # Create an error log entry and increment the import_errors counter
-            #import_error_log_details = str(line) + '\n\nTOTAL FIELDS: ' + str(len(line)) + '\n\nTRACEBACK:\n' + traceback.format_exc()
-            #if import_log: ImportLogEntry.objects.create(import_log=import_log, csv_line=reader.line_num, problem=str(e), details=import_error_log_details)
-            self.import_errors += 1
+            self.import_errors[str(e)] += 1
             logger.error('Diamond import exception', exc_info=e)
         else:
             if len(self.row_buffer) > self.buffer_size:
@@ -203,43 +243,14 @@ class BaseBackend(object):
                 self.row_buffer.append(diamond_row)
             self.import_successes += 1
 
-    def report_missing_values(self, field, values):
-        summary_logger.warning(
-            'Missing values for %s' % field,
-            extra={
-                'tags': {
-                    'backend': self.backend_module,
-                },
-                'summary_detail': ', '.join(sorted(values)),
-            },
-        )
-
-    def report_skipped_diamonds(self, count):
-        summary_logger.warning(
-            'Skipped diamonds',
-            extra={
-                'tags': {
-                    'backend': self.backend_module,
-                },
-                'summary_detail': count,
-            },
-        )
-
     def nvl(self, data):
         if data is None or data == '':
             return 'NULL'
         return data
 
 class CSVBackend(BaseBackend):
-    def run(self):
-        # TODO: Shouldn't have to call this explicitly in each backend
-        self.populate_import_data()
-
+    def _run(self):
         fp = self.get_fp()
-        # TODO: Raise exception, don't treat return value as success/failure
-        if not fp:
-            return 0, 1
-
         reader = csv.reader(fp)
 
         headers = reader.next()
@@ -273,26 +284,22 @@ class CSVBackend(BaseBackend):
         if self.row_buffer:
             writer.writerows(self.row_buffer)
 
-        return self.save(tmp_file)
+        return tmp_file
 
 class JSONBackend(BaseBackend):
-    def run(self):
-        self.populate_import_data()
-
+    def _run(self):
         data = self.get_json()
-        if not data:
-            return 0, 1
 
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
-        for line in data:
-            self.try_write_row(writer, line)
+        for obj in data:
+            self.try_write_row(writer, obj)
 
         if self.row_buffer:
             writer.writerows(self.row_buffer)
 
-        return self.save(tmp_file)
+        return tmp_file
 
 class XMLHandler(xml.sax.ContentHandler):
     def __init__(self, backend, writer):
@@ -308,13 +315,8 @@ class XMLBackend(BaseBackend):
     def get_handler(self, writer):
         return self.handler_class(self, writer)
 
-    def run(self):
-        # TODO: Shouldn't have to call this explicitly in each backend
-        self.populate_import_data()
-
+    def _run(self):
         fp = self.get_fp()
-        if not fp:
-            return 0, 1
 
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
@@ -323,4 +325,4 @@ class XMLBackend(BaseBackend):
         XmlParser.setContentHandler(self.get_handler(writer))
         XmlParser.parse(fp)
 
-        return self.save(tmp_file)
+        return tmp_file

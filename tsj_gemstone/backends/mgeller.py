@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 # TODO: Need to handle spaces between dimensions
-MEASUREMENT_RE = re.compile('[\sx*-]')
+MEASUREMENT_RE = re.compile('[\sxX*-]')
 
 def clean(data, upper=False):
     data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')

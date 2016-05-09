@@ -63,7 +63,27 @@
 		}
 	}
 }
+.widget-gemstones-outlines {
 
+    li {
+        display: inline-block;
+        margin: 20px;
+
+        object {
+            width: 70px;
+            margin: 0;
+        }
+    }
+    svg {
+        display: block;
+        height: 50px;
+        fill: rgb(255,255,255) !important;
+    }
+    a:hover {
+        cursor: pointer;
+        cursor: hand;
+    }
+}
 /********************************************
 ` jQuery UI
 *********************************************/
@@ -629,7 +649,6 @@
             form {
                 .pull-left();
                 margin-right: 15px;
-
 
                 .dropdown-menu {
                     font-size: 12px;

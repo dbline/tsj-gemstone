@@ -15,6 +15,7 @@ STYLE_CHOICES = (
 )
 ICON_CHOICES = (
     ('vectors', 'Vectors'),
+    ('outlines', 'Outlines'),
     ('images', 'Images'),
 )
 class GemstoneWidgetForm(PreferencesForm):

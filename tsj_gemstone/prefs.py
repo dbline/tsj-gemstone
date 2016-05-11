@@ -32,6 +32,7 @@ class GemstonePreferencesForm(PreferencesForm):
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
 
+    brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
     hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
     mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')

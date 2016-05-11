@@ -1,5 +1,6 @@
 __all__ = (
     'asc',
+    'brilliantediamond',
     'gndiamond',
     'hasenfeld',
     'idex',

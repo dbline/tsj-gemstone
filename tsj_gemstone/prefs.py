@@ -2,7 +2,8 @@ from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import Group
 
-from thinkspace.apps.preferences import AppPreferences, PreferencesForm
+from thinkspace.apps.preferences.forms import PreferencesForm
+from thinkspace.apps.preferences.options import AppPreferences
 
 class GemstonePreferencesForm(PreferencesForm):
     PRICE_CHOICES = (

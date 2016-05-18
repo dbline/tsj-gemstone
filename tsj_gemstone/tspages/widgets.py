@@ -4,7 +4,7 @@ from ckeditor.widgets import CKEditorWidget
 
 from thinkspace.apps.pages.library import WidgetLibrary
 from thinkspace.apps.pages.widgets import TemplatedWidget
-from thinkspace.apps.preferences import PreferencesForm
+from thinkspace.apps.preferences.forms import PreferencesForm
 from tsj_gemstone import models
 
 register = WidgetLibrary()

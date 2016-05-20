@@ -32,6 +32,29 @@ class Command(BaseCommand):
         ),
     )
 
+    def add_arguments(self, parser):
+        parser.add_argument('--file',
+            action='store',
+            dest='file',
+            default=None,
+            help='File to import'
+        )
+        parser.add_argument('-b', '--backend',
+            action='store',
+            dest='backend',
+            help='Backend to import from (gndiamond, polygon, rapaport, rapnet10) (default: value of rapaport_version pref)',
+        )
+        parser.add_argument('--async',
+            action='store_true',
+            dest='async',
+            help='Run this command asynchronously as a Celery task'
+        )
+        parser.add_argument('--nodebug',
+            action='store_true',
+            dest='nodebug',
+            help='Skip the "debug" test data and load real data instead',
+        )
+
     def handle(self, *args, **options):
         # TODO: Start Celery task if async=True
         backend = get_backend(options.get('backend'))

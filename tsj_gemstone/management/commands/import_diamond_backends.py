@@ -31,6 +31,23 @@ class Command(MultisiteCommand, LabelCommand):
         )
     )
 
+    def add_arguments(self, parser):
+        parser.add_argument('--async',
+            action='store_true',
+            dest='async',
+            help='Run this command asynchronously as a Celery task',
+        )
+        parser.add_argument('--nodebug',
+            action='store_true',
+            dest='nodebug',
+            help='Skip the "debug" test data and load real data instead',
+        )
+        parser.add_argument('-d', '--dry-run',
+            action='store_true',
+            dest='dry_run',
+            help='Simulate an import and log what would occur',
+        )
+
     def handle_label(self, router, **options):
         # We don't want to simply rely on CELERY_ALWAYS_EAGER here because
         # even in production (where the setting would be False) we may want

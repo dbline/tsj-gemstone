@@ -11,55 +11,66 @@
 			width: 80%;
 			font-size: 1.2em;
 			line-height: 1.7;
-			.center-block();
+            text-align: center;
 		}
 	}
 	.viewall {
 		margin-top: 30px;
 		text-align: center;
 	}
-    .cuts {
-		.mp-none();
-		list-style: none;
+    .widget-content {
+        width: 80%;
+        margin: 0 auto;
 
-		@media(min-width: @screen-sm-min) {
-			.flex();
-			 align-items: center;
-			 justify-content: center;
-		}
+        @media(max-width: @screen-md-max) {
+            width: 100%;
+        }
+    }
+    ul.cuts {
+        display: inline-flex;
+        flex-flow: wrap;
+        justify-content: space-between;
+
+        @media(max-width: @screen-sm-max) {
+            display: flex;
+            justify-content: center;
+        }
+        @media(max-width: @screen-sm-max) {
+            justify-content: center;
+        }
 	}
 	li {
-		display: inline-block;
+        flex: 1;
+        margin: 0 15px;
 		text-align: center;
 
-		@media(max-width: @screen-xs-max) {
-			.pull-left();
-			display: block;
-			width: 30%;
-			margin: 0 5px 25px 5px;
-		}
-		a, span {
-			display: block;
-		}
+        @media(max-width: @screen-md-max) {
+            margin: 5px;
+        }
+        @media(max-width: @screen-sm-max) {
+            flex: 0 0 90px;
+            margin-bottom: 30px;
+        }
+        @media(min-width: @screen-sm-min) {
+
+            &:first-child {
+                margin-left: 0;
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+        }
 		a:hover {
 			text-decoration: none;
 		}
 		span {
+			display: block;
 			padding-top: 10px;
 			font-size: 1.1em;
-
-			@media(max-width: @screen-xs-max) {
-				font-size: 1.3em;
-			}
 		}
 		img {
-			width: 60%;
-			opacity: 0.6;
-			.center-block();
-
-			&:hover {
-				opacity: 1;
-			}
+			width: 70%;
+			&:extend(.center-block);
 		}
 	}
 }

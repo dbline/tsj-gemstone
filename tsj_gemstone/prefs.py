@@ -46,6 +46,12 @@ class GemstonePreferencesForm(PreferencesForm):
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
 
+    def clean_group(self):
+        grop = self.cleaned_data('group')
+        if isinstance(group, Group):
+            return group.pk
+        return group
+
 class GemstonePreferences(AppPreferences):
     fieldsets = (
         (_('General'), {

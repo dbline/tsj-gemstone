@@ -47,7 +47,7 @@ class GemstonePreferencesForm(PreferencesForm):
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
 
     def clean_group(self):
-        grop = self.cleaned_data('group')
+        group = self.cleaned_data.get('group')
         if isinstance(group, Group):
             return group.pk
         return group

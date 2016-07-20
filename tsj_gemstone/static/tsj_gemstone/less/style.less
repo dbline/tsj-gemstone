@@ -28,23 +28,25 @@
     }
     ul.cuts {
         display: inline-flex;
-        flex-flow: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
+        align-items: flex-start;
+        text-align: center;
+        margin: 0 auto;
+        margin-bottom: 0;
 
         @media(max-width: @screen-sm-max) {
             display: flex;
-            justify-content: center;
-        }
-        @media(max-width: @screen-sm-max) {
+            flex-wrap: wrap;
             justify-content: center;
         }
 	}
 	li {
-        flex: 1;
+        flex: 0 0 90px;
         margin: 0 15px;
 		text-align: center;
 
         @media(max-width: @screen-md-max) {
+            flex: 0 0 80px;
             margin: 5px;
         }
         @media(max-width: @screen-sm-max) {

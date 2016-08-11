@@ -268,18 +268,21 @@ class CSVBackend(BaseBackend):
         row_buffer = []
         buffer_size = 1000
 
-        for line in reader:
-            # Sometimes the feed has blank lines
-            if not line:
-                continue
+        try:
+            for line in reader:
+                # Sometimes the feed has blank lines
+                if not line:
+                    continue
 
-            # Rather than fail on malformed CSVs, pad rows which have fewer
-            # columns than the header row
-            col_diff = (len(headers) - blank_columns) - len(line)
-            if col_diff > 0:
-                line.extend([''] * col_diff)
+                # Rather than fail on malformed CSVs, pad rows which have fewer
+                # columns than the header row
+                col_diff = (len(headers) - blank_columns) - len(line)
+                if col_diff > 0:
+                    line.extend([''] * col_diff)
 
-            self.try_write_row(writer, line, blank_columns=blank_columns)
+                self.try_write_row(writer, line, blank_columns=blank_columns)
+        except csv.Error as e:
+            raise ImportSourceError(str(e))
 
         if self.row_buffer:
             writer.writerows(self.row_buffer)

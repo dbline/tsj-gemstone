@@ -76,7 +76,6 @@ class Backend(CSVBackend):
             line = line[:-blank_columns]
 
         (
-            #owner,
             unused_feed_date,
             availability, # "Values: Guaranteed Available, Available"
             stock_number, # StockName in CSV
@@ -262,7 +261,7 @@ class Backend(CSVBackend):
             self.backend_module,
             '', # lot_num
             stock_number,
-            owner,
+            '', # owner
             cut,
             self.nvl(cut_grade),
             self.nvl(color),

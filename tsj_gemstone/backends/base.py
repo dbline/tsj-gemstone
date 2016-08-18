@@ -253,7 +253,11 @@ class CSVBackend(BaseBackend):
         fp = self.get_fp()
         reader = csv.reader(fp)
 
-        headers = reader.next()
+        try:
+            headers = reader.next()
+        except StopIteration as e:
+            raise ImportSourceError('Unable to read headers')
+
         blank_columns = 0
         # Count empty columns on the end
         for col in headers:

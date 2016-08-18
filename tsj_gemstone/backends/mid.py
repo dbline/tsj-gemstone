@@ -64,7 +64,7 @@ class Backend(CSVBackend):
         #    logger.warning('Missing MID API URL, aborting import.')
         #    return
 
-        url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3NvbZ3oYopkxLjXA%3d%3d"
+        url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3Nvbaiejv0DoWuFg%3d%3d"
 
         # TODO: Catch HTTP errors
         response = requests.get(url)
@@ -76,14 +76,11 @@ class Backend(CSVBackend):
             line = line[:-blank_columns]
 
         (
-            owner,
+            #owner,
             unused_feed_date,
-            availability, # "Guaranteed Available"
+            availability, # "Values: Guaranteed Available, Available"
             stock_number, # StockName in CSV
             cert_num,
-            unused_is_new_arrival,
-            unused_parcel_units,
-            unused_location,
             country,
             city,
             state,
@@ -92,10 +89,6 @@ class Backend(CSVBackend):
             color,
             clarity,
             certifier,
-            unused_fancy_color_fullname,
-            unused_fancy_color_intensity,
-            unused_fancy_color_overtone,
-            unused_fancy_color,
             cut_grade,
             polish,
             symmetry,
@@ -104,38 +97,15 @@ class Backend(CSVBackend):
             length,
             width,
             depth,
-            u_measurements,
             depth_percent,
             table_percent,
-            unused_crown_height,
-            unused_crown_angle,
-            unused_pavilion_depth,
-            unused_pavilion_angle,
-            u_girdle_thin,
-            u_girdle_thick,
-            u_girdle_condition,
-            u_girdle_percent,
             girdle,
             culet,
-            unused_culet_condition,
             comment,
             unused_treatment,
             unused_laser_inscription,
-            u_clarity_description,
-            u_shade,
-            u_milky,
-            u_black_inclsion,
-            u_central_inclusion,
-            u_verification_url,
             cert_image,
-            u_diamond_image,
-            u_discount,
-            u_total_price,
             carat_price,
-            u_rap_price,
-            u_cert_filename,
-            u_image_filename,
-            u_allow_on_rap,
             unused_is_matched_pair,
             unused_matching_stock_number,
             unused_is_matched_pair_separable,

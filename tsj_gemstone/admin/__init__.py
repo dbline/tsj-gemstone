@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin import site, ModelAdmin, SimpleListFilter
 from django.shortcuts import redirect
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ungettext
 
 from .. import models
 from ..tasks import import_site_gemstone_backends
@@ -36,6 +36,43 @@ class FluorescenceColorAdmin(ModelAdmin):
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('name', 'abbr', 'aliases', 'url', 'disabled')
+    actions = ModelAdmin.actions + ['action_mark_enabled', 'action_mark_disabled']
+
+    def action_mark_enabled(self, request, queryset):
+        """
+        Mark as enabled action.
+        """
+        rows_updated = queryset.update(disabled=False)
+
+        msg = ungettext(
+            'Successfully enabled %(rows_updated)d %(name)s.',
+            'Successfully enabled %(rows_updated)d %(name_plural)s.',
+            rows_updated
+        ) % {
+            'rows_updated': rows_updated,
+            'name': self.model._meta.verbose_name.title(),
+            'name_plural': self.model._meta.verbose_name_plural.title()
+        }
+        messages.success(request, msg)
+    action_mark_enabled.short_description = 'Enable selected Certifiers'
+
+    def action_mark_disabled(self, request, queryset):
+        """
+        Mark as disabled action.
+        """
+        rows_updated = queryset.update(disabled=True)
+
+        msg = ungettext(
+            'Successfully disabled %(rows_updated)d %(name)s.',
+            'Successfully disabled  %(rows_updated)d %(name_plural)s.',
+            rows_updated
+        ) % {
+            'rows_updated': rows_updated,
+            'name': self.model._meta.verbose_name.title(),
+            'name_plural': self.model._meta.verbose_name_plural.title()
+        }
+        messages.success(request, msg)
+    action_mark_disabled.short_description = 'Disable selected Certifiers'
 
 class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True

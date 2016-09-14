@@ -92,6 +92,16 @@ class Backend(CSVBackend):
 
         return rap_list
 
+    def _get_headers(self, reader):
+        # When we have a valid rapnet account but the user doesn't have DLS,
+        # rather than an error response code we receive this string in the
+        # response body, which is parsed as a valid CSV:
+        # You are not authorized to use the Download Listings Service (DLS), this service requires a RapNet + DLS subscription.
+        headers = reader.next()
+        if len(headers) and 'not authorized' in headers[0].lower():
+            raise ImportSourceError(','.join(headers))
+        return headers
+
     def write_diamond_row(self, line, blank_columns=None):
         (
             owner, # seller in CSV

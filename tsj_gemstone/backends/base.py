@@ -249,9 +249,12 @@ class BaseBackend(object):
         return data
 
 class CSVBackend(BaseBackend):
+    def _get_headers(self, reader):
+        return reader.next()
+
     def _run(self):
         fp = self.get_fp()
-        reader = csv.reader(fp)
+        headers = self._get_headers(reader)
 
         try:
             headers = reader.next()

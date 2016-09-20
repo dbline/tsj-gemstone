@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-    console.dir('dupa');
-
     //Replace img svg with inline svg
     $('img.svg').each(function(){
         var $img = $(this);

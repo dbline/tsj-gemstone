@@ -250,16 +250,15 @@ class BaseBackend(object):
 
 class CSVBackend(BaseBackend):
     def _get_headers(self, reader):
-        return reader.next()
+        try:
+            return reader.next()
+        except StopIteration as e:
+            raise ImportSourceError('Unable to read headers')
 
     def _run(self):
         fp = self.get_fp()
+        reader = csv.reader(fp)
         headers = self._get_headers(reader)
-
-        try:
-            headers = reader.next()
-        except StopIteration as e:
-            raise ImportSourceError('Unable to read headers')
 
         blank_columns = 0
         # Count empty columns on the end

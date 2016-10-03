@@ -39,6 +39,7 @@ class GemstonePreferencesForm(PreferencesForm):
     mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
+    rditrading = forms.BooleanField(required=False, label='RDI Trading')
     stuller = forms.BooleanField(required=False)
     premiergem = forms.BooleanField(required=False, label='Premier Gem')
     leibish = forms.BooleanField(required=False, label='Leibish & Co.')
@@ -90,8 +91,8 @@ class GemstonePreferences(AppPreferences):
         }),
         (_('Additional feeds'), {
             'fields': (
-                'brilliantediamond', 'gndiamond', 'hasenfeld', 'mgeller',
-                'mid', 'rdi', 'stuller', 'premiergem', 'leibish',
+                'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
+                'mgeller', 'mid', 'premiergem', 'rdi', 'rditrading', 'stuller',
             ),
         }),
     )

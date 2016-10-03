@@ -11,5 +11,6 @@ __all__ = (
     'polygon',
     'rapnet10',
     'rdi',
+    'rditrading',
     'stuller',
 )

@@ -15,7 +15,6 @@
             {{ header|safe }}
         </div>
     {% endif %}
-
     <div class="widget-content">
         <ul class="cuts list-unstyled">
         {% for cut in widget_object_list %}
@@ -24,7 +23,8 @@
                     {% if icon_style == "vectors" %}
                         <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ cut.name|lower }}.png" alt="{{ cut.name }}" />
                     {% elif icon_style == "outlines" %}
-                        <object class="{{ cut.name|lower }}" data="{{ STATIC_URL }}tsj_gemstone/images/outlines/{{ cut.name|lower }}.svg" type="image/svg+xml"></object>
+                        <img class="svg {{ cut.name|lower }}" src="{{ STATIC_URL }}tsj_gemstone/images/outlines/{{ cut.name|lower }}.svg">
+
                     {% elif icon_style == "images" %}
                         <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ cut.name|lower }}.jpg" alt="{{ cut.name }}" />
                     {% endif %}

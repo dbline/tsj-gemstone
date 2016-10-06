@@ -36,13 +36,14 @@ class GemstonePreferencesForm(PreferencesForm):
     brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
     hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
+    leibish = forms.BooleanField(required=False, label='Leibish & Co.')
     mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
+    ofermizrahi = forms.BooleanField(required=False, label='Ofer Mizrahi Diamonds')
+    premiergem = forms.BooleanField(required=False, label='Premier Gem')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
     stuller = forms.BooleanField(required=False)
-    premiergem = forms.BooleanField(required=False, label='Premier Gem')
-    leibish = forms.BooleanField(required=False, label='Leibish & Co.')
 
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
@@ -92,7 +93,8 @@ class GemstonePreferences(AppPreferences):
         (_('Additional feeds'), {
             'fields': (
                 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
-                'mgeller', 'mid', 'premiergem', 'rdi', 'rditrading', 'stuller',
+                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'rdi',
+                'rditrading', 'stuller',
             ),
         }),
     )

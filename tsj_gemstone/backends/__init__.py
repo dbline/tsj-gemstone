@@ -7,6 +7,7 @@ __all__ = (
     'leibish',
     'mgeller',
     'mid',
+    'ofermizrahi',
     'premiergem',
     'polygon',
     'rapnet10',

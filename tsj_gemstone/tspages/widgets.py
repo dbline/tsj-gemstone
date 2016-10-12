@@ -48,6 +48,9 @@ class GemstoneWidgetForm(PreferencesForm):
 class GemstoneWidget(TemplatedWidget):
     verbose_name = 'Gemstones'
 
+    class Media:
+        js = ('tsj_gemstone/js/tsj_gemstone_widget.js',)
+
     def get_template_names(self, context, extra_template_names=None):
         template_names = super(GemstoneWidget, self).get_template_names(
             context, extra_template_names=extra_template_names)

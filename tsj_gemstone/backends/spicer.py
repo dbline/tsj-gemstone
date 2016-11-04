@@ -56,14 +56,24 @@ class Backend(CSVBackend):
             line = line[:-blank_columns]
         (
             stock_number,
-            lot_num,
-            t_s,
-            description,
-            count,
-            age,
-            cost,
+            old_number,
             price,
-            margin,
+            current,
+            status,
+            status_date,
+            inventory_type,
+            location,
+            price_method,
+            quantity,
+            entered,
+            vendor,
+            lot_num,
+            style_note,
+            invoice_number,
+            description,
+            payable_date,
+            additional_info,
+            test
         ) = line
 
         (
@@ -94,6 +104,8 @@ class Backend(CSVBackend):
         }
         """
 
+        cut = ''
+
         dia = {}
         desc = description.splitlines()
         for line in desc:
@@ -101,16 +113,26 @@ class Backend(CSVBackend):
                 attr = line.split(': ')
                 dia[attr[0]] = attr[1]
             except IndexError:
+                attr = line.split(' ')
+                try:
+                    if attr[6].startswith('Fire') or attr[6].startswith('Lazare'):
+                        cut = attr[7]
+                    else:
+                        cut = attr[6]
+                except IndexError:
+                    continue
                 continue
 
-        cut = dia['Diamond Shape']
         try:
             cut = self.cut_aliases[cached_clean_upper(cut)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
-        carat_weight = dia['Carat']
-        carat_weight = Decimal(str(cached_clean(carat_weight)))
+        try:
+            carat_weight = dia['Carat']
+            carat_weight = Decimal(str(cached_clean(carat_weight)))
+        except KeyError as e:
+            raise KeyValueError('carat_weight', e.args[0])
 
         color = dia['Color']
         color = self.color_aliases.get(cached_clean_upper(color))
@@ -149,7 +171,7 @@ class Backend(CSVBackend):
             raise KeyValueError('cut', e.args[0])
 
         try:
-            price = Decimal(cost.replace(',', ''))
+            price = Decimal(price.replace(',', '').replace('$', ''))
             carat_price = price / carat_weight
         except InvalidOperation:
             carat_price = None
@@ -213,7 +235,5 @@ class Backend(CSVBackend):
             '', #country,
             'NULL', # rap_date
         )
-
-        print ret
 
         return ret

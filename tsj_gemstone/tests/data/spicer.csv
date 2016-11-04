@@ -1,108 +1,1241 @@
-Item #,Vendor Style #,T/S,Description,Count,Age,Cost,Price,Margin
-,,,,,,,,
-001-190-00620,01:DIARND001,S/I,"Harmony Loose Diamond With One 0.27Ct Round Brilliant Cut G Vs2 DiamondLab: WGCert: R.00067Cut: Very GoodPolish: Very GoodSymmetry: Very Good",576,420.00,"1,050.00",0.60,+1050.0000
-001-190-00809,E50:E31916-60,S/I,"Harmony Loose Diamond With One 1.30Ct Round Brilliant Cut I Si1 DiamondLab: GIACert: 2171495625Sarine Number: EDDBIUIUG1ZSarine Template: SPRGCHRMD3Carat: 1.3Color: IClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",163,"6,084.00","10,950.00",0.44,+10950.0000
-001-190-00833,F40:R050ESI2,S/I,"Harmony Loose Diamond With One 0.51Ct Round Brilliant Cut E Si2 DiamondLab: GIACert: 5172477124Sarine Number: 89C1ZFN5IC4Sarine Template: SPRGCHRMD3Carat: 0.51Color: EClarity: SI2Cut: Very GoodPolish: ExcellentSymmetry: ExcellentDiam",78,"1,173.00","2,995.00",0.61,+1173.0000
-001-190-00805,E50:E29650-01,S/I,"Harmony Loose Diamond With One 0.60Ct Round Brilliant Cut I Vs2 DiamondLab: GIACert: 2186348789Sarine Number: Y2BC0QWA238Sarine Template: SPRGCHRMD3Carat: 0.6Color: IClarity: VS2Cut: ExcellentPolish: Very GoodSymmetry: ExcellentDiamo",163,"1,369.00","2,950.00",0.54,+1207.0000
-001-190-00806,E50:E32230,S/I,"Harmony Loose Diamond With One 0.64Ct Round Brilliant Cut J Si1 DiamondLab: GIACert: 1219410709Sarine Number: ITE6VYAV7SUSarine Template: SPRGCHRMD3Carat: 0.64Color: JClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiam",162,"1,207.00","2,450.00",0.51,+1207.0000
-001-190-00472,B36:284755,S/I,"Legacy Loose Diamond With One 1.15Ct Round Brilliant Cut G Lazare DiamondLab: GIACert: 2145639058Sarine Number: P3HIVMZOS3GSarine Template: SPRGCLGCD9Carat: 1.15Color: GClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDi","1,059","8,113.25","13,250.00",0.39,+13250.0000
-001-190-00842,F40:120GVVS2,S/I,"Legacy Loose Diamond With One 1.26Ct Round Brilliant Cut G Vvs2 DiamondLab: GIACert: 7176449292Sarine Number: 0CANNC6LGHHSarine Template: SPRGCLGCD9Carat: 1.26Color: GClarity: VVS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",77,"7,600.95","13,450.00",0.43,+13450.0000
-001-190-00865,E50:E33040,S/I,"Spark Loose Diamond With One 0.54Ct Round Brilliant Cut G I1 DiamondLab: GIACert: 2175716001Sarine Number: IDUTS8454ESSarine Template: SPRGCSPKD6Carat: 0.54Color: GClarity: I1Cut: Very GoodPolish: Very GoodSymmetry: ExcellentDiamond",1,630.00,"1,350.00",0.53,+1350.0000
-001-190-00748,D80:F1358309,S/I,"Harmony Loose Diamond With One 1.33Ct Fire Princess H Si2 DiamondLab: GIACert: 5172316109Sarine Number: S3CX5RYYLZHSarine Template: SPRGCFMKD1Carat: 1.33Color: HClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Sh",323,"5,689.74","13,500.00",0.58,+13500.0000
-001-190-00811,E50:E31895-31,S/I,"Harmony Loose Diamond With One 1.58Ct Round Brilliant Cut H Si2 DiamondLab: GIACert: 6205725972Sarine Number: K1TTQGRSMDQSarine Template: SPRGCHRMD3Carat: 1.58Color: HClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiam",163,"7,850.00","13,500.00",0.42,+13500.0000
-001-190-00416,D29:KR08-168,S/I,"Harmony Loose Diamond With One 2.03Ct Cushion Cut J Forevermark DiamondLab: FDICert: 1222123Sarine Number: NASarine Template: NACarat: 2.03Color: JClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Cushion Cut","1,414","7,289.73","14,995.00",0.51,+14890.0000
-001-190-00594,D80:Q1567343,S/I,"Harmony Loose Diamond With One 1.53Ct Fire Cushion I Si1 DiamondLab: GIACert: 61667751243Sarine Number: XSCSXH0BY36Sarine Template: SPRGCFCND4Carat: 1.53Color: IClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Sh",626,"8,124.30","14,950.00",0.46,+14950.0000
-001-190-00669,B36:326064,S/I,"Legacy Loose Diamond With One 1.32Ct Round Brilliant Cut H Lazare DiamondLab: GIACert: 2186927398Sarine Number: YNP6GOY2IAOSarine Template: SPRGCLGCD9Carat: 1.32Color: HClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDi",469,"8,751.60","14,950.00",0.41,+14950.0000
-001-190-00708,F40:R200CSVG-073,S/I,"Spark Loose Diamond With One 2.01Ct Round Brilliant Cut G I1 DiamondLab: WGCert: RBC00201I1GSarine Number: DWOMMD2ZC8QSarine Template: SPRGCSPKD6Carat: 2.01Color: GClarity: I1Cut: Very GoodPolish: GoodSymmetry: GoodDiamond Shape: Rou",442,"7,135.50","14,950.00",0.52,+14950.0000
-001-190-00711,F40:R150CLVSE-113,S/I,"Spark Loose Diamond With One 1.50Ct Round Brilliant Cut J Si1 DiamondLab: WGCert: RBC00150SI1J-2Sarine Number: 32CIB3C0L7XSarine Template: SPRGCSPKD6Carat: 1.5Color: JClarity: SI1Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiam",442,"6,225.00","14,995.00",0.58,+14995.0000
-001-190-00843,F40:R150GSI1,S/I,"Legacy Loose Diamond With One 1.55Ct Round Brilliant Cut G Si1 DiamondLab: GIACert: 6211818498Sarine Number: RLZLN6JAX70Sarine Template: SPRGCLGCD9Carat: 1.55Color: GClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",78,"10,896.50","15,995.00",0.32,+15995.0000
-001-190-00799,17:Y800W|50,P/I,"Spark Loose Diamond With One 0.51Ct Round Brilliant Cut G I1 DiamondLab: WGCert: 003Sarine Number: WDVLAETDLQUSarine Template: SPRGCSPKD6Carat: 0.51Color: GClarity: I1Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond Shape: R",210,736.44,"1,620.00",0.55,+1620.0000
-001-190-00421,F15:DD42V-9A,S/I,"Legacy Loose Diamond With One 1.43Ct Princess Cut G Forevermark DiamondLab: FDICert: 6265121Sarine Number: NASarine Template: NACarat: 1.43Color: GClarity: SI1Cut: NAPolish: ExcellentSymmetry: ExcellentDiamond Shape: Radiant Cut","1,408","9,395.10","16,450.00",0.43,+16450.0000
-001-190-00556,01:1,S/I,"Harmony Loose Diamond With One 1.51Ct Round Brilliant Cut E Si2 DiamondLab: WGCert: RBC00151SI2EFSarine Number: GCVN8HUOBISSarine Template: SPRGCHRMD3Carat: 1.51Color: FClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDi",737,"2,750.00","15,500.00",0.82,+16995.0000
-001-190-00394,F15:D120-4,S/I,"Legacy Loose Diamond With One 1.51Ct Princess Cut G Forevermark DiamondLab: FDICert: 739306Sarine Number: NASarine Template: NACarat: 1.51Color: GClarity: SI1Cut: NAPolish: ExcellentSymmetry: ExcellentDiamond Shape: Radiant Cut","1,559","10,500.00","17,500.00",0.40,+17500.0000
-001-190-00807,E50:E32205-07,S/I,"Harmony Loose Diamond With One 0.73Ct Round Brilliant Cut H Si2 DiamondLab: GIACert: 2228100730Sarine Number: YSGLFQF1ZRXSarine Template: SPRGCHRMD3Carat: 0.73Color: HClarity: SI2Cut: ExcellentPolish: Very GoodSymmetry: ExcellentDiam",163,"1,800.00","3,700.00",0.51,+1800.0000
-001-190-00277,B36:KR01.75ISI1,S/I,"Harmony Loose Diamond With One 1.75Ct Round Brilliant Cut I Si1 DiamondLab: AGSCert: 9841002Sarine Number: JOR296BQWH3Sarine Template: SPRGCHRMD3Carat: 1.75Color: IClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond","2,893","11,305.00","18,450.00",0.39,+18450.0000
-001-190-00866,E50:E33182-01,S/I,"Spark Loose Diamond With One 0.50Ct Round Brilliant Cut H Si2 DiamondLab: GIACert: 6173918208Sarine Number: 7WONYDPOVOWSarine Template: SPRGCSPKD6Carat: 0.5Color: HClarity: SI2Cut: Very GoodPolish: GoodSymmetry: ExcellentDiamond Shap",1,856.00,"1,895.00",0.55,+1895.0000
-001-190-00821,F40:R060AAMG,S/I,"Spark Loose Diamond With One 0.62Ct Round Brilliant Cut F I1 DiamondLab: giaCert: 5171783601Sarine Number: 723S9WG3ZZKSarine Template: SPRGCSPKD6Carat: 0.62Color: FClarity: I1Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond",79,"1,116.00","1,925.00",0.42,+1925.0000
-001-190-00822,F40:R060AAMG1,S/I,"Spark Loose Diamond With One 0.69Ct Round Brilliant Cut F Si1 DiamondLab: GIACert: 2175783716Sarine Number: 71NXU3XSQUISarine Template: SPRGCSPKD6Carat: 0.69Color: FClarity: SI1Cut: Very GoodPolish: Very GoodSymmetry: GoodDiamond Sha",78,"1,224.00","2,995.00",0.59,+1925.0000
-001-190-00645,D80:11637380,S/I,"Legacy Loose Diamond With One 1.63Ct Round Brilliant Cut F Si1 DiamondLab: AGSCert: 104072818003Sarine Number: 0888B04O22NSarine Template: SPRGCLGCD9Carat: 1.63Color: FClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",512,"12,714.00","19,250.00",0.34,+19250.0000
-001-190-00837,F40:R200ISI2,S/I,"Harmony Loose Diamond With One 2.06Ct Round Brilliant Cut I Si2 DiamondLab: GIACert: 5172752273Sarine Number: 6NGXROIN4JCSarine Template: SPRGCHRMD3Carat: 2.06Color: IClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiam",78,"10,901.52","19,950.00",0.45,+19950.0000
-001-190-00841,F40:R120DVS1,S/I,"Legacy Loose Diamond With One 1.35Ct Round Brilliant Cut D Vs1 DiamondLab: GIACert: 5172431262Sarine Number: W1IMLVEFMHLSarine Template: SPRGCLGCD9Carat: 1.35Color: DClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",77,"13,884.75","19,950.00",0.30,+19950.0000
-001-190-00844,F40:R150EVS2,S/I,"Legacy Loose Diamond With One 1.51Ct Round Brilliant Cut E Vs2 DiamondLab: GIACert: 2228679648Sarine Number: PE4NQZN3HTXSarine Template: SPRGCLGCD9Carat: 1.51Color: EClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",78,"13,846.70","20,995.00",0.34,+20995.0000
-001-190-00815,01:.75GSI1,S/I,"Harmony Loose Diamond With One 0.75Ct Round Brilliant Cut G Si2 DiamondLab: WGCert: 000005Sarine Number: PFPHPO1P2DTSarine Template: SPRGCHRMD3Carat: 0.75Color: GClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond S",128,"2,121.00","3,850.00",0.45,+2121.0000
-001-190-00867,E50:E32741-02,S/I,"Spark Loose Diamond With One 0.65Ct Round Brilliant Cut I Si2 DiamondLab: GIACert: 6221991196Sarine Number: IJHQ6T1VMG99Sarine Template: SPRGCSPKD6Carat: 0.65Color: IClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamo",1,"1,076.00","2,150.00",0.50,+2150.0000
-001-190-00776,17:Y800W|63,P/I,"Harmony Loose Diamond With One 0.54Ct Princess Cut G Si1 DiamondLab: SGCert: 0006Sarine Number: NASarine Template: NACarat: 0.54Color: GClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Princess Cut",217,950.00,"2,185.00",0.57,+2185.0000
-001-190-00732,AK:1564124,S/I,"Harmony Loose Diamond With One 2.01Ct Oval F Si2 DiamondLab: GIACert: 2165205790Sarine Number: NASarine Template: NACarat: 2.01Color: FClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: ExcellentDiamond Shape: Oval",371,"12,204.72","21,950.00",0.44,+21950.0000
-001-190-00780,RIAM:PENPC50B-W,P/I,"Harmony Loose Diamond With One 0.50Ct Princess Cut I Vs2 DiamondLab: SGCert: 0005Sarine Number: NASarine Template: NACarat: 0.5Color: IClarity: VS2Cut: GoodPolish: GoodSymmetry: GoodDiamond Shape: Princess Cut",216,863.00,"2,245.00",0.62,+2245.0000
-001-190-00323,E50:P-050B.0556,S/I,"Harmony Loose Diamond With One 0.56Ct Round Brilliant Cut J Si2 DiamondLab: 0012Cert: WGSarine Number: 4ZSPQHH9ULTSarine Template: SPRGCHRMD3Carat: 0.56Color: JClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Sha","2,158",750.60,"2,250.00",0.67,+2250.0000
-001-190-00819,WP:2175554909,S/I,"Legacy Loose Diamond With One 0.67Ct Round Brilliant Cut D Vs2 DiamondLab: GIACert: 217554909Sarine Number: LZCXR25R1M3Sarine Template: SPRGCLGCD9Carat: 0.67Color: DClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamon",82,"2,442.15","4,395.00",0.44,+2442.1500
-001-190-00814,B36:332706,S/I,"Legacy Loose Diamond With One 2.18Ct Lazare Round F Si1 DiamondLab: GIACert: 2175597312Sarine Number: NE5J2DXI2RASarine Template: SPRGCLGCD9Carat: 2.18Color: FClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Shap",133,"24,426.90","36,950.00",0.34,+24426.9000
-001-190-00850,D80:Q0636521,S/I,"Legacy Loose Diamond With One 0.65Ct Fire Cushion F Forevermark DiamondLab: FDICert: 5922722Sarine Number: RXG90WRD7HOSarine Template: SPRGCFCND4Carat: 0.65Color: FClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",76,"1,140.75","2,450.00",0.53,+2450.0000
-001-190-00838,F40:R2000IVVS2,S/I,"Harmony Loose Diamond With One 2.13Ct Round Brilliant Cut I Vvs2 DiamondLab: GIACert: 1173410119Sarine Number: 2E8S8EG83SISarine Template: SPRGCHRMD3Carat: 213Color: IClarity: VVS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",78,"17,300.00","24,950.00",0.31,+24950.0000
-001-190-00616,01:PCWG002,S/I,"Harmony Loose Diamond With One 0.64Ct Princess Cut H/I Si1 DiamondLab: SGCert: PC0064SI1HSarine Number: NASarine Template: NACarat: 0.64Color: H/IClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Princess Cut",667,"1,157.12","2,595.00",0.55,+2595.0000
-001-190-00817,WP:2155901478,S/I,"Legacy Loose Diamond With One 1.87Ct Round Brilliant Cut F Vs1 DiamondLab: GIACert: 2155901478Sarine Number: FZEABKDPYVDSarine Template: SPRGCLGCD9Carat: 1.87Color: FClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",83,"18,626.80","26,450.00",0.30,+26450.0000
-001-190-00384,D80:G-6147142438,S/I,"Harmony Loose Diamond With One 0.55Ct Fire Princess DiamondLab: GIACert: 6147142438Sarine Number: KE3JCBRL14MSarine Template: SPRGCFMKD1Carat: 0.55Color: GClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Shape: P","1,740",940.50,"2,270.00",0.59,+2739.0000
-001-190-00597,01:DIARND001,S/I,"Legacy Loose Diamond With One 0.51Ct Round Brilliant Cut H Vs2 DiamondLab: AGSCert: 0002780101Sarine Number: KEUZ6BSZ8KGSarine Template: SPRGCLGCD9Carat: 0.51Color: HClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",667,"1,402.50","3,450.00",0.59,+2850.0000
-001-190-00376,B36:KR00.60HSI1,S/I,"Legacy Loose Diamond With One 0.60Ct Round Brilliant Cut H Lazare DiamondLab: GIACert: 6127252509Sarine Number: KY75SHH9GJTSarine Template: SPRGCLGCD9Carat: 0.6Color: HClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia","1,793","1,242.00","2,950.00",0.58,+2950.0000
-001-190-00622,01:FM001,S/I,"Harmony Loose Diamond With One 0.50Ct Round Brilliant Cut F Forevermark DiamondLab: FDICert: 6299709Sarine Number: NASarine Template: SPRGCHRMD3Carat: 0.5Color: FClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond S",576,"1,180.50","2,950.00",0.60,+2950.0000
-001-190-00840,F40:R075HVVS1E,S/I,"Legacy Loose Diamond With One 0.77Ct Round Brilliant Cut H Vvs1 DiamondLab: GIACert: 2227668403Sarine Number: IG6VBQP78OXSarine Template: SPRGCLGCD9Carat: 0.77Color: HClarity: VVS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",78,"3,000.00","5,450.00",0.45,+3000.0000
-001-190-00823,F40:R075CSVSNG,S/I,"Spark Loose Diamond With One 0.71Ct Round Brilliant Cut I Si1 DiamondLab: GIACert: 2175783690Sarine Number: O1JRADME9HMSarine Template: SPRGCSPKD6Carat: 0.71Color: IClarity: SI1Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamon",79,"1,739.50","3,250.00",0.46,+3250.0000
-001-190-00746,D80:Q0535632,S/I,"Legacy Loose Diamond With One 0.56Ct Fire Cushion F Forevermark DiamondLab: FDICert: 7923298Sarine Number: E5O07Y4ZXCVSarine Template: SPRGCFCND4Carat: 0.56Color: FClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",326,"1,250.48","3,395.00",0.63,+3395.0000
-001-190-00824,F40:R080CSVSG,S/I,"Spark Loose Diamond With One 0.81Ct Round Brilliant Cut K Si2 DiamondLab: GIACert: 5172440447Sarine Number: 0RS3SGQLUT7Sarine Template: SPRGCSPKD6Carat: 0.82Color: KClarity: SI2Cut: ExcellentPolish: Very GoodSymmetry: Very GoodDiamon",79,"2,009.00","3,450.00",0.42,+3450.0000
-001-190-00826,F40:R090HI1,S/I,"Spark Loose Diamond With One 0.91Ct Round Brilliant Cut H I1 DiamondLab: GIACert: 62029093316Sarine Number: 1867WEK5TKASarine Template: SPRGCSPKD6Carat: 0.91Color: HClarity: I1Cut: Very GoodPolish: ExcellentSymmetry: ExcellentDiamond",79,"2,093.00","3,950.00",0.47,+3950.0000
-001-190-00770,D80:Q0728566,S/I,"Harmony Loose Diamond With One 0.75Ct Fire Cushion E Si2 DiamondLab: GIACert: 5171244766Sarine Number: XC7RWQKIAMQSarine Template: SPRGCFCND4Carat: 0.75Color: EClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Sha",228,"2,040.00","3,995.00",0.49,+3995.0000
-001-190-00851,WP:025779,S/I,"Legacy Loose Diamond With One 0.62Ct Round Brilliant Cut F Vs1 DiamondLab: GIACert: 1142653314Sarine Number: 2LGWK35DEAYSarine Template: SPRGCLGCD9Carat: 0.62Color: FClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",77,"2,219.60","3,995.00",0.44,+3995.0000
-001-190-00485,B36:295592,S/I,"Legacy Loose Diamond With One 0.50Ct Round Brilliant Cut E Lazare DiamondLab: GIACert: 2151086418Sarine Number: CGG74GB91ATSarine Template: SPRGCLGCD9Carat: 0.5Color: EClarity: VVS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDi","1,059","1,935.00","4,075.00",0.53,+4075.0000
-001-190-00463,D80:F0748111,S/I,"Harmony Loose Diamond With One 0.71Ct Fire Princess G Forevermark DiamondLab: FDICert: FM#1129673Sarine Number: 1KBI99JSOZFSarine Template: SPRGCFMKD1Carat: 0.71Color: GClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDi","1,069","1,928.36","4,250.00",0.55,+4250.0000
-001-190-00534,01:OVAL,S/I,"Harmony Loose Diamond With One 0.85Ct Oval E Si2 DiamondLab: WGCert: OV0085SI2ESarine Number: NASarine Template: NACarat: 0.85Color: EClarity: SI2Cut: NAPolish: ExcellentSymmetry: Very GoodDiamond Shape: Oval",814,"2,167.50","5,450.00",0.60,+4335.0000
-001-190-00825,F40:R080CSVSNG,S/I,"Spark Loose Diamond With One 0.86Ct Round Brilliant Cut I Vs2 DiamondLab: GIACert: 2175783646Sarine Number: 62OHN15XA5Sarine Template: SPRGCSPKD6Carat: 0.86Color: IClarity: VS2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond",79,"2,436.00","4,350.00",0.44,+4350.0000
-001-190-00868,E50:E32232-02,S/I,"Spark Loose Diamond With One 0.90Ct Round Brilliant Cut H Si2 DiamondLab: GIaCert: 1213331644Sarine Number: FZV77YUIQZ0Sarine Template: SPRGCSPKD6Carat: 0.9Color: HClarity: SI2Cut: Very GoodPolish: ExcellentSymmetry: GoodDiamond Shap",1,"2,632.00","4,350.00",0.39,+4350.0000
-001-190-00839,F40:R075DSI1,S/I,"Legacy Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 DiamondLab: GIACert: 12286367Sarine Number: HNT1PSXQLJMSarine Template: SPRGCLGCD9Carat: 0.7Color: DClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",78,"2,450.00","4,395.00",0.44,+4395.0000
-001-190-00834,F40:R075ESI2,S/I,"Harmony Loose Diamond With One 0.80Ct Round Brilliant Cut E Si2 DiamondLab: GIACert: 1229863863Sarine Number: JGAWNJ94IY9Sarine Template: SPRGCHRMD3Carat: 0.8Color: EClarity: SI2Cut: Very GoodPolish: ExcellentSymmetry: Very GoodDiamo",78,"2,400.00","4,450.00",0.46,+4450.0000
-001-190-00828,F40:R090AVSG,S/I,"Spark Loose Diamond With One 0.90Ct Round Brilliant Cut H Si1 DiamondLab: GIACert: 2175783651Sarine Number: AUNN3CR9168Sarine Template: SPRGCSPKD6Carat: 0.9Color: HClarity: SI1Cut: Very GoodPolish: Very GoodSymmetry: GoodDiamond Shap",79,"2,790.00","4,750.00",0.41,+4750.0000
-001-190-00651,B36:23791,S/I,"Legacy Loose Diamond With One 0.55Ct Round Brilliant Cut F Lazare DiamondLab: GIACert: 16332140Sarine Number: 62791P2SWEISarine Template: SPRGCLGCD9Carat: 0.55Color: FClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiam",490,"2,470.00","4,950.00",0.50,+4950.0000
-001-190-00668,B36:317947,S/I,"Legacy Loose Diamond With One 0.71Ct Round Brilliant Cut G Lazare DiamondLab: AGSCert: 104072332023Sarine Number: H4RMC2NL2VCSarine Template: SPRGCLGCD9Carat: 0.71Color: GClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: Excellent D",469,"2,743.44","4,950.00",0.45,+4950.0000
-001-190-00829,F40:R099KSI1E,S/I,"Spark Loose Diamond With One 1.01Ct Round Brilliant Cut K Si1 DiamondLab: GIACert: 6222674873Sarine Number: 6U1E09S2AD9Sarine Template: SPRGCSPKD6Carat: 1.01Color: KClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: Very GoodDiamon",78,"2,929.00","4,995.00",0.41,+4995.0000
-001-190-00835,F40:R090HSI22,S/I,"Harmony Loose Diamond With One 0.90Ct Round Brilliant Cut H Si2 DiamondLab: GIACert: 3225770337Sarine Number: CG1UFXB5UVTSarine Template: SPRGCHRMD3Carat: 0.9Color: HClarity: SI2Cut: Very GoodPolish: ExcellentSymmetry: ExcellentDiamo",78,"2,835.00","4,995.00",0.43,+4995.0000
-001-190-00605,E50:E23786,S/I,"Spark Loose Diamond With One 1.02Ct Round Brilliant Cut J I1 DiamondLab: SGCert: 001Sarine Number: 6L8ECRXBKQTSarine Template: SPRGCSPKD6Carat: 1.02Color: JClarity: I1Cut: GoodPolish: Very GoodSymmetry: GoodDiamond Shape: Round Brill",617,"2,900.00","4,450.00",0.35,+5085.0000
-001-190-00836,F40:R090IVS2,S/I,"Harmony Loose Diamond With One 0.91Ct Round Brilliant Cut I Vs2 DiamondLab: GIACert: 6222139012Sarine Number: 46QLEB061PWSarine Template: SPRGCHRMD3Carat: 0.91Color: IClarity: VS2Cut: Very GoodPolish: ExcellentSymmetry: ExcellentDiam",78,"3,672.00","5,900.00",0.38,+5900.0000
-001-190-00782,17:Y100|911,P/I,"Harmony Loose Diamond With One 1.05Ct Emerald Cut G Si2 DiamondLab: NACert: NASarine Number: NASarine Template: NACarat: 1.05Color: GClarity: SI2Polish: GoodSymmetry: GoodDiamond Shape: Asscher Cut",216,"3,308.00","5,995.00",0.45,+5995.0000
-001-190-00830,F40:R120II1,S/I,"Spark Loose Diamond With One 1.20Ct Round Brilliant Cut I I1 DiamondLab: GIACert: 6232074173Sarine Number: VKM1YCXSCR3Sarine Template: SPRGCSPKD6Carat: 1.2Color: IClarity: I1Cut: ExcellentPolish: ExcellentSymmetry: Very GoodDiamond S",78,"3,840.00","5,995.00",0.36,+5995.0000
-001-190-00033,17:9390,S/I,"Spark Loose Diamond With One 1.04Ct Round Brilliant Cut H I1 DiamondLab: SGCert: 004Sarine Number: KN0MA7MYAK7Sarine Template: SPRGCSPKD6Carat: 1.04Color: HClarity: I1Cut: Very GoodPolish: ExcellentSymmetry: Very GoodDiamond Shape: R","3,616","3,276.00","6,250.00",0.48,+6250.0000
-001-190-00778,17:Y075-17,P/I,"Harmony Loose Diamond With One 1.06Ct Oval G Si2 DiamondLab: NACert: NASarine Number: NASarine Template: NACarat: 1.06Color: GClarity: SI2Cut: NAPolish: GoodSymmetry: GoodDiamond Shape: Oval",218,"3,537.00","6,395.00",0.45,+6395.0000
-001-190-00573,B36:320675,S/I,"Legacy Loose Diamond With One 3.01Ct Round Brilliant Cut I Lazare DiamondLab: AGSCert: 104074311011Sarine Number: 5C8HOGX82CYSarine Template: SPRGCHRMD3Carat: 3.02Color: IClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: Excellent",709,"38,076.50","64,730.00",0.41,+64730.0000
-001-190-00760,e82:2AA4779,S/I,"Harmony Loose Diamond With One 1.01Ct Round Brilliant Cut H Si2 DiamondLab: GIACert: 7208407442Sarine Number: VZ4GBC8KSJKSarine Template: SPRGCHRMD3Carat: 1.01Color: HClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiam",261,"3,676.40","6,495.00",0.43,+6495.0000
-001-190-00870,E50:E33155-02,S/I,"Spark Loose Diamond With One 1.27Ct Round Brilliant Cut G I1 DiamondLab: GIACert: 6231702930Sarine Number: JEBFI3KCD63Sarine Template: SPRGCSPKD6Carat: 1.27Color: GClarity: I1Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond",1,"3,680.00","6,500.00",0.43,+6500.0000
-001-190-00409,F12:PNR 1362826,S/I,"Harmony Loose Diamond With One 1.02Ct Oval H Forevermark DiamondLab: FDICert: 3908695Sarine Number: NASarine Template: NACarat: 1.02Color: HClarity: SI2Cut: NAPolish: ExcellentSymmetry: ExcellentDiamond Shape: Oval","1,427","3,700.00","6,950.00",0.47,+6950.0000
-001-190-00848,D80:Q0938193,S/I,"Harmony Loose Diamond With One 0.91Ct Fire Cushion F Si2 DiamondLab: GIACert: 2175406093Sarine Number: TLDFZ12P84GSarine Template: SPRGCFCND4Carat: 0.91Color: FClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Sha",76,"3,326.00","6,950.00",0.52,+6950.0000
-001-190-00845,D80:10927200,S/I,"Legacy Loose Diamond With One 0.93Ct Round Brilliant Cut E Si1 DiamondLab: AGSCert: 104077510003Sarine Number: 2KY1DHT7P5KSarine Template: SPRGCLGCD9Carat: 0.92Color: EClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",76,"4,057.20","6,995.00",0.42,+6995.0000
-001-190-00652,01:RND6031,S/I,"Spark Loose Diamond With One 6.04Ct Round Brilliant Cut O/P Vvs1 DiamondLab: GIACert: 2175468305Sarine Number: NASarine Template: NACarat: 6.04Color: O/PClarity: VVS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Shape: Ro",489,"20,000.00","69,995.00",0.71,+69995.0000
-001-190-00810,E50:E31502,S/I,"Harmony Loose Diamond With One 1.40Ct Round Brilliant Cut G Si2 DiamondLab: GIACert: 62114534495Sarine Number: WXS1W1JEYEMSarine Template: SPRGCHRMD3Carat: 1.4Color: GClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiam",162,"7,000.00","11,950.00",0.41,+7000.0000
-001-190-00846,D80:10946090,S/I,"Legacy Loose Diamond With One 0.90Ct Round Brilliant Cut G Vs2 DiamondLab: AGSCert: 104082409022Sarine Number: NK74F4KPBD5Sarine Template: SPRGCLGCD9Carat: 0.9Color: GClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiam",77,"4,185.00","7,350.00",0.43,+7350.0000
-001-190-00847,D80:F1056088,S/I,"Legacy Loose Diamond With One 1.00Ct Fire Princess H Vs2 DiamondLab: GIACert: 5172710988Sarine Number: E8XGE21CH0QSarine Template: SPRGCFMKD1Carat: 1Color: HClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Shape:",77,"4,428.00","7,450.00",0.41,+7450.0000
-001-190-00793,B36:257161,P/I,"Harmony Loose Diamond With One 0.90Ct Round Brilliant Cut I Lazare DiamondLab: GIACert: 213508976Sarine Number: TG1KA4C4B7MSarine Template: SPRGCHRMD3Carat: 0.9Color: IClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDia",212,"3,670.00","5,900.00",0.38,+7495.0000
-001-190-00794,E21:797119/J9912,P/I,"Legacy Loose Diamond With One 1.01Ct Radiant Cut F Si1 DiamondLab: NACert: NASarine Number: NASarine Template: NACarat: 1.01Color: FClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Radiant Cut",211,"4,141.00","7,495.00",0.45,+7495.0000
-001-190-00813,E50:D54090,S/I,"Harmony Loose Diamond With One 1.50Ct Oval E Si2 DiamondLab: GIACert: 6202085132Sarine Number: NASarine Template: NACarat: 1.5Color: EClarity: SI2Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Oval",161,"7,500.00","13,500.00",0.44,+7500.0000
-001-190-00871,E50:E32422-04,S/I,"Spark Loose Diamond With One 1.33Ct Round Brilliant Cut I Si2 DiamondLab: GIACert: 6222324638Sarine Number:  2G5ZULESNKOSarine Template: SPRGCSPKD6Carat: 1.33Color: IClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",1,"5,151.99","7,750.00",0.34,+7750.0000
-001-190-00571,F15:A49509F,S/I,"Harmony Loose Diamond With One 1.02Ct Round Brilliant Cut J Forevermark DiamondLab: FDICert: 9270261Sarine Number: ZPKJMXP4Z0CSarine Template: SPRGCHRMD3Carat: 1.02Color: JClarity: SI1Cut: Very GoodPolish: ExcellentSymmetry: Very Good",714,"5,580.00","7,850.00",0.29,+7850.0000
-001-190-00613,01:BB1400MQ.78E,S/I,"Legacy Loose Diamond With One 0.78Ct Marquise Cut D Vvs2 DiamondLab: GIACert: 5243395Sarine Number: NASarine Template: NACarat: 0.78Color: DClarity: VVS2Cut: NAPolish: ExcellentSymmetry: ExcellentDiamond Shape: Marquise Cut","5,436","2,900.00","7,895.00",0.63,+7895.0000
-001-190-00818,WP:1172682091,S/I,"Legacy Loose Diamond With One 0.94Ct Round Brilliant Cut H Vs2 DiamondLab: GIACert: 1172682091Sarine Number: VMAQKB58GRGSarine Template: SPRGCLGCD9Carat: 0.94Color: HClarity: VS2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamo",82,"4,516.70","7,895.00",0.43,+7895.0000
-001-190-00849,D80:Q1018300,S/I,"Harmony Loose Diamond With One 1.03Ct Fire Cushion F Forevermark DiamondLab: FDICert: 886855Sarine Number: ODI7V17XAPISarine Template: SPRGCFCND4Carat: 1.03Color: FClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",77,"4,210.64","7,950.00",0.47,+7950.0000
-001-190-00456,E19:313586AA11,S/I,"Harmony Loose Diamond With One 1.01Ct Round Brilliant Cut F Si2 DiamondLab: AGSCert: 5307503Sarine Number: B7TT5RLL595Sarine Template: SPRGCHRMD3Carat: 1.01Color: FClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond","4,354","4,580.00","8,950.00",0.49,+8950.0000
-001-190-00832,F40:R150HI1,S/I,"Spark Loose Diamond With One 1.54Ct Round Brilliant Cut H I1 DiamondLab: GIACert: 2226400707Sarine Number: 9R69T7YR2LSSarine Template: SPRGCSPKD6Carat: 1.54Color: HClarity: I1Cut: Very GoodPolish: ExcellentSymmetry: Very GoodDiamond",78,"5,645.64","8,995.00",0.37,+8995.0000
-001-190-00783,B36:LBQ50013PB,P/I,"Legacy Loose Diamond With One 1.06Ct Round Brilliant Cut H Si1 DiamondLab: AGSCert: 4974308Sarine Number: BL0PX72DRIDSarine Template: SPRGCLGCD9Carat: 1.06Color: HClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",216,"5,640.00","9,150.00",0.38,+9150.0000
-001-190-00745,D80:Q12-55-043,S/I,"Harmony Loose Diamond With One 1.20Ct Fire Cushion H Forevermark DiamondLab: FDICert: 1205776Sarine Number: XBHKTAHYOB1Sarine Template: SPRGCFCND4Carat: 1.2Color: HClarity: VS1Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond",331,"5,645.00","9,495.00",0.41,+9495.0000
-001-190-00808,E50:E32124,S/I,"Harmony Loose Diamond With One 1.27Ct Round Brilliant Cut G Si2 DiamondLab: GIACert: 2226318986Sarine Number: 3CPMXBGNJAJSarine Template: SPRGCHRMD3Carat: 1.27Color: GClarity: SI2Cut: ExcellentPolish: Very GoodSymmetry: ExcellentDiam",163,"5,469.00","9,850.00",0.44,+9850.0000
-001-190-00869,E50:E22649U,S/I,"Spark Loose Diamond With One 1.50Ct Round Brilliant Cut K Vs2 DiamondLab: GIACert: 6231384012Sarine Number: PHWAMLTGEFRSarine Template: SPRGCSPKD6Carat: 1.5Color: KClarity: VS2Cut: Very GoodPolish: ExcellentSymmetry: ExcellentDiamond",1,"5,651.00","9,950.00",0.43,+9950.0000
-001-190-00506,F40:1995989,S/I,"Harmony Loose Diamond With One 5.15Ct Round Brilliant Cut J Si2 DiamondLab: 1995989Cert: GIASarine Number: NASarine Template: NACarat: 5.15Color: JClarity: SI2Cut: ExcellentPolish: ExcellentSymmetry: ExcellentDiamond Shape: Round Bri","1,000","60,000.00","93,500.00",0.36,+99500.0000
-001-190-00800,D29:zq01,P/I,"Legacy Loose Diamond With One 1.22Ct Asscher Cut G Vs DiamondLab: NACert: NASarine Number: NASarine Template: NACarat: 1.22Color: GClarity: VS2Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Asscher Cut",210,"5,429.00","9,975.00",0.46,+9975.0000
-001-190-00569,F51:..,S/I,"Legacy Loose Diamond With One 1.01Ct Round Brilliant Cut G Forevermark DiamondLab: FDICert: 3856286Sarine Number: PBK43B312IDSarine Template: SPRGCLGCD9Carat: 1.01Color: GClarity: SI1Cut: ExcellentPolish: ExcellentSymmetry: Excellent D",715,"5,500.00","9,990.00",0.45,+9990.0000
-001-190-00795,17:K507D|22,P/I,"Harmony Loose Diamond With One 0.81Ct Round Brilliant Cut G Si2 DiamondLab: SGCert: 0002Sarine Number: UTNPEZGF2TDSarine Template: SPRGCHRMD3Carat: 0.81Color: GClarity: SI2Cut: Very GoodPolish: Very GoodSymmetry: Very GoodDiamond Sha",210,"2,347.00","4,495.00",0.48,+4495.0000
-001-190-00779,17:Y325-394,S/I,"Harmony Loose Diamond With One 0.52Ct Princess Cut G Si1 DiamondLab: WGCert: 00044Sarine Number: NASarine Template: NACarat: 0.52Color: GClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Princess Cut","1,791",912.60,"2,095.00",0.56,+2095.0000
-001-190-00777,17:Y100|1015/91,P/I,"Harmony Loose Diamond With One 2.12Ct Princess Cut I Vs2 DiamondLab: GIACert: 14776229Sarine Number: NASarine Template: NACarat: 2.12Color: IClarity: HARCut: NAPolish: Very GoodSymmetry: GoodDiamond Shape: Princess Cut",217,"12,296.00","20,950.00",0.41,+20950.0000
-001-190-00797,17:Y326|516/108,P/I,"Harmony Loose Diamond With One 2.02Ct Pear G Si2 DiamondLab: SGCert: 0007Sarine Number: NASarine Template: NACarat: 2.02Color: GClarity: SI2Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Pear",211,"13,241.00","22,500.00",0.41,+22500.0000
-001-190-00789,17:Y323|09/2.11,P/I,"Legacy Loose Diamond With One 2.11Ct Emerald Cut G Vs1 DiamondLab: SGCert: 0008Sarine Number: NASarine Template: NACarat: 2.11Color: GClarity: VS1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Emerald Cut",214,"19,201.00","32,750.00",0.41,+32750.0000
-001-190-00788,17:Y326/533/776,P/I,"Legacy Loose Diamond With One 0.78Ct Princess Cut F Si1 DiamondLab: SGCert: 0006Sarine Number: NASarine Template: NACarat: 0.78Color: FClarity: SI1Cut: NAPolish: Very GoodSymmetry: Very GoodDiamond Shape: Princess Cut",214,"2,963.00","5,950.00",0.50,+5950.0000
-,,,,,,,,
-,,,,,,,,
-Grand Total...,106,510,"621,612.17","1,123,410.00",44.67,,,
+"Item #","Old #","Retail","Current","Status","Status Date","Type","Location","Price Method","Qty","Entered","Vendor","Vendor Style","Style Note","Invoice #","Description","Payable Date","Additional Info"
+"001-190-00033","360557","$6,250.00","$6,250.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/4/2006","17","9390","","S1569","Spark Loose Diamond With One 1.04Ct Round Brilliant Cut H I1 Diamond
+Lab: SG
+Cert: 004
+Sarine Number: KN0MA7MYAK7
+Sarine Template: SPRGCSPKD6
+Carat: 1.04
+Color: H
+Clarity: I1
+Cut: Very Good
+Polish: Excellent
+Symmetry: Very Good
+Diamond Shape: R","","",""
+"001-190-00277","","$18,450.00","$18,450.00","I","12/28/2013","S","Inventory  Managers Safe","","","11/25/2008","B36","KR01.75ISI1","","M212435","Harmony Loose Diamond With One 1.75Ct Round Brilliant Cut I Si1 Diamond
+Lab: AGS
+Cert: 9841002
+Sarine Number: JOR296BQWH3
+Sarine Template: SPRGCHRMD3
+Carat: 1.75
+Color: I
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","12/19/2013 10:50:51 AM","",""
+"001-190-00323","","$2,250.00","$2,250.00","I","8/6/2016","S","Inventory  Managers Safe","","","11/30/2010","E50","P-050B.0556","","MO074767","Harmony Loose Diamond With One 0.56Ct Round Brilliant Cut J Si2 Diamond
+Lab: 0012
+Cert: WG
+Sarine Number: 4ZSPQHH9ULT
+Sarine Template: SPRGCHRMD3
+Carat: 0.56
+Color: J
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Sha","","",""
+"001-190-00376","","$2,950.00","$2,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/30/2011","B36","KR00.60HSI1","","1084507","Legacy Loose Diamond With One 0.60Ct Round Brilliant Cut H Lazare Diamond
+Lab: GIA
+Cert: 6127252509
+Sarine Number: KY75SHH9GJT
+Sarine Template: SPRGCLGCD9
+Carat: 0.6
+Color: H
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00384","","$2,270.00","$2,270.00","I","8/5/2016","S","Inventory  Managers Safe","","","1/22/2012","D80","G-6147142438","","70649","Harmony Loose Diamond With One 0.55Ct Fire Princess Diamond
+Lab: GIA
+Cert: 6147142438
+Sarine Number: KE3JCBRL14M
+Sarine Template: SPRGCFMKD1
+Carat: 0.55
+Color: G
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: P","","",""
+"001-190-00394","","$17,500.00","$17,500.00","I","7/21/2012","S","Inventory  Managers Safe","","","7/21/2012","F15","D120-4","","12849","Legacy Loose Diamond With One 1.51Ct Princess Cut G Forevermark Diamond
+Lab: FDI
+Cert: 739306
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.51
+Color: G
+Clarity: SI1
+Cut: NA
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Radiant Cut","","",""
+"001-190-00409","","$6,950.00","$6,950.00","I","6/20/2014","S","Inventory  Managers Safe","","","11/30/2012","F12","PNR 1362826","","M48435","Harmony Loose Diamond With One 1.02Ct Oval H Forevermark Diamond
+Lab: FDI
+Cert: 3908695
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.02
+Color: H
+Clarity: SI2
+Cut: NA
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Oval","","",""
+"001-190-00416","","$14,995.00","$14,995.00","I","12/13/2012","S","Inventory  Managers Safe","","","12/13/2012","D29","KR08-168","","151945","Harmony Loose Diamond With One 2.03Ct Cushion Cut J Forevermark Diamond
+Lab: FDI
+Cert: 1222123
+Sarine Number: NA
+Sarine Template: NA
+Carat: 2.03
+Color: J
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Cushion Cut","","",""
+"001-190-00421","","$16,450.00","$16,450.00","I","12/19/2012","S","Inventory  Managers Safe","","","12/19/2012","F15","DD42V-9A","","13264","Legacy Loose Diamond With One 1.43Ct Princess Cut G Forevermark Diamond
+Lab: FDI
+Cert: 6265121
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.43
+Color: G
+Clarity: SI1
+Cut: NA
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Radiant Cut","","",""
+"001-190-00456","370491","$8,950.00","$8,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/26/2004","E19","313586AA11","","30643","Harmony Loose Diamond With One 1.01Ct Round Brilliant Cut F Si2 Diamond
+Lab: AGS
+Cert: 5307503
+Sarine Number: B7TT5RLL595
+Sarine Template: SPRGCHRMD3
+Carat: 1.01
+Color: F
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00463","","$4,250.00","$4,250.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/23/2013","D80","F0748111","","97443","Harmony Loose Diamond With One 0.71Ct Fire Princess G Forevermark Diamond
+Lab: FDI
+Cert: FM#1129673
+Sarine Number: 1KBI99JSOZF
+Sarine Template: SPRGCFMKD1
+Carat: 0.71
+Color: G
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Di","","",""
+"001-190-00472","","$13,250.00","$13,250.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/3/2013","B36","284755","","1111341","Legacy Loose Diamond With One 1.15Ct Round Brilliant Cut G Lazare Diamond
+Lab: GIA
+Cert: 2145639058
+Sarine Number: P3HIVMZOS3G
+Sarine Template: SPRGCLGCD9
+Carat: 1.15
+Color: G
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Di","","",""
+"001-190-00485","","$4,075.00","$4,075.00","I","12/3/2013","S","Inventory  Managers Safe","","","12/3/2013","B36","295592","","1111341","Legacy Loose Diamond With One 0.50Ct Round Brilliant Cut E Lazare Diamond
+Lab: GIA
+Cert: 2151086418
+Sarine Number: CGG74GB91AT
+Sarine Template: SPRGCLGCD9
+Carat: 0.5
+Color: E
+Clarity: VVS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Di","","",""
+"001-190-00492","","$6,250.00","$6,250.00","S","11/25/2014","S","Safe 4","","","2/19/2014","E50","E23786","","SI153204","W&G SELECT 1D=1.02  G SI2 EGL#2260047021","","",""
+"001-190-00506","","$93,500.00","$93,500.00","I","10/18/2016","S","Case 2","","","2/1/2014","F40","1995989","","671008994","Harmony Loose Diamond With One 5.15Ct Round Brilliant Cut J Si2 Diamond
+Lab: 1995989
+Cert: GIA
+Sarine Number: NA
+Sarine Template: NA
+Carat: 5.15
+Color: J
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Round Bri","","",""
+"001-190-00534","","$5,450.00","$5,450.00","I","11/16/2015","S","Inventory  Managers Safe","","","8/6/2014","01","OVAL","","0001","Harmony Loose Diamond With One 0.85Ct Oval E Si2 Diamond
+Lab: WG
+Cert: OV0085SI2E
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.85
+Color: E
+Clarity: SI2
+Cut: NA
+Polish: Excellent
+Symmetry: Very Good
+Diamond Shape: Oval","","",""
+"001-190-00536","","$840.00","$840.00","M","7/7/2016","S","Safe 4","","","8/6/2014","01","OVAL","","","Oval .30CT SI1 E
+Harmony / loose","","",""
+"001-190-00556","","$15,500.00","$15,500.00","I","10/22/2014","S","Inventory  Managers Safe","","","10/22/2014","01","1","","4003","Harmony Loose Diamond With One 1.51Ct Round Brilliant Cut E Si2 Diamond
+Lab: WG
+Cert: RBC00151SI2EF
+Sarine Number: GCVN8HUOBIS
+Sarine Template: SPRGCHRMD3
+Carat: 1.51
+Color: F
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Di","","",""
+"001-190-00569","","$9,990.00","$9,990.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/13/2014","F51","..","","?FROM 2013","Legacy Loose Diamond With One 1.01Ct Round Brilliant Cut G Forevermark Diamond
+Lab: FDI
+Cert: 3856286
+Sarine Number: PBK43B312ID
+Sarine Template: SPRGCLGCD9
+Carat: 1.01
+Color: G
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent D","","",""
+"001-190-00571","","$7,850.00","$7,850.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/13/2014","F15","A49509F","","514475 dated 3/26/13","Harmony Loose Diamond With One 1.02Ct Round Brilliant Cut J Forevermark Diamond
+Lab: FDI
+Cert: 9270261
+Sarine Number: ZPKJMXP4Z0C
+Sarine Template: SPRGCHRMD3
+Carat: 1.02
+Color: J
+Clarity: SI1
+Cut: Very Good
+Polish: Excellent
+Symmetry: Very Good","","",""
+"001-190-00573","","$64,730.00","$64,730.00","I","8/5/2016","S","Inventory  Managers Safe","","","11/18/2014","B36","320675","","1119614","Harmony Loose Diamond With One 3.01Ct Round Brilliant Cut I Lazare Diamond
+Lab: AGS
+Cert: 104074311011
+Sarine Number: 5C8HOGX82CY
+Sarine Template: SPRGCHRMD3
+Carat: 3.02
+Color: I
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent","","",""
+"001-190-00594","","$14,950.00","$14,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","2/10/2015","D80","Q1567343","","102059","Harmony Loose Diamond With One 1.53Ct Fire Cushion I Si1 Diamond
+Lab: GIA
+Cert: 61667751243
+Sarine Number: XSCSXH0BY36
+Sarine Template: SPRGCFCND4
+Carat: 1.53
+Color: I
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Sh","","",""
+"001-190-00596","","$2,685.00","$2,685.00","S","11/11/2015","S","Safe 2","","","12/31/2014","01","DIARND001","","123114A","Spark Loose Diamond With One 0.77Ct Round Brilliant Cut Diamond
+Lab: WG
+Cert: 0011
+Cut: Very Good
+Polish: Excellent
+Symmetry: Very Good","","",""
+"001-190-00597","","$3,450.00","$3,450.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/31/2014","01","DIARND001","","123114A","Legacy Loose Diamond With One 0.51Ct Round Brilliant Cut H Vs2 Diamond
+Lab: AGS
+Cert: 0002780101
+Sarine Number: KEUZ6BSZ8KG
+Sarine Template: SPRGCLGCD9
+Carat: 0.51
+Color: H
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00605","","$4,450.00","$4,450.00","I","8/5/2016","S","Inventory  Managers Safe","","","2/18/2015","E50","E23786","","SI153204","Spark Loose Diamond With One 1.02Ct Round Brilliant Cut J I1 Diamond
+Lab: SG
+Cert: 001
+Sarine Number: 6L8ECRXBKQT
+Sarine Template: SPRGCSPKD6
+Carat: 1.02
+Color: J
+Clarity: I1
+Cut: Good
+Polish: Very Good
+Symmetry: Good
+Diamond Shape: Round Brill","","",""
+"001-190-00611","","$34,397.50","$34,397.50","M","4/14/2015","P","west #1 wedding bands","","","3/13/2015","17","Y100|1015/91","","31804","2.12CT PRINCESS VS2 I GIA PLATINUM GIA 14776229","","",""
+"001-190-00613","10236","$7,895.00","$7,895.00","I","3/18/2015","S","Inventory  Managers Safe","","","12/10/2001","01","BB1400MQ.78E","","ESTATE","Legacy Loose Diamond With One 0.78Ct Marquise Cut D Vvs2 Diamond
+Lab: GIA
+Cert: 5243395
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.78
+Color: D
+Clarity: VVS2
+Cut: NA
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Marquise Cut","","",""
+"001-190-00616","","$2,595.00","$2,595.00","I","12/31/2014","S","Inventory  Managers Safe","","","12/31/2014","01","PCWG002","","LOOSEDIA001","Harmony Loose Diamond With One 0.64Ct Princess Cut H/I Si1 Diamond
+Lab: SG
+Cert: PC0064SI1H
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.64
+Color: H/I
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00620","","$1,050.00","$1,050.00","I","4/1/2015","S","Inventory  Managers Safe","","","4/1/2015","01","DIARND001","","LOOSE001","Harmony Loose Diamond With One 0.27Ct Round Brilliant Cut G Vs2 Diamond
+Lab: WG
+Cert: R.00067
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good","","",""
+"001-190-00621","","$1,050.00","$1,050.00","S","3/16/2016","S","Safe 2","","","4/1/2015","01","DIARND001","","LOOSE001","Harmony Loose Diamond With One 0.26Ct Round Brilliant Cut G Vs2 Diamond
+Lab: WG
+Cert: R.00068
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good","","",""
+"001-190-00622","","$2,950.00","$2,950.00","I","8/31/2016","S","Inventory  Managers Safe","","","4/1/2015","01","FM001","","WICK001","Harmony Loose Diamond With One 0.50Ct Round Brilliant Cut F Forevermark Diamond
+Lab: FDI
+Cert: 6299709
+Sarine Number: NA
+Sarine Template: SPRGCHRMD3
+Carat: 0.5
+Color: F
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond S","","",""
+"001-190-00645","","$19,250.00","$19,250.00","I","8/5/2016","S","Inventory  Managers Safe","","","6/4/2015","D80","11637380","","H103001","Legacy Loose Diamond With One 1.63Ct Round Brilliant Cut F Si1 Diamond
+Lab: AGS
+Cert: 104072818003
+Sarine Number: 0888B04O22N
+Sarine Template: SPRGCLGCD9
+Carat: 1.63
+Color: F
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00651","","$4,950.00","$4,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","6/26/2015","B36","23791","","M1086346","Legacy Loose Diamond With One 0.55Ct Round Brilliant Cut F Lazare Diamond
+Lab: GIA
+Cert: 16332140
+Sarine Number: 62791P2SWEI
+Sarine Template: SPRGCLGCD9
+Carat: 0.55
+Color: F
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00652","","$69,995.00","$69,995.00","I","6/27/2015","S","Inventory  Managers Safe","","","6/27/2015","01","RND6031","","001-33164","Spark Loose Diamond With One 6.04Ct Round Brilliant Cut O/P Vvs1 Diamond
+Lab: GIA
+Cert: 2175468305
+Sarine Number: NA
+Sarine Template: NA
+Carat: 6.04
+Color: O/P
+Clarity: VVS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Ro","","",""
+"001-190-00668","","$4,950.00","$4,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","7/17/2015","B36","317947","","8463","Legacy Loose Diamond With One 0.71Ct Round Brilliant Cut G Lazare Diamond
+Lab: AGS
+Cert: 104072332023
+Sarine Number: H4RMC2NL2VC
+Sarine Template: SPRGCLGCD9
+Carat: 0.71
+Color: G
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent D","","",""
+"001-190-00669","","$14,950.00","$14,950.00","I","7/17/2015","S","Inventory  Managers Safe","","","7/17/2015","B36","326064","","8463","Legacy Loose Diamond With One 1.32Ct Round Brilliant Cut H Lazare Diamond
+Lab: GIA
+Cert: 2186927398
+Sarine Number: YNP6GOY2IAO
+Sarine Template: SPRGCLGCD9
+Carat: 1.32
+Color: H
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Di","","",""
+"001-190-00708","","$14,950.00","$14,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","8/13/2015","F40","R200CSVG-073","","671011426","Spark Loose Diamond With One 2.01Ct Round Brilliant Cut G I1 Diamond
+Lab: WG
+Cert: RBC00201I1G
+Sarine Number: DWOMMD2ZC8Q
+Sarine Template: SPRGCSPKD6
+Carat: 2.01
+Color: G
+Clarity: I1
+Cut: Very Good
+Polish: Good
+Symmetry: Good
+Diamond Shape: Rou","","",""
+"001-190-00711","","$14,995.00","$14,995.00","I","8/5/2016","S","Inventory  Managers Safe","","","8/13/2015","F40","R150CLVSE-113","","671011426","Spark Loose Diamond With One 1.50Ct Round Brilliant Cut J Si1 Diamond
+Lab: WG
+Cert: RBC00150SI1J-2
+Sarine Number: 32CIB3C0L7X
+Sarine Template: SPRGCSPKD6
+Carat: 1.5
+Color: J
+Clarity: SI1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diam","","",""
+"001-190-00732","","$21,950.00","$21,950.00","I","10/23/2015","S","Inventory  Managers Safe","","","10/23/2015","AK","1564124","","3057","Harmony Loose Diamond With One 2.01Ct Oval F Si2 Diamond
+Lab: GIA
+Cert: 2165205790
+Sarine Number: NA
+Sarine Template: NA
+Carat: 2.01
+Color: F
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Excellent
+Diamond Shape: Oval","","",""
+"001-190-00745","","$9,495.00","$9,495.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/2/2015","D80","Q12-55-043","","MEMO-001DEC2015","Harmony Loose Diamond With One 1.20Ct Fire Cushion H Forevermark Diamond
+Lab: FDI
+Cert: 1205776
+Sarine Number: XBHKTAHYOB1
+Sarine Template: SPRGCFCND4
+Carat: 1.2
+Color: H
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00746","","$3,395.00","$3,395.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/7/2015","D80","Q0535632","","89210","Legacy Loose Diamond With One 0.56Ct Fire Cushion F Forevermark Diamond
+Lab: FDI
+Cert: 7923298
+Sarine Number: E5O07Y4ZXCV
+Sarine Template: SPRGCFCND4
+Carat: 0.56
+Color: F
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00748","","$13,500.00","$13,500.00","I","8/5/2016","S","Inventory  Managers Safe","","","12/10/2015","D80","F1358309","","M89392","Harmony Loose Diamond With One 1.33Ct Fire Princess H Si2 Diamond
+Lab: GIA
+Cert: 5172316109
+Sarine Number: S3CX5RYYLZH
+Sarine Template: SPRGCFMKD1
+Carat: 1.33
+Color: H
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Sh","12/16/2015 3:27:21 PM","",""
+"001-190-00760","","$6,495.00","$6,495.00","I","8/5/2016","S","Inventory  Managers Safe","","","2/10/2016","e82","2AA4779","","26391","Harmony Loose Diamond With One 1.01Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIA
+Cert: 7208407442
+Sarine Number: VZ4GBC8KSJK
+Sarine Template: SPRGCHRMD3
+Carat: 1.01
+Color: H
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diam","","",""
+"001-190-00770","","$3,995.00","$3,995.00","I","8/5/2016","S","Inventory  Managers Safe","","","3/14/2016","D80","Q0728566","","M90813","Harmony Loose Diamond With One 0.75Ct Fire Cushion E Si2 Diamond
+Lab: GIA
+Cert: 5171244766
+Sarine Number: XC7RWQKIAMQ
+Sarine Template: SPRGCFCND4
+Carat: 0.75
+Color: E
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Sha","","",""
+"001-190-00776","","$2,185.00","$2,185.00","I","3/24/2016","P","Inventory  Managers Safe","","","3/24/2016","17","Y800W|63","","33173","Harmony Loose Diamond With One 0.54Ct Princess Cut G Si1 Diamond
+Lab: SG
+Cert: 0006
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.54
+Color: G
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00777","","$20,950.00","$20,950.00","I","3/24/2016","P","Inventory  Managers Safe","","","3/24/2016","17","Y100|1015/91","","31804","Harmony Loose Diamond With One 2.12Ct Princess Cut I Vs2 Diamond
+Lab: GIA
+Cert: 14776229
+Sarine Number: NA
+Sarine Template: NA
+Carat: 2.12
+Color: I
+Clarity: HAR
+Cut: NA
+Polish: Very Good
+Symmetry: Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00778","","$6,395.00","$6,395.00","I","3/24/2016","P","Inventory  Managers Safe","","","3/24/2016","17","Y075-17","","17069","Harmony Loose Diamond With One 1.06Ct Oval G Si2 Diamond
+Lab: NA
+Cert: NA
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.06
+Color: G
+Clarity: SI2
+Cut: NA
+Polish: Good
+Symmetry: Good
+Diamond Shape: Oval","","",""
+"001-190-00779","","$2,095.00","$2,095.00","I","12/2/2011","S","Inventory  Managers Safe","","","12/2/2011","17","Y325-394","","35423","Harmony Loose Diamond With One 0.52Ct Princess Cut G Si1 Diamond
+Lab: WG
+Cert: 00044
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.52
+Color: G
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00780","","$2,245.00","$2,245.00","I","3/25/2016","P","Inventory  Managers Safe","","","3/25/2016","RIAM","PENPC50B-W","","131887","Harmony Loose Diamond With One 0.50Ct Princess Cut I Vs2 Diamond
+Lab: SG
+Cert: 0005
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.5
+Color: I
+Clarity: VS2
+Cut: Good
+Polish: Good
+Symmetry: Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00782","","$5,995.00","$5,995.00","I","3/25/2016","P","Inventory  Managers Safe","","","3/25/2016","17","Y100|911","","28534","Harmony Loose Diamond With One 1.05Ct Emerald Cut G Si2 Diamond
+Lab: NA
+Cert: NA
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.05
+Color: G
+Clarity: SI2
+Polish: Good
+Symmetry: Good
+Diamond Shape: Asscher Cut","","",""
+"001-190-00783","","$9,150.00","$9,150.00","I","8/5/2016","P","Inventory  Managers Safe","","","3/25/2016","B36","LBQ50013PB","","175651","Legacy Loose Diamond With One 1.06Ct Round Brilliant Cut H Si1 Diamond
+Lab: AGS
+Cert: 4974308
+Sarine Number: BL0PX72DRID
+Sarine Template: SPRGCLGCD9
+Carat: 1.06
+Color: H
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00788","","$5,950.00","$5,950.00","I","3/28/2016","P","Inventory  Managers Safe","","","3/28/2016","17","Y326/533/776","","25391","Legacy Loose Diamond With One 0.78Ct Princess Cut F Si1 Diamond
+Lab: SG
+Cert: 0006
+Sarine Number: NA
+Sarine Template: NA
+Carat: 0.78
+Color: F
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Princess Cut","","",""
+"001-190-00789","","$32,750.00","$32,750.00","I","3/28/2016","P","Inventory  Managers Safe","","","3/28/2016","17","Y323|09/2.11","","31804.","Legacy Loose Diamond With One 2.11Ct Emerald Cut G Vs1 Diamond
+Lab: SG
+Cert: 0008
+Sarine Number: NA
+Sarine Template: NA
+Carat: 2.11
+Color: G
+Clarity: VS1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Emerald Cut","","",""
+"001-190-00793","","$5,900.00","$5,900.00","I","8/5/2016","P","Inventory  Managers Safe","","","3/30/2016","B36","257161","","8417","Harmony Loose Diamond With One 0.90Ct Round Brilliant Cut I Lazare Diamond
+Lab: GIA
+Cert: 213508976
+Sarine Number: TG1KA4C4B7M
+Sarine Template: SPRGCHRMD3
+Carat: 0.9
+Color: I
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00794","","$7,495.00","$7,495.00","I","3/30/2016","P","Inventory  Managers Safe","","","3/30/2016","E21","797119/J9912","","REMAKE","Legacy Loose Diamond With One 1.01Ct Radiant Cut F Si1 Diamond
+Lab: NA
+Cert: NA
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.01
+Color: F
+Clarity: SI1
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Radiant Cut","","",""
+"001-190-00795","","$4,495.00","$4,495.00","I","8/5/2016","P","Inventory  Managers Safe","","","3/31/2016","17","K507D|22","","30809","Harmony Loose Diamond With One 0.81Ct Round Brilliant Cut G Si2 Diamond
+Lab: SG
+Cert: 0002
+Sarine Number: UTNPEZGF2TD
+Sarine Template: SPRGCHRMD3
+Carat: 0.81
+Color: G
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond Sha","","",""
+"001-190-00797","","$22,500.00","$22,500.00","I","3/31/2016","P","Inventory  Managers Safe","","","3/31/2016","17","Y326|516/108","","21908","Harmony Loose Diamond With One 2.02Ct Pear G Si2 Diamond
+Lab: SG
+Cert: 0007
+Sarine Number: NA
+Sarine Template: NA
+Carat: 2.02
+Color: G
+Clarity: SI2
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Pear","","",""
+"001-190-00799","","$1,620.00","$1,620.00","I","8/5/2016","P","Inventory  Managers Safe","","","3/31/2016","17","Y800W|50","","27860","Spark Loose Diamond With One 0.51Ct Round Brilliant Cut G I1 Diamond
+Lab: WG
+Cert: 003
+Sarine Number: WDVLAETDLQU
+Sarine Template: SPRGCSPKD6
+Carat: 0.51
+Color: G
+Clarity: I1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: R","","",""
+"001-190-00800","","$9,975.00","$9,975.00","I","3/31/2016","P","Inventory  Managers Safe","","","3/31/2016","D29","zq01","","","Legacy Loose Diamond With One 1.22Ct Asscher Cut G Vs Diamond
+Lab: NA
+Cert: NA
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.22
+Color: G
+Clarity: VS2
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Asscher Cut","","",""
+"001-190-00805","","$2,950.00","$2,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E29650-01","","1776","Harmony Loose Diamond With One 0.60Ct Round Brilliant Cut I Vs2 Diamond
+Lab: GIA
+Cert: 2186348789
+Sarine Number: Y2BC0QWA238
+Sarine Template: SPRGCHRMD3
+Carat: 0.6
+Color: I
+Clarity: VS2
+Cut: Excellent
+Polish: Very Good
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00806","","$2,450.00","$2,450.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E32230","","1776","Harmony Loose Diamond With One 0.64Ct Round Brilliant Cut J Si1 Diamond
+Lab: GIA
+Cert: 1219410709
+Sarine Number: ITE6VYAV7SU
+Sarine Template: SPRGCHRMD3
+Carat: 0.64
+Color: J
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00807","","$3,700.00","$3,700.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E32205-07","","1776","Harmony Loose Diamond With One 0.73Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIA
+Cert: 2228100730
+Sarine Number: YSGLFQF1ZRX
+Sarine Template: SPRGCHRMD3
+Carat: 0.73
+Color: H
+Clarity: SI2
+Cut: Excellent
+Polish: Very Good
+Symmetry: Excellent
+Diam","","",""
+"001-190-00808","","$9,850.00","$9,850.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E32124","","1776","Harmony Loose Diamond With One 1.27Ct Round Brilliant Cut G Si2 Diamond
+Lab: GIA
+Cert: 2226318986
+Sarine Number: 3CPMXBGNJAJ
+Sarine Template: SPRGCHRMD3
+Carat: 1.27
+Color: G
+Clarity: SI2
+Cut: Excellent
+Polish: Very Good
+Symmetry: Excellent
+Diam","","",""
+"001-190-00809","","$10,950.00","$10,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E31916-60","","1776","Harmony Loose Diamond With One 1.30Ct Round Brilliant Cut I Si1 Diamond
+Lab: GIA
+Cert: 2171495625
+Sarine Number: EDDBIUIUG1Z
+Sarine Template: SPRGCHRMD3
+Carat: 1.3
+Color: I
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00810","","$11,950.00","$11,950.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E31502","","1776","Harmony Loose Diamond With One 1.40Ct Round Brilliant Cut G Si2 Diamond
+Lab: GIA
+Cert: 62114534495
+Sarine Number: WXS1W1JEYEM
+Sarine Template: SPRGCHRMD3
+Carat: 1.4
+Color: G
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00811","","$13,500.00","$13,500.00","I","8/5/2016","S","Inventory  Managers Safe","","","5/18/2016","E50","E31895-31","","1776","Harmony Loose Diamond With One 1.58Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIA
+Cert: 6205725972
+Sarine Number: K1TTQGRSMDQ
+Sarine Template: SPRGCHRMD3
+Carat: 1.58
+Color: H
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00813","","$13,500.00","$13,500.00","I","5/19/2016","S","Inventory  Managers Safe","","","5/19/2016","E50","D54090","","1776","Harmony Loose Diamond With One 1.50Ct Oval E Si2 Diamond
+Lab: GIA
+Cert: 6202085132
+Sarine Number: NA
+Sarine Template: NA
+Carat: 1.5
+Color: E
+Clarity: SI2
+Cut: NA
+Polish: Very Good
+Symmetry: Very Good
+Diamond Shape: Oval","","",""
+"001-190-00814","","$36,950.00","$36,950.00","I","6/17/2016","S","Inventory  Managers Safe","","","6/17/2016","B36","332706","","247849","Legacy Loose Diamond With One 2.18Ct Lazare Round F Si1 Diamond
+Lab: GIA
+Cert: 2175597312
+Sarine Number: NE5J2DXI2RA
+Sarine Template: SPRGCLGCD9
+Carat: 2.18
+Color: F
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shap","","",""
+"001-190-00815","","$3,850.00","$3,850.00","I","8/5/2016","S","Inventory  Managers Safe","","","6/22/2016","01",".75GSI1","","Found1","Harmony Loose Diamond With One 0.75Ct Round Brilliant Cut G Si2 Diamond
+Lab: WG
+Cert: 000005
+Sarine Number: PFPHPO1P2DT
+Sarine Template: SPRGCHRMD3
+Carat: 0.75
+Color: G
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond S","","",""
+"001-190-00817","","$26,450.00","$26,450.00","I","10/4/2016","S","Inventory  Managers Safe","","","8/6/2016","WP","2155901478","","SIN010639","Legacy Loose Diamond With One 1.87Ct Round Brilliant Cut F Vs1 Diamond
+Lab: GIA
+Cert: 2155901478
+Sarine Number: FZEABKDPYVD
+Sarine Template: SPRGCLGCD9
+Carat: 1.87
+Color: F
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00818","","$7,895.00","$7,895.00","I","8/6/2016","S","Inventory  Managers Safe","","","8/6/2016","WP","1172682091","","sin010639","Legacy Loose Diamond With One 0.94Ct Round Brilliant Cut H Vs2 Diamond
+Lab: GIA
+Cert: 1172682091
+Sarine Number: VMAQKB58GRG
+Sarine Template: SPRGCLGCD9
+Carat: 0.94
+Color: H
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00819","","$4,395.00","$4,395.00","I","8/6/2016","S","Inventory  Managers Safe","","","8/6/2016","WP","2175554909","","","Legacy Loose Diamond With One 0.67Ct Round Brilliant Cut D Vs2 Diamond
+Lab: GIA
+Cert: 217554909
+Sarine Number: LZCXR25R1M3
+Sarine Template: SPRGCLGCD9
+Carat: 0.67
+Color: D
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamon","","",""
+"001-190-00821","","$1,925.00","$1,925.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R060AAMG","","31111231","Spark Loose Diamond With One 0.62Ct Round Brilliant Cut F I1 Diamond
+Lab: gia
+Cert: 5171783601
+Sarine Number: 723S9WG3ZZK
+Sarine Template: SPRGCSPKD6
+Carat: 0.62
+Color: F
+Clarity: I1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond","","",""
+"001-190-00822","","$2,995.00","$2,995.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R060AAMG1","","31111231","Spark Loose Diamond With One 0.69Ct Round Brilliant Cut F Si1 Diamond
+Lab: GIA
+Cert: 2175783716
+Sarine Number: 71NXU3XSQUI
+Sarine Template: SPRGCSPKD6
+Carat: 0.69
+Color: F
+Clarity: SI1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Good
+Diamond Sha","","",""
+"001-190-00823","","$3,250.00","$3,250.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R075CSVSNG","","31111232","Spark Loose Diamond With One 0.71Ct Round Brilliant Cut I Si1 Diamond
+Lab: GIA
+Cert: 2175783690
+Sarine Number: O1JRADME9HM
+Sarine Template: SPRGCSPKD6
+Carat: 0.71
+Color: I
+Clarity: SI1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamon","","",""
+"001-190-00824","","$3,450.00","$3,450.00","I","8/10/2016","S","","","","8/10/2016","F40","R080CSVSG","","31111232","Spark Loose Diamond With One 0.81Ct Round Brilliant Cut K Si2 Diamond
+Lab: GIA
+Cert: 5172440447
+Sarine Number: 0RS3SGQLUT7
+Sarine Template: SPRGCSPKD6
+Carat: 0.82
+Color: K
+Clarity: SI2
+Cut: Excellent
+Polish: Very Good
+Symmetry: Very Good
+Diamon","","",""
+"001-190-00825","","$4,350.00","$4,350.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R080CSVSNG","","31111232","Spark Loose Diamond With One 0.86Ct Round Brilliant Cut I Vs2 Diamond
+Lab: GIA
+Cert: 2175783646
+Sarine Number: 62OHN15XA5
+Sarine Template: SPRGCSPKD6
+Carat: 0.86
+Color: I
+Clarity: VS2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond","","",""
+"001-190-00826","","$3,950.00","$3,950.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R090HI1","","31111232","Spark Loose Diamond With One 0.91Ct Round Brilliant Cut H I1 Diamond
+Lab: GIA
+Cert: 62029093316
+Sarine Number: 1867WEK5TKA
+Sarine Template: SPRGCSPKD6
+Carat: 0.91
+Color: H
+Clarity: I1
+Cut: Very Good
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00828","","$4,750.00","$4,750.00","I","8/10/2016","S","Inventory  Managers Safe","","","8/10/2016","F40","R090AVSG","","31111232","Spark Loose Diamond With One 0.90Ct Round Brilliant Cut H Si1 Diamond
+Lab: GIA
+Cert: 2175783651
+Sarine Number: AUNN3CR9168
+Sarine Template: SPRGCSPKD6
+Carat: 0.9
+Color: H
+Clarity: SI1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Good
+Diamond Shap","","",""
+"001-190-00829","","$4,995.00","$4,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R099KSI1E","","31111232","Spark Loose Diamond With One 1.01Ct Round Brilliant Cut K Si1 Diamond
+Lab: GIA
+Cert: 6222674873
+Sarine Number: 6U1E09S2AD9
+Sarine Template: SPRGCSPKD6
+Carat: 1.01
+Color: K
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Very Good
+Diamon","","",""
+"001-190-00830","","$5,995.00","$5,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R120II1","","31111232","Spark Loose Diamond With One 1.20Ct Round Brilliant Cut I I1 Diamond
+Lab: GIA
+Cert: 6232074173
+Sarine Number: VKM1YCXSCR3
+Sarine Template: SPRGCSPKD6
+Carat: 1.2
+Color: I
+Clarity: I1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Very Good
+Diamond S","","",""
+"001-190-00832","","$8,995.00","$8,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R150HI1","","31111232","Spark Loose Diamond With One 1.54Ct Round Brilliant Cut H I1 Diamond
+Lab: GIA
+Cert: 2226400707
+Sarine Number: 9R69T7YR2LS
+Sarine Template: SPRGCSPKD6
+Carat: 1.54
+Color: H
+Clarity: I1
+Cut: Very Good
+Polish: Excellent
+Symmetry: Very Good
+Diamond","","",""
+"001-190-00833","","$2,995.00","$2,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R050ESI2","","31111232","Harmony Loose Diamond With One 0.51Ct Round Brilliant Cut E Si2 Diamond
+Lab: GIA
+Cert: 5172477124
+Sarine Number: 89C1ZFN5IC4
+Sarine Template: SPRGCHRMD3
+Carat: 0.51
+Color: E
+Clarity: SI2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00834","","$4,450.00","$4,450.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R075ESI2","","31111232","Harmony Loose Diamond With One 0.80Ct Round Brilliant Cut E Si2 Diamond
+Lab: GIA
+Cert: 1229863863
+Sarine Number: JGAWNJ94IY9
+Sarine Template: SPRGCHRMD3
+Carat: 0.8
+Color: E
+Clarity: SI2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Very Good
+Diamo","","",""
+"001-190-00835","","$4,995.00","$4,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R090HSI22","","31111232","Harmony Loose Diamond With One 0.90Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIA
+Cert: 3225770337
+Sarine Number: CG1UFXB5UVT
+Sarine Template: SPRGCHRMD3
+Carat: 0.9
+Color: H
+Clarity: SI2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00836","","$5,900.00","$5,900.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R090IVS2","","31111232","Harmony Loose Diamond With One 0.91Ct Round Brilliant Cut I Vs2 Diamond
+Lab: GIA
+Cert: 6222139012
+Sarine Number: 46QLEB061PW
+Sarine Template: SPRGCHRMD3
+Carat: 0.91
+Color: I
+Clarity: VS2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00837","","$19,950.00","$19,950.00","S","11/1/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R200ISI2","","31111232","Harmony Loose Diamond With One 2.06Ct Round Brilliant Cut I Si2 Diamond
+Lab: GIA
+Cert: 5172752273
+Sarine Number: 6NGXROIN4JC
+Sarine Template: SPRGCHRMD3
+Carat: 2.06
+Color: I
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diam","","",""
+"001-190-00838","","$24,950.00","$24,950.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R2000IVVS2","","31111232","Harmony Loose Diamond With One 2.13Ct Round Brilliant Cut I Vvs2 Diamond
+Lab: GIA
+Cert: 1173410119
+Sarine Number: 2E8S8EG83SI
+Sarine Template: SPRGCHRMD3
+Carat: 213
+Color: I
+Clarity: VVS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00839","","$4,395.00","$4,395.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R075DSI1","","31111232","Legacy Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 Diamond
+Lab: GIA
+Cert: 12286367
+Sarine Number: HNT1PSXQLJM
+Sarine Template: SPRGCLGCD9
+Carat: 0.7
+Color: D
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00840","","$5,450.00","$5,450.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R075HVVS1E","","31111232","Legacy Loose Diamond With One 0.77Ct Round Brilliant Cut H Vvs1 Diamond
+Lab: GIA
+Cert: 2227668403
+Sarine Number: IG6VBQP78OX
+Sarine Template: SPRGCLGCD9
+Carat: 0.77
+Color: H
+Clarity: VVS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00841","","$19,950.00","$19,950.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R120DVS1","","31111232","Legacy Loose Diamond With One 1.35Ct Round Brilliant Cut D Vs1 Diamond
+Lab: GIA
+Cert: 5172431262
+Sarine Number: W1IMLVEFMHL
+Sarine Template: SPRGCLGCD9
+Carat: 1.35
+Color: D
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00842","","$13,450.00","$13,450.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","120GVVS2","","31111232","Legacy Loose Diamond With One 1.26Ct Round Brilliant Cut G Vvs2 Diamond
+Lab: GIA
+Cert: 7176449292
+Sarine Number: 0CANNC6LGHH
+Sarine Template: SPRGCLGCD9
+Carat: 1.26
+Color: G
+Clarity: VVS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00843","","$15,995.00","$15,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R150GSI1","","31111232","Legacy Loose Diamond With One 1.55Ct Round Brilliant Cut G Si1 Diamond
+Lab: GIA
+Cert: 6211818498
+Sarine Number: RLZLN6JAX70
+Sarine Template: SPRGCLGCD9
+Carat: 1.55
+Color: G
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00844","","$20,995.00","$20,995.00","I","8/11/2016","S","Inventory  Managers Safe","","","8/11/2016","F40","R150EVS2","","31111232","Legacy Loose Diamond With One 1.51Ct Round Brilliant Cut E Vs2 Diamond
+Lab: GIA
+Cert: 2228679648
+Sarine Number: PE4NQZN3HTX
+Sarine Template: SPRGCLGCD9
+Carat: 1.51
+Color: E
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00845","","$6,995.00","$6,995.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","D80","10927200","","105914","Legacy Loose Diamond With One 0.93Ct Round Brilliant Cut E Si1 Diamond
+Lab: AGS
+Cert: 104077510003
+Sarine Number: 2KY1DHT7P5K
+Sarine Template: SPRGCLGCD9
+Carat: 0.92
+Color: E
+Clarity: SI1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Dia","","",""
+"001-190-00846","","$7,350.00","$7,350.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","D80","10946090","","105914","Legacy Loose Diamond With One 0.90Ct Round Brilliant Cut G Vs2 Diamond
+Lab: AGS
+Cert: 104082409022
+Sarine Number: NK74F4KPBD5
+Sarine Template: SPRGCLGCD9
+Carat: 0.9
+Color: G
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diam","","",""
+"001-190-00847","","$7,450.00","$7,450.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","D80","F1056088","","105914","Legacy Loose Diamond With One 1.00Ct Fire Princess H Vs2 Diamond
+Lab: GIA
+Cert: 5172710988
+Sarine Number: E8XGE21CH0Q
+Sarine Template: SPRGCFMKD1
+Carat: 1
+Color: H
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape:","","",""
+"001-190-00848","","$6,950.00","$6,950.00","I","8/12/2016","S","","","","8/12/2016","D80","Q0938193","","105914","Harmony Loose Diamond With One 0.91Ct Fire Cushion F Si2 Diamond
+Lab: GIA
+Cert: 2175406093
+Sarine Number: TLDFZ12P84G
+Sarine Template: SPRGCFCND4
+Carat: 0.91
+Color: F
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Sha","","",""
+"001-190-00849","","$7,950.00","$7,950.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","D80","Q1018300","","105914","Harmony Loose Diamond With One 1.03Ct Fire Cushion F Forevermark Diamond
+Lab: FDI
+Cert: 886855
+Sarine Number: ODI7V17XAPI
+Sarine Template: SPRGCFCND4
+Carat: 1.03
+Color: F
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00850","","$2,450.00","$2,450.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","D80","Q0636521","","105915","Lab: FDI
+Cert: 5922722
+Sarine Number: RXG90WRD7HO
+Sarine Template: SPRGCFCND4
+Carat: 0.65
+Color: F
+Clarity: VS2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamond Shape: Cushion Cut","","",""
+"001-190-00851","","$3,995.00","$3,995.00","I","8/12/2016","S","Inventory  Managers Safe","","","8/12/2016","WP","025779","","SIN010639","Legacy Loose Diamond With One 0.62Ct Round Brilliant Cut F Vs1 Diamond
+Lab: GIA
+Cert: 1142653314
+Sarine Number: 2LGWK35DEAY
+Sarine Template: SPRGCLGCD9
+Carat: 0.62
+Color: F
+Clarity: VS1
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""
+"001-190-00865","","$1,350.00","$1,350.00","I","10/26/2016","S","","","","10/26/2016","E50","E33040","","1784","Spark Loose Diamond With One 0.54Ct Round Brilliant Cut G I1 Diamond
+Lab: GIA
+Cert: 2175716001
+Sarine Number: IDUTS8454ES
+Sarine Template: SPRGCSPKD6
+Carat: 0.54
+Color: G
+Clarity: I1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00866","","$1,895.00","$1,895.00","I","10/26/2016","S","","","","10/26/2016","E50","E33182-01","","1784","Spark Loose Diamond With One 0.50Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIA
+Cert: 6173918208
+Sarine Number: 7WONYDPOVOW
+Sarine Template: SPRGCSPKD6
+Carat: 0.5
+Color: H
+Clarity: SI2
+Cut: Very Good
+Polish: Good
+Symmetry: Excellent
+Diamond Shap","","",""
+"001-190-00867","","$2,150.00","$2,150.00","I","10/26/2016","S","","","","10/26/2016","E50","E32741-02","","1784","Spark Loose Diamond With One 0.65Ct Round Brilliant Cut I Si2 Diamond
+Lab: GIA
+Cert: 6221991196
+Sarine Number: IJHQ6T1VMG99
+Sarine Template: SPRGCSPKD6
+Carat: 0.65
+Color: I
+Clarity: SI2
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamo","","",""
+"001-190-00868","","$4,350.00","$4,350.00","I","10/26/2016","S","","","","10/26/2016","E50","E32232-02","","1784","Spark Loose Diamond With One 0.90Ct Round Brilliant Cut H Si2 Diamond
+Lab: GIa
+Cert: 1213331644
+Sarine Number: FZV77YUIQZ0
+Sarine Template: SPRGCSPKD6
+Carat: 0.9
+Color: H
+Clarity: SI2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Good
+Diamond Shap","","",""
+"001-190-00869","","$9,950.00","$9,950.00","I","10/26/2016","S","","","","10/26/2016","E50","E22649U","","1784","Spark Loose Diamond With One 1.50Ct Round Brilliant Cut K Vs2 Diamond
+Lab: GIA
+Cert: 6231384012
+Sarine Number: PHWAMLTGEFR
+Sarine Template: SPRGCSPKD6
+Carat: 1.5
+Color: K
+Clarity: VS2
+Cut: Very Good
+Polish: Excellent
+Symmetry: Excellent
+Diamond","","",""
+"001-190-00870","","$6,500.00","$6,500.00","I","10/26/2016","S","","","","10/26/2016","E50","E33155-02","","1784","Spark Loose Diamond With One 1.27Ct Round Brilliant Cut G I1 Diamond
+Lab: GIA
+Cert: 6231702930
+Sarine Number: JEBFI3KCD63
+Sarine Template: SPRGCSPKD6
+Carat: 1.27
+Color: G
+Clarity: I1
+Cut: Very Good
+Polish: Very Good
+Symmetry: Very Good
+Diamond","","",""
+"001-190-00871","","$7,750.00","$7,750.00","I","10/26/2016","S","","","","10/26/2016","E50","E32422-04","","1784","Spark Loose Diamond With One 1.33Ct Round Brilliant Cut I Si2 Diamond
+Lab: GIA
+Cert: 6222324638
+Sarine Number:  2G5ZULESNKO
+Sarine Template: SPRGCSPKD6
+Carat: 1.33
+Color: I
+Clarity: SI2
+Cut: Excellent
+Polish: Excellent
+Symmetry: Excellent
+Diamo","","",""

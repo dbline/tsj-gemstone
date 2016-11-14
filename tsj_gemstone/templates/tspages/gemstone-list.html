@@ -25,6 +25,8 @@
 
 {% block content %}
 
+{% widget_dock above_content %}
+
 <div class="row">
     <div class="gemstone-filters col-md-3">
         <form class="form form-gemstone">
@@ -143,5 +145,7 @@
         </div>
     </div>
 </div>
+
+{% widget_dock below_content %}
 
 {% endblock content %}

@@ -281,7 +281,8 @@ class Backend(CSVBackend):
             '', #city,
             '', #state,
             '', #country,
-            'NULL', #rap_date
+            'NULL', # rap_date
+            '{}', # data
         )
 
         return ret

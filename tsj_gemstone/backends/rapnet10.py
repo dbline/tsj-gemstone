@@ -365,7 +365,8 @@ class Backend(CSVBackend):
             city,
             state,
             country,
-            rap_date
+            rap_date, # rap_date
+            '{}', # data
         )
 
         return ret

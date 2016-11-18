@@ -253,8 +253,8 @@ class Backend(CSVBackend):
             '', #city,
             '', #state,
             '', #country,
-            'NULL', #rap_date
-            #manmade, # TODO: Isn't this part of the model in dev?
+            'NULL', # rap_date
+            '{}', # data
         )
 
         return ret

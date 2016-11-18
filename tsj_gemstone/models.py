@@ -1,6 +1,7 @@
 from django.db import models
 from django.template import Context, loader
 
+from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
 import mimetypes
 
@@ -189,6 +190,8 @@ class DiamondBase(TimeStampedModel):
 
     # TODO: Abstract Rapaport information to a different model
     rap_date = models.DateTimeField('Date Added', blank=True, null=True)
+
+    data = JSONField(default={})
 
     def formatted_price(self):
         return moneyfmt(self.price, dp='', places=0)

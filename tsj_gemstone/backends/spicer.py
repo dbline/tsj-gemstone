@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+import json
 import logging
 import os
 import re
@@ -47,6 +48,23 @@ def split_measurements(measurements):
 
     return length, width, depth
 
+one_word = [
+    'Lab',
+    'Cert',
+    'Carat',
+    'Color',
+    'Clarity',
+    'Polish',
+    'Symmetry',
+    'Cut',
+]
+
+two_words = [
+    'Diamond Shape',
+    'Sarine Number',
+    'Sarine Template',
+]
+
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
     default_filename = '/glusterfs/ftp_home/spicerftp/spicer.csv'
@@ -56,24 +74,21 @@ class Backend(CSVBackend):
             line = line[:-blank_columns]
         (
             stock_number,
-            old_number,
-            price,
-            current,
-            status,
-            status_date,
-            inventory_type,
-            location,
-            price_method,
-            quantity,
-            entered,
             vendor,
             lot_num,
-            style_note,
-            invoice_number,
+            price,
+            current,
+            image,
+            status,
             description,
-            payable_date,
-            additional_info,
-            test
+            category_id,
+            category_name,
+            category_type,
+            category_description,
+            lowest_price,
+            inventory_type,
+            price_method,
+            additional_info
         ) = line
 
         (
@@ -89,41 +104,48 @@ class Backend(CSVBackend):
         lot_num = clean(lot_num, upper=True)
 
         """
+        Harmony Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 Diamond Lab: GIA Cert: 6225820160 Sarine Number: AUPRDJ8M18G Sarine Template: SPRGCHRMD3 Carat: 0.7 Color: D Clarity: SI2 Cut: Very Good Polish: Very Good Symmetry: Very Good Diamond Shape: Oval
+
         {
-            'Cut': 'NA',
-            'Symmetry': 'Very Good',
-            'Color': 'G',
-            'Sarine Number': 'NA',
-            'Carat': '0.52',
-            'Lab': 'WG',
-            'Diamond Shape': 'Princess Cut',
-            'Cert': '00044',
-            'Sarine Template': 'NA',
-            'Polish': 'Very Good',
-            'Clarity': 'SI1'
+            'Symmetry': 'Excellent',
+            'Color': 'I',
+            'Sarine Number': 'Y2BC0QWA238',
+            'Carat': '0.6',
+            'Lab': 'GIA',
+            'Diamond Shape': 'Round',
+            'Cert': '2186348789',
+            'Sarine Template': 'SPRGCHRMD3',
+            'Polish': 'Very',
+            'Clarity': 'VS2'
         }
+
         """
 
-        cut = ''
-
         dia = {}
-        desc = description.splitlines()
-        for line in desc:
-            try:
-                attr = line.split(': ')
-                dia[attr[0]] = attr[1]
-            except IndexError:
-                attr = line.split(' ')
-                try:
-                    if attr[6].startswith('Fire') or attr[6].startswith('Lazare'):
-                        cut = attr[7]
+
+        if category_id == '190':
+            sections = description.split(': ')
+            last_key = None
+            for section in sections:
+                if last_key:
+                    value = section.split()[:1][0]
+                    dia[last_key] = value
+
+                key = section.split()[-2:]
+                key = ' '.join(key)
+                if key in two_words:
+                    last_key = key
+                else:
+                    key = section.split()[-1:][0]
+                    if key in one_word:
+                        last_key = key
                     else:
-                        cut = attr[6]
-                except IndexError:
-                    continue
-                continue
+                        last_key = None
+        else:
+            raise SkipDiamond('Not a diamond')
 
         try:
+            cut = dia['Diamond Shape']
             cut = self.cut_aliases[cached_clean_upper(cut)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
@@ -171,7 +193,7 @@ class Backend(CSVBackend):
             raise KeyValueError('cut', e.args[0])
 
         try:
-            price = Decimal(price.replace(',', '').replace('$', ''))
+            price = Decimal(price)
             carat_price = price / carat_weight
         except InvalidOperation:
             carat_price = None
@@ -197,6 +219,20 @@ class Backend(CSVBackend):
         length = None
         width = None
         depth = None
+
+        data = {}
+
+        try:
+            sarine_id = dia['Sarine Number']
+            data['sarine_id'] = sarine_id
+        except KeyError as e:
+            raise KeyValueError('sarine_id', e.args[0])
+
+        try:
+            sarine_template = dia['Sarine Template']
+            data['sarine_template'] = sarine_id
+        except KeyError as e:
+            raise KeyValueError('sarine_template', e.args[0])
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
@@ -234,6 +270,7 @@ class Backend(CSVBackend):
             '', #state,
             '', #country,
             'NULL', # rap_date
+            json.dumps(data),
         )
 
         return ret

@@ -74,7 +74,8 @@ class BaseBackend(object):
         'city',
         'state',
         'country',
-        'rap_date'
+        'rap_date',
+        'data'
     ))
 
     def __init__(self, filename=None, nodebug=False, task_id=None):

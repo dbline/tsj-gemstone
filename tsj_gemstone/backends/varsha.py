@@ -474,6 +474,7 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         '', # state
         '', # country
         'NULL', # rap_date
+        '{}', # data
     )
 
     return ret

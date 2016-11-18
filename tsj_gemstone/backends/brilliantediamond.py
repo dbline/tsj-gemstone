@@ -76,7 +76,7 @@ class Backend(CSVBackend):
             fluorescence,
             fluorescence_color,
             unused_crown_height,
-            unused_crown_angle,   
+            unused_crown_angle,
             unused_pavilion_depth,
             unused_pavilion_angle,
             unused_treatment,
@@ -279,8 +279,8 @@ class Backend(CSVBackend):
             city,
             state,
             country,
-            'NULL', #rap_date
-            #'f' #manmade
+            'NULL', # rap_date
+            '{}', # data
         )
 
         return ret

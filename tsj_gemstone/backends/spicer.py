@@ -224,13 +224,15 @@ class Backend(CSVBackend):
 
         try:
             sarine_id = dia['Sarine Number']
-            data['sarine_id'] = sarine_id
+            if sarine_id != 'NA':
+                data['sarine_id'] = sarine_id
         except KeyError as e:
             raise KeyValueError('sarine_id', e.args[0])
 
         try:
             sarine_template = dia['Sarine Template']
-            data['sarine_template'] = sarine_id
+            if sarine_template != 'NA':
+                data['sarine_template'] = sarine_template
         except KeyError as e:
             raise KeyValueError('sarine_template', e.args[0])
 

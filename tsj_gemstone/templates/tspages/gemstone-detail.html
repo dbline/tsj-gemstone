@@ -26,6 +26,13 @@
                     responsive: true,
                 });
             });
+        {% if diamond.data.sarine_id %}
+            // https://api.sarine.com/viewer/v1/V1XWDF7VPUM/HX3CDW4NJW
+            var sarine_id = '{{ diamond.data.sarine_id }}';
+            var sarine_template = '{{ diamond.data.sarine_template }}';
+            var src = 'https://api.sarine.com/viewer/v1/' + sarine_id + '/' + sarine_template;
+            $('iframe.sarine').attr('src', src);
+        {% endif %}
         });
     </script>
 {% endblock js %}
@@ -48,6 +55,11 @@
     {% endif %}
     <div class="wrapper">
         <div class="section-sidebar">
+        {% if diamond.data.sarine_id %}
+            <div class="gemstone-sarine">
+                <iframe class="sarine"></iframe>
+            </div>
+        {% else %}
             <div class="gemstone-images">
                 {% if icon_style == "images" %}
                     <img src="{{ STATIC_URL }}tsj_gemstone/images/images/{{ diamond.cut.name|lower }}.jpg" alt="{{ diamond.cut.name }}" />
@@ -55,6 +67,7 @@
                     <img src="{{ STATIC_URL }}tsj_gemstone/images/vector/{{ diamond.cut.name|lower }}.png" alt="{{ diamond.cut.name }}" />
                 {% endif %}
             </div>
+        {% endif %}
             <div class="section-info section-info-questions">
                 <h3>Have Questions?</h3>
                 {% with inquiry_form as form %}

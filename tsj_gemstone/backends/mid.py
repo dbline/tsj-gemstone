@@ -190,12 +190,12 @@ class Backend(CSVBackend):
 
         fluorescence = cached_clean_upper(fluorescence)
         fluorescence_id = None
-        fluorescence_color = None
+        #fluorescence_color = None
         fluorescence_color_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
             if fluorescence.startswith(abbr.upper()):
                 fluorescence_id = id
-                fluorescence_color = fluorescence.replace(abbr.upper(), '')
+                #fluorescence_color = fluorescence.replace(abbr.upper(), '')
                 continue
         fluorescence = fluorescence_id
 

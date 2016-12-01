@@ -10,6 +10,7 @@ __all__ = (
     'ofermizrahi',
     'premiergem',
     'polygon',
+    'rapnet',
     'rapnet10',
     'rdi',
     'rditrading',

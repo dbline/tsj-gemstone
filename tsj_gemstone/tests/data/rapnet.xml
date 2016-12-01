@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <GetDiamondsResponse xmlns="http://technet.rapaport.com/">
+      <GetDiamondsResult>
+        <xs:schema xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="NewDataSet">
+          <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+            <xs:complexType>
+              <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Table1">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="DiamondID" type="xs:int" minOccurs="0"/>
+                      <xs:element name="ShapeTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="Weight" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="ColorTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="ClarityTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="CutLongTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="LabTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="RapNetPrice" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="FinalPrice" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="CertificateNumber" type="xs:string" minOccurs="0"/>
+                      <xs:element name="VendorStockNumber" type="xs:string" minOccurs="0"/>
+                      <xs:element name="SymmetryTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="PolishTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="DepthPercent" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="TablePercent" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="MeasLength" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="MeasWidth" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="MeasDepth" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="GirdleSizeMin" type="xs:string" minOccurs="0"/>
+                      <xs:element name="GirdleSizeMax" type="xs:string" minOccurs="0"/>
+                      <xs:element name="GirdleConditionTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="CuletSizeTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="CuletConditionTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="FluorescenceColorTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="FluorescenceIntensityTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="DominantColor" type="xs:string" minOccurs="0"/>
+                      <xs:element name="SecondaryColor" type="xs:string" minOccurs="0"/>
+                      <xs:element name="FancyColorIntensityTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="FancyColorOvertones" type="xs:string" minOccurs="0"/>
+                      <xs:element name="HasCertFile" type="xs:int" minOccurs="0"/>
+                      <xs:element name="LastRate" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="CurrencyShortTitle" type="xs:string" minOccurs="0"/>
+                      <xs:element name="CurrencySymbol" type="xs:string" minOccurs="0"/>
+                      <xs:element name="TotalSalesPriceInCurrency" type="xs:decimal" minOccurs="0"/>
+                      <xs:element name="HasSarineloupe" type="xs:boolean" minOccurs="0"/>
+                      <xs:element name="SarineloupeUrl" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:schema>
+        <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+          <NewDataSet xmlns="">
+            <Table1 diffgr:id="Table11" msdata:rowOrder="0">
+              <DiamondID>73853315</DiamondID>
+              <ShapeTitle>Round</ShapeTitle>
+              <Weight>0.500</Weight>
+              <ColorTitle>D</ColorTitle>
+              <ClarityTitle>SI1</ClarityTitle>
+              <CutLongTitle>Excellent</CutLongTitle>
+              <LabTitle>GIA</LabTitle>
+              <RapNetPrice>1334.8800</RapNetPrice>
+              <FinalPrice>1355.0000</FinalPrice>
+              <CertificateNumber>6232078611</CertificateNumber>
+              <VendorStockNumber>XCJ97596</VendorStockNumber>
+              <SymmetryTitle>Very Good</SymmetryTitle>
+              <PolishTitle>Very Good</PolishTitle>
+              <DepthPercent>62.1</DepthPercent>
+              <TablePercent>56.00</TablePercent>
+              <MeasLength>5.05</MeasLength>
+              <MeasWidth>5.10</MeasWidth>
+              <MeasDepth>3.15</MeasDepth>
+              <GirdleSizeMin>Slightly Thick</GirdleSizeMin>
+              <GirdleSizeMax>Slightly Thick</GirdleSizeMax>
+              <CuletSizeTitle>None</CuletSizeTitle>
+              <FluorescenceIntensityTitle>Faint</FluorescenceIntensityTitle>
+              <HasCertFile>1</HasCertFile>
+              <LastRate>1.00000000</LastRate>
+              <CurrencyShortTitle>USD</CurrencyShortTitle>
+              <CurrencySymbol>$</CurrencySymbol>
+              <TotalSalesPriceInCurrency>1355.00000000000</TotalSalesPriceInCurrency>
+              <HasSarineloupe>false</HasSarineloupe>
+            </Table1>
+            <Table1 diffgr:id="Table12" msdata:rowOrder="1">
+              <DiamondID>73853324</DiamondID>
+              <ShapeTitle>Round</ShapeTitle>
+              <Weight>0.500</Weight>
+              <ColorTitle>H</ColorTitle>
+              <ClarityTitle>VS1</ClarityTitle>
+              <CutLongTitle>Excellent</CutLongTitle>
+              <LabTitle>GIA</LabTitle>
+              <RapNetPrice>1390.5000</RapNetPrice>
+              <FinalPrice>1411.0000</FinalPrice>
+              <CertificateNumber>1223929417</CertificateNumber>
+              <VendorStockNumber>XCJ98118</VendorStockNumber>
+              <SymmetryTitle>Excellent</SymmetryTitle>
+              <PolishTitle>Excellent</PolishTitle>
+              <DepthPercent>62.9</DepthPercent>
+              <TablePercent>57.00</TablePercent>
+              <MeasLength>5.03</MeasLength>
+              <MeasWidth>5.07</MeasWidth>
+              <MeasDepth>3.18</MeasDepth>
+              <GirdleSizeMin>Thin</GirdleSizeMin>
+              <GirdleSizeMax>Slightly Thick</GirdleSizeMax>
+              <CuletSizeTitle>None</CuletSizeTitle>
+              <FluorescenceIntensityTitle>Faint</FluorescenceIntensityTitle>
+              <HasCertFile>1</HasCertFile>
+              <LastRate>1.00000000</LastRate>
+              <CurrencyShortTitle>USD</CurrencyShortTitle>
+              <CurrencySymbol>$</CurrencySymbol>
+              <TotalSalesPriceInCurrency>1411.00000000000</TotalSalesPriceInCurrency>
+              <HasSarineloupe>false</HasSarineloupe>
+            </Table1>
+            <Table1 diffgr:id="Table13" msdata:rowOrder="2">
+              <DiamondID>75417337</DiamondID>
+              <ShapeTitle>Round</ShapeTitle>
+              <Weight>0.500</Weight>
+              <ColorTitle>H</ColorTitle>
+              <ClarityTitle>I1</ClarityTitle>
+              <CutLongTitle>Very Good</CutLongTitle>
+              <LabTitle>GIA</LabTitle>
+              <RapNetPrice>765.0000</RapNetPrice>
+              <FinalPrice>778.0000</FinalPrice>
+              <CertificateNumber>5171564778</CertificateNumber>
+              <VendorStockNumber>2C3040/G</VendorStockNumber>
+              <SymmetryTitle>Good</SymmetryTitle>
+              <PolishTitle>Good</PolishTitle>
+              <DepthPercent>59.7</DepthPercent>
+              <TablePercent>59.00</TablePercent>
+              <MeasLength>5.16</MeasLength>
+              <MeasWidth>5.23</MeasWidth>
+              <MeasDepth>3.10</MeasDepth>
+              <GirdleSizeMin>Very Thin</GirdleSizeMin>
+              <GirdleSizeMax>Slightly Thick</GirdleSizeMax>
+              <CuletSizeTitle>None</CuletSizeTitle>
+              <FluorescenceIntensityTitle>None</FluorescenceIntensityTitle>
+              <HasCertFile>1</HasCertFile>
+              <LastRate>1.00000000</LastRate>
+              <CurrencyShortTitle>USD</CurrencyShortTitle>
+              <CurrencySymbol>$</CurrencySymbol>
+              <TotalSalesPriceInCurrency>778.00000000000</TotalSalesPriceInCurrency>
+              <HasSarineloupe>false</HasSarineloupe>
+            </Table1>
+          </NewDataSet>
+        </diffgr:diffgram>
+      </GetDiamondsResult>
+      <DiamondsFound>1952</DiamondsFound>
+    </GetDiamondsResponse>
+  </soap:Body>
+</soap:Envelope>

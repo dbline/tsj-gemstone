@@ -13,10 +13,16 @@ class GemstonePreferencesForm(PreferencesForm):
         ('anon', 'Everyone'), #TODO: Eventually change stored value to 'all' to standardize with tsj_catalog
         ('group', 'Group'),
     )
+    RAPNET_VERSIONS = (
+        ('', 'Select a subscription type'),
+        ('rapnet10', 'Download Listing Service'),
+        ('rapnetii', 'Instant Inventory'),
+    )
 
-    rapaport_username = forms.CharField(help_text=_(u'Your Rapaport username.'), required=False)
-    rapaport_password = forms.CharField(help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
-    rapaport_url = forms.URLField(required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
+    rapaport_username = forms.CharField(label='Username', help_text=_(u'Your Rapaport username.'), required=False)
+    rapaport_password = forms.CharField(label='Password', help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
+    rapaport_url = forms.URLField(label='DLS URL', required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
+    rapaport_version = forms.ChoiceField(label='Subscription Type', choices=RAPNET_VERSIONS, required=False)
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
     rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput,
@@ -72,6 +78,7 @@ class GemstonePreferences(AppPreferences):
             'fields': (
                 'rapaport_username',
                 'rapaport_password',
+                'rapaport_version',
                 'rapaport_url',
             ),
         }),

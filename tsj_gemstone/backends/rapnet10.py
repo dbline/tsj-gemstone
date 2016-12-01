@@ -43,7 +43,10 @@ class Backend(CSVBackend):
 
     @property
     def enabled(self):
-        return prefs.get('rapaport_username') and prefs.get('rapaport_password')
+        username = prefs.get('rapaport_username')
+        password = prefs.get('rapaport_password')
+        version = prefs.get('rapaport_version')
+        return username and password and version == 'rapnet10'
 
     def get_fp(self):
         if self.filename:

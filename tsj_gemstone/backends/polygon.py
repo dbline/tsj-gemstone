@@ -9,9 +9,9 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
 
 from django.conf import settings
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
-from .base import CSVBackend, ImportSourceError, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, ImportSourceError, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -27,17 +27,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 def split_measurements(measurements):
     try:
@@ -135,7 +125,7 @@ class Backend(CSVBackend):
         stock_number = clean(stock_number, upper=True)
 
         try:
-            cut = self.cut_aliases[cached_clean_upper(cut)]
+            cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -145,9 +135,9 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean_upper(color))
+        color = self.color_aliases.get(cached_clean(color, upper=True))
 
-        certifier = cached_clean_upper(certifier)
+        certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -170,7 +160,7 @@ class Backend(CSVBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean_upper(clarity)
+        clarity = cached_clean(clarity, upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -178,7 +168,7 @@ class Backend(CSVBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean_upper(cut_grade))
+        cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         price_before_markup = clean(price_before_markup.replace(',', ''))
         if price_before_markup:
             price_before_markup = Decimal(price_before_markup)
@@ -198,29 +188,29 @@ class Backend(CSVBackend):
             table_percent = 'NULL'
 
         if girdle_thinnest:
-            girdle_thinnest = cached_clean_upper(girdle_thinnest)
+            girdle_thinnest = cached_clean(girdle_thinnest, upper=True)
             girdle = [girdle_thinnest]
             if girdle_thickest:
-                girdle_thickest = cached_clean_upper(girdle_thickest)
+                girdle_thickest = cached_clean(girdle_thickest, upper=True)
                 girdle.append(girdle_thickest)
             girdle = ' - '.join(girdle)
         else:
             girdle = ''
 
         if culet_size and culet_size != 'None':
-            culet_size = cached_clean_upper(culet_size)
+            culet_size = cached_clean(culet_size, upper=True)
             culet = [culet_size]
             if culet_condition and culet_condition != 'None':
-                culet_condition = cached_clean_upper(culet_condition)
+                culet_condition = cached_clean(culet_condition, upper=True)
                 culet.append(culet_condition)
             culet = ' '.join(culet)
         else:
             culet = ''
 
-        polish = self.grading_aliases.get(cached_clean_upper(polish))
-        symmetry = self.grading_aliases.get(cached_clean_upper(symmetry))
+        polish = self.grading_aliases.get(cached_clean(polish, upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
 
-        fluorescence = cached_clean_upper(fluorescence)
+        fluorescence = cached_clean(fluorescence, upper=True)
         fluorescence_id = None
         fluorescence_color_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
@@ -231,7 +221,7 @@ class Backend(CSVBackend):
         fluorescence = fluorescence_id
 
         if fluorescence_color:
-            fluorescence_color = cached_clean_upper(fluorescence_color)
+            fluorescence_color = cached_clean(fluorescence_color, upper=True)
             for abbr, id in self.fluorescence_color_aliases.iteritems():
                 if fluorescence_color.startswith(abbr.upper()):
                     fluorescence_color_id = id

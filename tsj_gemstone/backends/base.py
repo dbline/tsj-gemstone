@@ -17,6 +17,8 @@ from ..prefs import prefs
 logger = logging.getLogger('tsj_gemstone.backends')
 summary_logger = logging.getLogger('tsj_gemstone.backends.summary')
 
+LRU_CACHE_MAXSIZE = 2**16
+
 class KeyValueError(Exception):
     def __init__(self, key, value):
         self.key, self.value = key, value

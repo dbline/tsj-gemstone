@@ -10,9 +10,9 @@ import time
 import requests
 
 from django.conf import settings
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
-from .base import JSONBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, JSONBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..utils import moneyfmt
 
@@ -29,17 +29,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 def split_measurements(measurements):
     try:
@@ -103,7 +93,7 @@ class Backend(JSONBackend):
         stock_number = clean(str(data.get('SerialNumber')))
         comment = cached_clean(data.get('Comments'))
         try:
-            cut = self.cut_aliases[cached_clean_upper(data.get('Shape'))]
+            cut = self.cut_aliases[cached_clean(data.get('Shape'), upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -113,9 +103,9 @@ class Backend(JSONBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean_upper(data.get('Color')))
+        color = self.color_aliases.get(cached_clean(data.get('Color'), upper=True))
 
-        certifier = cached_clean_upper(data.get('Certification'))
+        certifier = cached_clean(data.get('Certification'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -137,7 +127,7 @@ class Backend(JSONBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean_upper(data.get('Clarity'))
+        clarity = cached_clean(data.get('Clarity'), upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -145,7 +135,7 @@ class Backend(JSONBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean_upper(data.get('Make')))
+        cut_grade = self.grading_aliases.get(cached_clean(data.get('Make'), upper=True))
         try:
             if isinstance(data.get('PricePerCarat'), dict):
                 # TODO: Verify that data['PricePerCarat']['CurrencyCode'] is USD
@@ -175,25 +165,25 @@ class Backend(JSONBackend):
             table_percent = 'NULL'
 
         if data.get('Girdle'):
-            girdle_thinnest = cached_clean_upper(data['Girdle'])
+            girdle_thinnest = cached_clean(data['Girdle'], upper=True)
             girdle = [girdle_thinnest]
             if data.get('Girdle2'):
-                girdle_thickest = cached_clean_upper(data['Girdle2'])
+                girdle_thickest = cached_clean(data['Girdle2'], upper=True)
                 girdle.append(girdle_thickest)
             girdle = ' - '.join(girdle)
         else:
             girdle = ''
 
-        culet = cached_clean_upper(data.get('Culet'))
-        polish = self.grading_aliases.get(cached_clean_upper(data.get('Polish')))
-        symmetry = self.grading_aliases.get(cached_clean_upper(data.get('Symmetry')))
+        culet = cached_clean(data.get('Culet'), upper=True)
+        polish = self.grading_aliases.get(cached_clean(data.get('Polish'), upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(data.get('Symmetry'), upper=True))
 
         # Fluorescence and color are combined, e.g 'FAINT BLUE'
         fl = data.get('Fluorescence', '')
         if ' ' in fl:
             fl, flcolor = fl.split(' ')
-            fluorescence = cached_clean_upper(fl)
-            fluorescence_color = cached_clean_upper(flcolor)
+            fluorescence = cached_clean(fl, upper=True)
+            fluorescence_color = cached_clean(flcolor, upper=True)
 
             for abbr, id in self.fluorescence_aliases.iteritems():
                 if fluorescence.startswith(abbr.upper()):

@@ -7,7 +7,7 @@ import six
 from string import ascii_letters, digits, whitespace, punctuation
 
 from django.conf import settings
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
 import requests
 
@@ -15,8 +15,8 @@ from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
 
-from .base import (XMLBackend, XMLHandler, ImportSourceError, SkipDiamond,
-                   KeyValueError, SkipImport)
+from .base import (LRU_CACHE_MAXSIZE, XMLBackend, XMLHandler, ImportSourceError,
+                   SkipDiamond, KeyValueError, SkipImport)
 
 logger = logging.getLogger(__name__)
 
@@ -33,17 +33,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 class MDLHandler(XMLHandler):
     def __init__(self, backend, writer):
@@ -130,7 +120,7 @@ class Backend(XMLBackend):
 
         stock_number = clean(data.get('stock_number'))
         try:
-            cut = self.cut_aliases[cached_clean_upper(data.get('shape'))]
+            cut = self.cut_aliases[cached_clean(data.get('shape'), upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -140,9 +130,9 @@ class Backend(XMLBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean_upper(data.get('colour')))
+        color = self.color_aliases.get(cached_clean(data.get('colour'), upper=True))
 
-        certifier = cached_clean_upper(data.get('certtype'))
+        certifier = cached_clean(data.get('certtype'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -164,7 +154,7 @@ class Backend(XMLBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean_upper(data.get('clarity'))
+        clarity = cached_clean(data.get('clarity'), upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -172,7 +162,7 @@ class Backend(XMLBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean_upper(data.get('make')))
+        cut_grade = self.grading_aliases.get(cached_clean(data.get('make'), upper=True))
 
         try:
             price = clean(data.get('price').replace(',', ''))

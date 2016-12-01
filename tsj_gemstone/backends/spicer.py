@@ -9,9 +9,9 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
 
 from django.conf import settings
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
-from .base import CSVBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..utils import moneyfmt
 
@@ -28,17 +28,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 def split_measurements(measurements):
     try:
@@ -146,7 +136,7 @@ class Backend(CSVBackend):
 
         try:
             cut = dia['Diamond Shape']
-            cut = self.cut_aliases[cached_clean_upper(cut)]
+            cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -157,10 +147,10 @@ class Backend(CSVBackend):
             raise KeyValueError('carat_weight', e.args[0])
 
         color = dia['Color']
-        color = self.color_aliases.get(cached_clean_upper(color))
+        color = self.color_aliases.get(cached_clean(color, upper=True))
 
         certifier = dia['Lab']
-        certifier = cached_clean_upper(certifier)
+        certifier = cached_clean(certifier, upper=True)
 
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
@@ -178,7 +168,7 @@ class Backend(CSVBackend):
             certifier = certifier_id
 
         clarity = dia['Clarity']
-        clarity = cached_clean_upper(clarity)
+        clarity = cached_clean(clarity, upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -188,7 +178,7 @@ class Backend(CSVBackend):
 
         try:
             cut_grade = dia['Cut']
-            cut_grade = self.grading_aliases.get(cached_clean_upper(cut_grade))
+            cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         except KeyError as e:
             raise KeyValueError('cut', e.args[0])
 
@@ -202,10 +192,10 @@ class Backend(CSVBackend):
             raise SkipDiamond('No carat_price specified')
 
         polish = dia['Polish']
-        polish = self.grading_aliases.get(cached_clean_upper(polish))
+        polish = self.grading_aliases.get(cached_clean(polish, upper=True))
 
         symmetry = dia['Symmetry']
-        symmetry = self.grading_aliases.get(cached_clean_upper(symmetry))
+        symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
 
         cert_num = dia['Cert']
         cert_num = clean(cert_num)

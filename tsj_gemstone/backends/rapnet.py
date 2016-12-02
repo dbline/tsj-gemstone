@@ -154,8 +154,8 @@ class Backend(BaseBackend):
                 break
 
             for row in page_data:
-                if row['VendorStockNumber'] not in ids:
-                    ids.add(row['VendorStockNumber'])
+                if row['DiamondID'] not in ids:
+                    ids.add(row['DiamondID'])
                     new_ids += 1
                     data.append(row)
 
@@ -196,7 +196,7 @@ class Backend(BaseBackend):
             verify_cert_images
         ) = self.pref_values
 
-        stock_number = clean(str(data.get('VendorStockNumber')), upper=True)
+        stock_number = clean(str(data.get('DiamondID')), upper=True)
 
         try:
             cut = self.cut_aliases[cached_clean(data.get('ShapeTitle'), upper=True)]

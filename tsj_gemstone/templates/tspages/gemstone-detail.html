@@ -205,7 +205,9 @@
                     {% add_to_cart 'tsj_gemstone.Diamond' diamond %}
                 {% endif %}
                 {% if diamond.get_cert_image_type == 'image' %}
-                    <a class="btn btn-default" href="{% page gemstone-print diamond.pk %}" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                    {% page gemstone-print diamond.pk as gemstone_print_url %}{% if gemstone_print_url %}
+                    <a class="btn btn-default" href="" target="_blank"><i class="fa fa-print"></i> Print Certificate</a>
+                    {% endif %}
                 {% endif %}
                 </div>
             {% if diamond.get_cert_image_type == 'image' %}

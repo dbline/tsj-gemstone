@@ -30,7 +30,7 @@ def min_max(force_update=True):
         _min_max['gradings'] = Grading.objects.values('order', 'name').order_by('-order')
         _min_max['fluorescence'] = Fluorescence.objects.all()
         _min_max['fluorescence_colors'] = FluorescenceColor.objects.all()
-        certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct('certifier__id')
+        certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct()
         _min_max['certifiers'] = Certifier.objects.filter(id__in=certifiers).exclude(disabled=True)
 
     return _min_max

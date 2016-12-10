@@ -63,7 +63,7 @@ class GemstoneWidget(TemplatedWidget):
         return template_names
 
     def render(self, context):
-        cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
+        cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct()
         if cuts:
             qs = models.Cut.objects.filter(id__in=cuts)
         else:

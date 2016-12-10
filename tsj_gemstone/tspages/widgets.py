@@ -56,10 +56,16 @@ class GemstoneWidget(TemplatedWidget):
             context, extra_template_names=extra_template_names)
 
         style = self.preferences.get('style')
-        if style == 'simple':
-            template_names.insert(0, 'tswidgets/tsj_gemstone.gemstone.html')
-        elif style == 'advanced':
-            template_names.insert(0, 'tswidgets/tsj_gemstone.gemstone.html')
+        template_override = None
+        # The default template is included by the parent method
+        #if style == 'simple':
+        #    template_override = 'tswidgets/tsj_gemstone.gemstone.html'
+        if style == 'advanced':
+            template_override = 'tswidgets/tsj_gemstone.gemstone.html'
+
+        if template_override:
+            template_names = self._template_names_with_app(template_override) + template_names
+
         return template_names
 
     def render(self, context):

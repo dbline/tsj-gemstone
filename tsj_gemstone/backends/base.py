@@ -6,6 +6,8 @@ import logging
 import tempfile
 import xml.sax
 
+from xlrd import open_workbook
+
 from psycopg2.extras import Json
 
 from django.conf import settings
@@ -38,6 +40,7 @@ class ImportSourceError(Exception):
 
 class BaseBackend(object):
     filename = None
+    fp_mode = 'rU'
 
     # Order must match struture of tsj_gemstone_diamond table with the exception
     # of the id column which is excluded when doing an import.
@@ -127,7 +130,7 @@ class BaseBackend(object):
 
         if fn:
             try:
-                return open(fn, 'rU')
+                return open(fn, self.fp_mode)
             except IOError as e:
                 raise ImportSourceError(str(e))
         else:
@@ -258,9 +261,12 @@ class CSVBackend(BaseBackend):
         except StopIteration as e:
             raise ImportSourceError('Unable to read headers')
 
+    def _get_reader(self, fp):
+        return csv.reader(fp)
+
     def _run(self):
         fp = self.get_fp()
-        reader = csv.reader(fp)
+        reader = self._get_reader(fp)
         headers = self._get_headers(reader)
 
         blank_columns = 0
@@ -273,10 +279,14 @@ class CSVBackend(BaseBackend):
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
-        # To cut down on disk writes, we buffer the rows
-        row_buffer = []
-        buffer_size = 1000
+        self._read_rows(reader, writer, headers, blank_columns)
 
+        if self.row_buffer:
+            writer.writerows(self.row_buffer)
+
+        return tmp_file
+
+    def _read_rows(self, reader, writer, headers, blank_columns=None):
         try:
             for line in reader:
                 # Sometimes the feed has blank lines
@@ -293,10 +303,35 @@ class CSVBackend(BaseBackend):
         except csv.Error as e:
             raise ImportSourceError(str(e))
 
-        if self.row_buffer:
-            writer.writerows(self.row_buffer)
+# TODO: Move somewhere common, copied from catalog import
+class IterableSheet(object):
+    def __init__(self, sheet):
+        self.current_row = 0
+        self.sheet = sheet
 
-        return tmp_file
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.current_row > self.sheet.nrows-1:
+            raise StopIteration
+        row = self.sheet.row(self.current_row)
+        self.current_row += 1
+        return [str(cell.value) for cell in row]
+
+class XLSBackend(CSVBackend):
+    fp_mode = 'rb'
+
+    def _get_reader(self, fp):
+        fp = self.get_fp()
+        book = open_workbook(file_contents=fp.read())
+        sheet = IterableSheet(book.sheet_by_index(0))
+        return sheet
+
+    def _read_rows(self, reader, writer, headers, blank_columns=None):
+        # TODO: Catch exceptions that arise from iterating and raise ImportSourceError
+        for line in reader:
+            self.try_write_row(writer, line)
 
 class JSONBackend(BaseBackend):
     def _run(self):

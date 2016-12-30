@@ -59,7 +59,14 @@ two_words = [
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
-    default_filename = '/glusterfs/ftp_home/spicerftp/spicer.csv'
+    infile_glob = '/glusterfs/ftp_home/spicerftp/*-INVENTORY.CSV'
+
+    def get_default_filename(self):
+        files = sorted(glob.glob(self.infile_glob))
+        if len(files):
+            fn = files[-1]
+            logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
+            return fn
 
     def save(self, fp):
         # fp should be a tempfile.NamedTemporaryFile.  We currently assume

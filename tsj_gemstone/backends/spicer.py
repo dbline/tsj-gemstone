@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+import csv
 import json
 import logging
 import os
@@ -9,6 +10,7 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
 
 from django.conf import settings
+from django.db import connection, transaction
 from django.utils.lru_cache import lru_cache
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
@@ -59,6 +61,78 @@ class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
     default_filename = '/glusterfs/ftp_home/spicerftp/spicer.csv'
 
+    def save(self, fp):
+        # fp should be a tempfile.NamedTemporaryFile.  We currently assume
+        # that it's also still open in write mode, so flush and reopen.
+        fp.flush()
+        fp = open(fp.name)
+
+        with transaction.atomic():
+            try:
+                cursor = connection.cursor()
+                cursor.copy_from(fp, 'tsj_gemstone_diamond', null='NULL', columns=self.Row._fields)
+            except Exception as e:
+                logger.exception("Error on copy_from for %s" % self.backend_module)
+
+        fp.close()
+
+    def _read_rows(self, reader, writer, headers, blank_columns=None):
+        existing_sns = set(models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
+
+        try:
+            for line in reader:
+                # Sometimes the feed has blank lines
+                if not line:
+                    continue
+
+                # Rather than fail on malformed CSVs, pad rows which have fewer
+                # columns than the header row
+                col_diff = (len(headers) - blank_columns) - len(line)
+                if col_diff > 0:
+                    line.extend([''] * col_diff)
+
+                self.try_write_row(writer, line, blank_columns=blank_columns, existing_sns=existing_sns)
+        except csv.Error as e:
+            raise ImportSourceError(str(e))
+
+    def try_write_row(self, writer, *args, **kwargs):
+        existing_sns = kwargs.pop('existing_sns')
+
+        try:
+            diamond_row = self.write_diamond_row(*args, **kwargs)
+        except SkipDiamond as e:
+            self.import_skip[str(e)] += 1
+        except KeyValueError as e:
+            self.missing_values[e.key][e.value] += 1
+        except KeyError as e:
+            self.import_errors[str(e)] += 1
+            logger.info('KeyError', exc_info=e)
+        except ValueError as e:
+            self.import_errors[str(e)] += 1
+            logger.info('ValueError', exc_info=e)
+        except Exception as e:
+            self.import_errors[str(e)] += 1
+            logger.error('Diamond import exception', exc_info=e)
+        else:
+            if diamond_row.stock_number in existing_sns:
+                diamond = models.Diamond.objects.get(stock_number=diamond_row.stock_number)
+                diamond.active = diamond_row.active
+                diamond.data = diamond_row.data
+                diamond.price = diamond_row.price
+                diamond.carat_price = diamond_row.carat_price
+                try:
+                    diamond.certifier_id = diamond_row.certifier_id
+                except:
+                    pass
+                diamond.save()
+            else:
+                if len(self.row_buffer) > self.buffer_size:
+                    writer.writerows(self.row_buffer)
+                    self.row_buffer = [diamond_row]
+                else:
+                    self.row_buffer.append(diamond_row)
+                self.import_successes += 1
+
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
             line = line[:-blank_columns]
@@ -92,6 +166,11 @@ class Backend(CSVBackend):
 
         stock_number = clean(stock_number, upper=True)
         lot_num = clean(lot_num, upper=True)
+
+        if status == 'I':
+            status = 'f'
+        else:
+            status = 't'
 
         """
         Harmony Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 Diamond Lab: GIA Cert: 6225820160 Sarine Number: AUPRDJ8M18G Sarine Template: SPRGCHRMD3 Carat: 0.7 Color: D Clarity: SI2 Cut: Very Good Polish: Very Good Symmetry: Very Good Diamond Shape: Oval
@@ -230,7 +309,7 @@ class Backend(CSVBackend):
         ret = self.Row(
             self.added_date,
             self.added_date,
-            't', # active
+            status, # active
             self.backend_module,
             lot_num,
             stock_number,

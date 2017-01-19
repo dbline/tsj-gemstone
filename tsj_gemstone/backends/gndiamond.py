@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 import glob
+import json
 import logging
 import os
 import re
@@ -257,6 +258,13 @@ class Backend(CSVBackend):
         if not price:
             raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
+        if sarine_link:
+            data = {'sarine_link': sarine_link}
+            # https://api.sarine.com/viewer/v1/V1XWDF7VPUM/HX3CDW4NJW
+        else:
+            data = {}
+
+
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,
@@ -293,7 +301,7 @@ class Backend(CSVBackend):
             '', # state,
             '', # country,
             'NULL', # rap_date
-            '{}', # data
+            json.dumps(data), # data - Sarine Link
         )
 
         return ret

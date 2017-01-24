@@ -176,9 +176,9 @@ class Backend(CSVBackend):
         lot_num = clean(lot_num, upper=True)
 
         if status == 'I':
-            status = 'f'
-        else:
             status = 't'
+        else:
+            status = 'f'
 
         """
         Harmony Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 Diamond Lab: GIA Cert: 6225820160 Sarine Number: AUPRDJ8M18G Sarine Template: SPRGCHRMD3 Carat: 0.7 Color: D Clarity: SI2 Cut: Very Good Polish: Very Good Symmetry: Very Good Diamond Shape: Oval

@@ -124,7 +124,10 @@ class Backend(CSVBackend):
         else:
             if diamond_row.stock_number in existing_sns:
                 diamond = models.Diamond.objects.get(stock_number=diamond_row.stock_number)
-                diamond.active = diamond_row.active
+                if diamond_row.active == 't':
+                    diamond.active = True
+                else:
+                    diamond.active = False
                 diamond.data = diamond_row.data
                 diamond.price = diamond_row.price
                 diamond.carat_price = diamond_row.carat_price

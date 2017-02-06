@@ -93,7 +93,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
     return diamonds
 
 @csrf_protect
-def gemstone_list(request, sort_by='', template='tspages/gemstone-list.html',
+def gemstone_list(request, sort_by='', template='tsj_gemstone/tspages/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):

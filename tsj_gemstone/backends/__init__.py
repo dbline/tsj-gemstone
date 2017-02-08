@@ -5,6 +5,7 @@ __all__ = (
     'hasenfeld',
     'idex',
     'leibish',
+    'mdl',
     'mgeller',
     'mid',
     'ofermizrahi',
@@ -15,4 +16,6 @@ __all__ = (
     'rdi',
     'rditrading',
     'stuller',
+    'vantyghem',
+    'waldman',
 )

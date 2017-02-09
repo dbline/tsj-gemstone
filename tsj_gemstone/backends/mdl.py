@@ -177,12 +177,12 @@ class Backend(XMLBackend):
         width = clean(data.get('minimum'))
         depth = clean(data.get('depth'))
 
-        if length >= 1000.00:
+        if length and float(length) >= 1000.00:
             raise SkipDiamond('Length too large ( >= 1000)')
-        if depth >= 1000.00:
+        if depth and float(depth) >= 1000.00:
             raise SkipDiamond('Depth too large ( >= 1000)')
-        if width >= 1000.00:
-            raise SkipDiamond('Widt too large ( >= 1000)')
+        if width and float(width) >= 1000.00:
+            raise SkipDiamond('Width too large ( >= 1000)')
 
         cert_num = clean(data.get('certnum'))
         if not cert_num:

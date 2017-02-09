@@ -50,7 +50,7 @@ class Backend(CSVBackend):
             carat_weight,
             color,
             clarity,
-            measurements,
+            unused_measurements,
             cut_grade,
             certifier,
             carat_price,
@@ -82,6 +82,10 @@ class Backend(CSVBackend):
             unused_status,
             unused_raplist,
             unused_off_rap,
+            unused_shade,
+            length,
+            width,
+            depth
         ) = line
 
         (
@@ -201,8 +205,12 @@ class Backend(CSVBackend):
             cert_image = ''
         """
 
-        measurements = clean(measurements)
-        length, width, depth = split_measurements(measurements)
+        # The feed includes individual length, width, depth fields now
+        #measurements = clean(measurements)
+        #length, width, depth = split_measurements(measurements)
+        length = clean(length)
+        width = clean(width)
+        depth = clean(depth)
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')

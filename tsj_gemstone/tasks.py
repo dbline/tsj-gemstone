@@ -24,7 +24,7 @@ def import_gemstone_backends(router, dry_run=False, nodebug=False, verbosity=1):
     cursor.execute("""
         SELECT DISTINCT db_schema FROM tsj_sites_siteinstance
         INNER JOIN information_schema.schemata ON db_schema=schema_name
-        WHERE process_pool=%s
+        WHERE process_pool=%s AND status='active'
     """, (router,))
 
     if current_task.request.called_directly:

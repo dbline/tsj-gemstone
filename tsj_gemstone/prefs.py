@@ -50,6 +50,9 @@ class GemstonePreferencesForm(PreferencesForm):
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
     stuller = forms.BooleanField(required=False)
+    mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
+    vantyghem = forms.BooleanField(required=False, label='Vantyghem (Canadian Dollar)')
+    waldman = forms.BooleanField(required=False, label='Waldman (Canadian Dollar)')
 
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
@@ -101,7 +104,7 @@ class GemstonePreferences(AppPreferences):
             'fields': (
                 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
                 'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'rdi',
-                'rditrading', 'stuller',
+                'rditrading', 'stuller', 'mdl', 'vantyghem', 'waldman',
             ),
         }),
     )

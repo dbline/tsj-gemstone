@@ -32,6 +32,10 @@
             var sarine_template = '{{ diamond.data.sarine_template }}';
             var src = 'https://api.sarine.com/viewer/v1/' + sarine_id + '/' + sarine_template;
             $('iframe.sarine').attr('src', src);
+        {% elif diamond.data.sarine_link %}
+            var link = '{{ diamond.data.sarine_link }}'.split('/');
+            var src = 'https://api.sarine.com/viewer/v1/' + link[5] + '/HX3CDW4NJW';
+            $('iframe.sarine').attr('src', src);
         {% endif %}
         });
     </script>
@@ -55,7 +59,7 @@
     {% endif %}
     <div class="wrapper">
         <div class="section-sidebar">
-        {% if diamond.data.sarine_id %}
+        {% if diamond.data.sarine_link or diamond.data.sarine_id %}
             <div class="gemstone-sarine">
                 <iframe class="sarine"></iframe>
             </div>

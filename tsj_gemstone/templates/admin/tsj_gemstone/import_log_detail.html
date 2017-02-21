@@ -1,0 +1,52 @@
+{% extends "admin/base_site.html" %}
+{% load admin_list thumbnail %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link href="{{ STATIC_URL }}admin/css/test_search.css" type="text/css" media="screen" rel="stylesheet" />
+{% endblock %}
+
+{% block bodyclass %}test-search{% endblock %}
+
+{% block content %}
+    <div class="base-content">
+        <h1>{{ object.created }} - {{ object.source }}</h1>
+        <div class="row-fluid">
+            <div class="span12">
+                {% if successes %}
+                    <h2>{{ successes }} Record{{ successes|pluralize }} Imported Successfully</h2>
+                {% endif %}
+
+                {% if missing %}
+                    <h2>Unrecognized Values</h2>
+                    {% for field, value_counts in missing %}
+                        <h3>For field <code>{{ field }}</code></h3>
+                        <ul>
+                        {% for value, count in value_counts %}
+                            <li><em>{{ value }}</em> seen {{ count }} time{{ count|pluralize }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+
+                {% if skip %}
+                    <h2>Skipped records</h2>
+                    <ul>
+                    {% for msg, count in skip %}
+                        <li><em>{{ msg }}</em> seen {{ count }} time{{ count|pluralize }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if errors %}
+                    <h2>Errors</h2>
+                    <ul>
+                    {% for msg, count in errors %}
+                        <li><em>{{ msg }}</em> seen {{ count }} time{{ count|pluralize }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

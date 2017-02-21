@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% load admin_list thumbnail %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link href="{{ STATIC_URL }}admin/css/test_search.css" type="text/css" media="screen" rel="stylesheet" />
+{% endblock %}
+
+{% block bodyclass %}test-search{% endblock %}
+
+{% block content %}
+    <div class="base-content">
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in page_obj.object_list %}
+                        <tr>
+                            <td><a href="{{ item.pk }}/">{{ item.created }}</a></td>
+                            <td>{{ item.status }}</td>
+                            <td>{{ item.source }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if page_obj.has_other_pages %}
+                <div class="section-pagination bottom">
+                    {% pagination cl %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

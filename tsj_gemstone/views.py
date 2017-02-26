@@ -148,7 +148,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/tspages/gemstone-l
     diamonds = full_range_match(diamonds, request.GET, 'polish', min_maxs, 'gradings', 'order', order_rev=True)
     diamonds = full_range_match(diamonds, request.GET, 'symmetry', min_maxs, 'gradings', 'order', order_rev=True)
 
-    paginator = QuerySetDiggPaginator(diamonds, 300, body=5, padding=2)
+    paginator = QuerySetDiggPaginator(diamonds, 125, body=5, padding=2)
     try: paginator_page = paginator.page(request.GET.get('page', 1))
     except: paginator_page = paginator.page(paginator.num_pages)
 

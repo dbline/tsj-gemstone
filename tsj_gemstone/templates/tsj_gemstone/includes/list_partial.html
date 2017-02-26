@@ -12,6 +12,7 @@
             {% if show_prices %}
                 <th><a href="?sort=price">Price</a></th>
             {% endif %}
+                <th><i class="fa fa-camera"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,7 @@
             {% if show_prices %}
                 <td>{{ gemstone.formatted_price }}</td>
             {% endif %}
+                <td>{% if gemstone.data.sarine_id or gemstone.data.sarine_link %}<i class="fa fa-camera"></i>{% elif gemstone.get_cert_image_type %}<i class="fa fa-certificate"></i>{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

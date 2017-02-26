@@ -1,9 +1,13 @@
 from functools import update_wrapper
+import json
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin import site, ModelAdmin, SimpleListFilter
-from django.shortcuts import redirect
+from django.core.paginator import InvalidPage, Paginator
+from django.db import connection
+from django.http import Http404
+from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from .. import models
@@ -11,27 +15,27 @@ from ..tasks import import_site_gemstone_backends
 
 class CutAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class ColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('abbr', 'aliases') 
+    list_display = ('abbr', 'aliases')
 
 class ClarityAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class GradingAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class FluorescenceAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases', 'order') 
+    list_display = ('name', 'abbr', 'aliases', 'order')
 
 class FluorescenceColorAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('name', 'abbr', 'aliases') 
+    list_display = ('name', 'abbr', 'aliases')
 
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
@@ -167,6 +171,12 @@ class DiamondAdmin(ModelAdmin):
            url('^start-import/$',
                wrap(start_import),
                name='start-gemstone-backends-import'),
+           url('^import-log/$',
+               wrap(import_log_list),
+               name='import-log-list'),
+           url('^import-log/(\d+)/$',
+               wrap(import_log_detail),
+               name='import-log-detail'),
         ) + super(DiamondAdmin, self).get_urls()
 
         return urls
@@ -190,6 +200,128 @@ def start_import(request):
     messages.info(request, 'Starting gemstone import')
     next = request.META.get('HTTP_REFERER') or '/admin/'
     return redirect(next)
+
+def import_log_list(request, template_name='admin/tsj_gemstone/import_log_list.html'):
+    sd = getattr(settings, 'SITE_DATA')
+    # TODO: We shouldn't have any problem reporting imports for non-MT sites
+    if not sd:
+        raise Http404
+
+    context = {
+        'title': 'Gemstone Import Reports',
+    }
+
+    # TODO: While this remains a raw query, we ought to paginate in the SQL.
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT id, created, status, source, data
+        FROM tsj_gemstone_central_import
+        WHERE db_schema=%s
+        ORDER BY created DESC
+    """, (sd.schema,))
+    rows = cursor.fetchall()
+    rows_dict = []
+    for row in rows:
+        rows_dict.append({
+            'pk': row[0],
+            'created': row[1],
+            'status': row[2],
+            'source': row[3],
+            'data': json.loads(row[4]),
+        })
+
+    paginator = Paginator(rows_dict, 100)
+    page_num = request.GET.get('p', 0)
+
+    try:
+        page_obj = paginator.page(int(page_num) + 1)
+    except InvalidPage as e:
+        raise Http404('Invalid page (%(page_num)s): %(message)s' % {
+            'page_num': page_num,
+            'message': str(e)
+        })
+
+    # Fake a ChangeList enough for the admin's pagination template tag
+    class CL(object):
+        def __init__(self, request, paginator, pn):
+            self.request = request
+            self.paginator = paginator
+            self.page_num = pn
+            self.show_all = False
+            self.can_show_all = False
+            self.multi_page = True
+
+        def get_query_string(self, new_params):
+            return '?{}&p={}'.format(
+                self.request.META['QUERY_STRING'],
+                new_params['p'],
+            )
+
+    context.update({
+        'cl': CL(request, paginator, page_num),
+        'page_obj': page_obj,
+    })
+
+    return render(request, template_name, context)
+
+def import_log_detail(request, pk, template_name='admin/tsj_gemstone/import_log_detail.html'):
+    sd = getattr(settings, 'SITE_DATA')
+    # TODO: We shouldn't have any problem reporting imports for non-MT sites
+    if not sd:
+        raise Http404
+
+    context = {
+        'title': 'Gemstone Import Reports',
+    }
+
+    # TODO: While this remains a raw query, we ought to paginate in the SQL.
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT created, source, data
+        FROM tsj_gemstone_central_import
+        WHERE id=%s AND db_schema=%s
+    """, (pk, sd.schema,))
+    row = cursor.fetchone()
+    if not row:
+        raise Http404
+
+    obj = {
+        'created': row[0],
+        'source': row[1],
+        'data': json.loads(row[2]),
+    }
+    context['object'] = obj
+
+    # Sort dicts into an ordered structure
+    data = obj['data']
+    if 'missing' in data:
+        missing = []
+        for field, value_counts in data['missing'].items():
+            missing_counts = []
+            for value, count in value_counts.items():
+                missing_counts.append((value, count))
+            missing_counts.sort(key=lambda x: x[0])
+            missing.append((field, missing_counts))
+        missing.sort(key=lambda x: x[0])
+        context['missing'] = missing
+
+    if 'skip' in data:
+        skip = []
+        for msg, count in data['skip'].items():
+            skip.append((msg, count))
+        skip.sort(key=lambda x: x[0])
+        context['skip'] = skip
+
+    if 'errors' in data:
+        errors = []
+        for msg, count in data['errors'].items():
+            errors.append((msg, count))
+        errors.sort(key=lambda x: x[0])
+        context['errors'] = errors
+
+    context['successes'] = data.get('successes')
+
+    return render(request, template_name, context)
 
 site.register(models.Cut, CutAdmin)
 site.register(models.Color, ColorAdmin)

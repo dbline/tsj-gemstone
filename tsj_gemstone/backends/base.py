@@ -41,6 +41,7 @@ class ImportSourceError(Exception):
 class BaseBackend(object):
     filename = None
     fp_mode = 'rU'
+    backend_module = None
 
     # Order must match struture of tsj_gemstone_diamond table with the exception
     # of the id column which is excluded when doing an import.
@@ -85,7 +86,10 @@ class BaseBackend(object):
 
     def __init__(self, filename=None, nodebug=False, task_id=None):
         self.filename = filename
-        self.backend_module = self.__module__.split('.')[-1]
+        # If the subclass hasn't specified a backend (Diamond.source), use
+        # the name of the module.
+        if self.backend_module is None:
+            self.backend_module = self.__module__.split('.')[-1]
         self.nodebug = nodebug
         self.task_id = task_id
 

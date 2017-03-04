@@ -1,4 +1,5 @@
 import csv
+import urllib2
 from decimal import Decimal, InvalidOperation
 import logging
 import os
@@ -24,7 +25,7 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 RAPNET_WSDL = 'https://technet.rapaport.com/WebServices/RetailFeed/Feed.asmx?WSDL'
-
+RAPNET_GET_CERT_PATH = 'http://www.diamondselections.com/GetCertificatePath.aspx?diamondid='
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
 
 def clean(data, upper=False):
@@ -266,7 +267,14 @@ class Backend(BaseBackend):
 
         # TODO: Is there a reliable URL we can use to construct a URL?
         #       There's a HasCertFile key which must be relevant..
-        cert_image = ''
+        try:
+            if clean(data.get('HasCertFile')):
+                response = urllib2.urlopen(RAPNET_GET_CERT_PATH + stock_number)
+                cert_image = response.read()
+                if not cert_image:
+                    raise InvalidOperation
+        except (InvalidOperation, urllib2.URLError, urllib2.HTTPError, ValueError):
+            cert_image = ''
 
         try:
             depth_percent = Decimal(clean(str(data.get('DepthPercent'))))

@@ -265,8 +265,7 @@ class Backend(BaseBackend):
         if not cert_num:
             cert_num = ''
 
-        # TODO: Is there a reliable URL we can use to construct a URL?
-        #       There's a HasCertFile key which must be relevant..
+        cert_image = ''
         try:
             if clean(data.get('HasCertFile')):
                 response = urllib2.urlopen(RAPNET_GET_CERT_PATH + stock_number)
@@ -274,7 +273,7 @@ class Backend(BaseBackend):
                 if not cert_image:
                     raise InvalidOperation
         except (InvalidOperation, urllib2.URLError, urllib2.HTTPError, ValueError):
-            cert_image = ''
+            pass
 
         try:
             depth_percent = Decimal(clean(str(data.get('DepthPercent'))))

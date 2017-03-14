@@ -26,7 +26,7 @@ class GemstoneWidgetForm(PreferencesForm):
     header = forms.CharField(widget=CKEditorWidget(config_name='advanced'),
         required=False,
         help_text='Header content to put above the gemstones')
-    hide_gemstones=forms.MultipleChoiceField(label='Hide')
+    hide_gemstones=forms.MultipleChoiceField(label='Hide', required=False)
     show_view_all = forms.BooleanField(
         label='Show View All Button',
         required=False)

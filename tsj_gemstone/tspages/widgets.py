@@ -26,7 +26,7 @@ class GemstoneWidgetForm(PreferencesForm):
     header = forms.CharField(widget=CKEditorWidget(config_name='advanced'),
         required=False,
         help_text='Header content to put above the gemstones')
-    hide_gemstones=forms.MultipleChoiceField(label='Hide')
+    hide_gemstones=forms.MultipleChoiceField(label='Hide', required=False)
     show_view_all = forms.BooleanField(
         label='Show View All Button',
         required=False)
@@ -54,7 +54,7 @@ class GemstoneWidgetForm(PreferencesForm):
             qs = models.Cut.objects.filter(id__in=cuts)
         else:
             qs = models.Cut.objects.all()
-        
+
         self.fields['hide_gemstones'].choices = [
             (row[0], row[1]) for row in qs.values_list('pk','name')
         ]

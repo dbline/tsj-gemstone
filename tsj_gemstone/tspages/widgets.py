@@ -198,6 +198,49 @@ class MegaMenuGemstoneShapesWidget(TemplatedWidget):
         return super(MegaMenuGemstoneShapesWidget, self).render(context)
 
 
+class MegaMenuGemstoneBudgetWidgetForm(PreferencesForm):
+    MAX_BUDGET_CHOICES = (
+        ('3', '$3k'),
+        ('4', '$4k'),
+        ('5', '$5k'),
+    )
+
+    max_budget = forms.ChoiceField(choices=MAX_BUDGET_CHOICES,
+        required=False, help_text='Gemstone max budget')
+    class_attr = forms.CharField(
+        required=False,
+        label='CSS Class',
+        help_text='Separate multiple classes by spaces')
+    template_name = forms.CharField(
+        required=False,
+        help_text='Custom template file, include path and name')
+
+
+class MegaMenuGemstoneBudgetWidget(TemplatedWidget):
+    verbose_name = 'Gemstones Budget'
+
+    def render(self, context):
+        max_budget = int(self.preferences.get('max_budget',5)) * 1000
+        budget = []
+
+        for value in range(1000, max_budget, 500):
+            value = int(value)
+
+            budget.append({
+                'min': 0 if value == 1000 else value - 500,
+                'max': value
+            })
+
+        budget.append({
+            'min': max_budget,
+            'max': 99999999
+        })
+
+        context['budget'] = budget
+        return super(MegaMenuGemstoneBudgetWidget, self).render(context)
+
+
 register.widget('gemstone', GemstoneWidget, form=GemstoneWidgetForm)
 register.widget('megamenu-gemstone-max-size', MegaMenuGemstoneMaxSizeWidget, form=MegaMenuGemstoneMaxSizeWidgetForm)
 register.widget('megamenu-gemstone-shapes', MegaMenuGemstoneShapesWidget, form=MegaMenuGemstoneShapesWidgetForm)
+register.widget('megamenu-gemstone-budget', MegaMenuGemstoneBudgetWidget, form=MegaMenuGemstoneBudgetWidgetForm)

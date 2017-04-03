@@ -20,9 +20,9 @@ ICON_CHOICES = (
 )
 class GemstoneWidgetForm(PreferencesForm):
     style = forms.ChoiceField(choices=STYLE_CHOICES,
-		required=False, help_text='Gemstone display style')
+        required=False, help_text='Gemstone display style')
     icon_style = forms.ChoiceField(choices=ICON_CHOICES,
-		required=False, help_text='Gemstone icon style')
+        required=False, help_text='Gemstone icon style')
     header = forms.CharField(widget=CKEditorWidget(config_name='advanced'),
         required=False,
         help_text='Header content to put above the gemstones')
@@ -39,12 +39,12 @@ class GemstoneWidgetForm(PreferencesForm):
         label='URL',
         help_text='View All URL')
     class_attr = forms.CharField(
-		required=False,
-		label='CSS Class',
-		help_text='Separate multiple classes by spaces')
+        required=False,
+        label='CSS Class',
+        help_text='Separate multiple classes by spaces')
     template_name = forms.CharField(
-		required=False,
-		help_text='Custom template file, include path and name')
+        required=False,
+        help_text='Custom template file, include path and name')
 
     def __init__(self, *args, **kwargs):
         super(GemstoneWidgetForm, self).__init__(*args, **kwargs)
@@ -100,4 +100,54 @@ class GemstoneWidget(TemplatedWidget):
         context['widget_object_list'] = qs
         return super(GemstoneWidget, self).render(context)
 
+
+class MegaMenuGemstoneMaxSizeWidgetForm(PreferencesForm):
+    MAX_SIZE_CHOICES = (
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+    )
+
+    max_size = forms.ChoiceField(choices=MAX_SIZE_CHOICES,
+        required=False, help_text='Gemstone max size')
+    class_attr = forms.CharField(
+        required=False,
+        label='CSS Class',
+        help_text='Separate multiple classes by spaces')
+    template_name = forms.CharField(
+        required=False,
+        help_text='Custom template file, include path and name')
+
+
+class MegaMenuGemstoneMaxSizeWidget(TemplatedWidget):
+    verbose_name = 'Gemstones Max Size'
+
+    def render(self, context):
+        max_size = int(self.preferences.get('max_size',4))
+        sizes = []
+
+        for size in range(1, max_size):
+            size = float(size)
+            min_value = 0.25 if size == 1 else size - 1
+
+            sizes.append({
+                'min': min_value,
+                'max': size - 0.50
+            })
+
+            sizes.append({
+                'min': size - 0.50,
+                'max': size
+            })
+
+        sizes.append({
+            'min': max_size,
+            'max': 99.99
+        })
+
+        context['sizes'] = sizes
+        return super(MegaMenuGemstoneMaxSizeWidget, self).render(context)
+
+
 register.widget('gemstone', GemstoneWidget, form=GemstoneWidgetForm)
+register.widget('megamenu-gemstone-max-size', MegaMenuGemstoneMaxSizeWidget, form=MegaMenuGemstoneMaxSizeWidgetForm)

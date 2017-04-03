@@ -62,9 +62,6 @@ class GemstoneWidgetForm(PreferencesForm):
 class GemstoneWidget(TemplatedWidget):
     verbose_name = 'Gemstones'
 
-    class Media:
-        js = ('tsj_gemstone/js/tsj_gemstone_widget.js',)
-
     def get_template_names(self, context, extra_template_names=None):
         template_names = super(GemstoneWidget, self).get_template_names(
             context, extra_template_names=extra_template_names)
@@ -149,5 +146,58 @@ class MegaMenuGemstoneMaxSizeWidget(TemplatedWidget):
         return super(MegaMenuGemstoneMaxSizeWidget, self).render(context)
 
 
+class MegaMenuGemstoneShapesWidgetForm(PreferencesForm):
+
+    ICON_STYLE_CHOICES = (
+        ('vectors', 'Vectors'),
+        ('images', 'Images'),
+        ('none', 'None'),
+    )
+
+    icon_style = forms.ChoiceField(choices=ICON_STYLE_CHOICES,
+        required=False, help_text='Gemstone icon style')
+    hide_gemstones=forms.MultipleChoiceField(label='Hide', required=False)
+    class_attr = forms.CharField(
+        required=False,
+        label='CSS Class',
+        help_text='Separate multiple classes by spaces')
+    template_name = forms.CharField(
+        required=False,
+        help_text='Custom template file, include path and name')
+
+    def __init__(self, *args, **kwargs):
+        super(MegaMenuGemstoneShapesWidgetForm, self).__init__(*args, **kwargs)
+
+        cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct()
+        if cuts:
+            qs = models.Cut.objects.filter(id__in=cuts)
+        else:
+            qs = models.Cut.objects.all()
+
+        self.fields['hide_gemstones'].choices = [
+            (row[0], row[1]) for row in qs.values_list('pk','name')
+        ]
+
+
+class MegaMenuGemstoneShapesWidget(TemplatedWidget):
+    verbose_name = 'Gemstone Shapes'
+
+    def render(self, context):
+        cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct()
+        if cuts:
+            qs = models.Cut.objects.filter(id__in=cuts)
+        else:
+            qs = models.Cut.objects.all()
+
+        hide_gemstones = context['widget_style'] = self.preferences.get('hide_gemstones')
+        if hide_gemstones:
+            qs = qs.filter(~Q(id__in=hide_gemstones))
+
+        context['icon_style'] = self.preferences.get('icon_style', ICON_CHOICES[0][0])
+        context['widget_object_list'] = qs
+        return super(MegaMenuGemstoneShapesWidget, self).render(context)
+
+
 register.widget('gemstone', GemstoneWidget, form=GemstoneWidgetForm)
 register.widget('megamenu-gemstone-max-size', MegaMenuGemstoneMaxSizeWidget, form=MegaMenuGemstoneMaxSizeWidgetForm)
+register.widget('megamenu-gemstone-shapes', MegaMenuGemstoneShapesWidget, form=MegaMenuGemstoneShapesWidgetForm)

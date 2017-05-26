@@ -95,6 +95,7 @@ def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=
 @csrf_protect
 def gemstone_list(request, sort_by='', template='tsj_gemstone/tspages/gemstone-list.html',
                  list_partial_template='tsj_gemstone/includes/list_partial.html',
+                 details_partial_template='tsj_gemstone/includes/list_partial_details.html',
                  paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
                  extra_context={}):
 
@@ -161,6 +162,7 @@ def gemstone_list(request, sort_by='', template='tsj_gemstone/tspages/gemstone-l
     if request.is_ajax():
         response_dict = dict(
             list_partial = render_to_string(list_partial_template, context, RequestContext(request)),
+            details_partial = render_to_string(details_partial_template, context, RequestContext(request)),
             paginator_full_partial = render_to_string(paginator_full_partial_template, context, RequestContext(request)),
         )
         response = HttpResponse(json.dumps(response_dict), content_type='application/javascript')

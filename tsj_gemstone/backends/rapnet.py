@@ -50,6 +50,23 @@ class Backend(BaseBackend):
         version = prefs.get('rapaport_version')
         return username and password and version == 'rapnetii'
 
+    def _get_ticket(self, client):
+        username = prefs.get('rapaport_username')
+        password = prefs.get('rapaport_password')
+
+        try:
+            response = client.service.Login(username, password)
+        except zeep.exceptions.Fault as e:
+            logger.exception('RapNet SOAP error')
+            raise ImportSourceError('RapNet SOAP error')
+        else:
+            return response['header']['AuthenticationTicketHeader']['Ticket']
+
+    def _get_headers(self, factory, ticket):
+        return {
+            'AuthenticationTicketHeader': factory.AuthenticationTicketHeader(*[ticket]),
+        }
+
     def get_data(self):
         doc = None
         data = []
@@ -67,17 +84,7 @@ class Backend(BaseBackend):
                 data.append(dict(((e.tag, e.text) for e in list(obj.iterchildren()))))
             return data
 
-        username = prefs.get('rapaport_username')
-        password = prefs.get('rapaport_password')
-
         client = zeep.Client(wsdl=RAPNET_WSDL)
-        try:
-            response = client.service.Login(username, password)
-        except zeep.exceptions.Fault as e:
-            logger.exception('RapNet SOAP error')
-            raise ImportSourceError('RapNet SOAP error')
-        else:
-            ticket = response['header']['AuthenticationTicketHeader']['Ticket']
 
         factory = client.type_factory('ns0')
         params = {
@@ -130,16 +137,22 @@ class Backend(BaseBackend):
             if v:
                 params[k] = v
 
-        headers = {
-            'AuthenticationTicketHeader': factory.AuthenticationTicketHeader(*[ticket]),
-        }
+        ticket = self._get_ticket(client)
+        headers = self._get_headers(factory, ticket)
 
         ids = set()
 
         # Accumulate paginated diamond data into ret
+        ts = time.time()
         while True:
             new_ids = 0
             page_data = []
+
+            # Recycle the auth ticket to avoid session timeouts
+            if time.time() - ts > 240:
+                ts = time.time()
+                ticket = self._get_ticket(client)
+                headers = self._get_headers(factory, ticket)
 
             response = client.service.GetDiamonds(
                 SearchParams=factory.FeedParameters(**params),
@@ -169,7 +182,7 @@ class Backend(BaseBackend):
 
             # Spread requests out a bit.  We're not sure what sort of rate
             # limiting the new API will bring with it.
-            time.sleep(random.random()*2.5)
+            time.sleep(random.random()*1.25)
 
         return data
 

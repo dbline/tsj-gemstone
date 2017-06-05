@@ -10,9 +10,9 @@ import time
 import requests
 
 from django.conf import settings
-from django.utils.lru_cache import lru_cache
+from django.utils.functional import memoize
 
-from .base import LRU_CACHE_MAXSIZE, JSONBackend, SkipDiamond, KeyValueError
+from .base import JSONBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..utils import moneyfmt
 
@@ -29,7 +29,17 @@ def clean(data, upper=False):
 
     return data
 
-cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
+def clean_upper(data):
+    return clean(data, upper=True)
+
+_clean_cache = {}
+_clean_upper_cache = {}
+
+# Values that are expected to recur within an import can have their
+# cleaned values cached with these wrappers.  Since memoize can't
+# handle kwargs, we have a separate wrapper for using upper=True
+cached_clean = memoize(clean, _clean_cache, 2)
+cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
@@ -56,34 +66,54 @@ class Backend(JSONBackend):
         session = requests.Session()
         session.auth = (settings.STULLER_USER, settings.STULLER_PASSWORD)
         session.headers.update({'Content-Type': 'application/json', 'Accept': 'application/json'})
-        url = 'https://www.stuller.com/api/v2/gem'
+        url = 'https://www.stuller.com/api/v2/gem/diamonds'
 
         next_page = None
         prev_page_hash = None
         serial_numbers = set()
         ret = []
 
-        new_serial_numbers = 0
+        # Accumulate paginated diamond data into ret
+        while True:
+            new_serial_numbers = 0
 
-        response = session.get(url)
+            if next_page:
+                # Stuller wants a JSON request body, not urlencoded form data
+                response = session.post(url, json={'NextPage': next_page})
+            else:
+                response = session.get(url)
 
-        if response.status_code != 200:
-            logger.error('Stuller HTTP error {}'.format(response.status_code))
-            return
+            if response.status_code != 200:
+                logger.error('Stuller HTTP error {}'.format(response.status_code))
+                return
 
-        data = response.json()
-        if 'Diamonds' not in data:
-            logger.warning('Stuller no Diamonds provided')
+            data = response.json()
+            if 'Diamonds' not in data:
+                break
 
-        for x, d in enumerate(data['Diamonds']):
-            if d['SerialNumber'] not in serial_numbers:
-                serial_numbers.add(d['SerialNumber'])
-                new_serial_numbers += 1
-                ret.append(d)
+            for x, d in enumerate(data['Diamonds']):
+                if d['SerialNumber'] not in serial_numbers:
+                    serial_numbers.add(d['SerialNumber'])
+                    new_serial_numbers += 1
+                    ret.append(d)
 
-        # If there aren't any new serial numbers, we're probably in an infinite loop
-        if not new_serial_numbers:
-            logger.warning('Stuller no Diamonds provided')
+            # If there aren't any new serial numbers, we're probably in an infinite loop
+            if not new_serial_numbers:
+                logger.warning('Stuller infinite loop (diamond count {})'.format(len(serial_numbers)))
+                break
+
+            if 'NextPage' in data and data['NextPage']:
+                next_page = data['NextPage']
+
+                # Sometimes we see the same NextPage
+                _hash = hashlib.md5(next_page).hexdigest()
+                if _hash == prev_page_hash:
+                    logger.warning('Stuller infinite loop (hash {})'.format(_hash))
+                    break
+                prev_page_hash = _hash
+                time.sleep(2)
+            else:
+                break
 
         return ret
 
@@ -93,7 +123,7 @@ class Backend(JSONBackend):
         stock_number = clean(str(data.get('SerialNumber')))
         comment = cached_clean(data.get('Comments'))
         try:
-            cut = self.cut_aliases[cached_clean(data.get('Shape'), upper=True)]
+            cut = self.cut_aliases[cached_clean_upper(data.get('Shape'))]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -103,9 +133,9 @@ class Backend(JSONBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(data.get('Color'), upper=True))
+        color = self.color_aliases.get(cached_clean_upper(data.get('Color')))
 
-        certifier = cached_clean(data.get('Certification'), upper=True)
+        certifier = cached_clean_upper(data.get('Certification'))
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -127,7 +157,7 @@ class Backend(JSONBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean(data.get('Clarity'), upper=True)
+        clarity = cached_clean_upper(data.get('Clarity'))
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -135,7 +165,7 @@ class Backend(JSONBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean(data.get('Make'), upper=True))
+        cut_grade = self.grading_aliases.get(cached_clean_upper(data.get('Make')))
         try:
             if isinstance(data.get('PricePerCarat'), dict):
                 # TODO: Verify that data['PricePerCarat']['CurrencyCode'] is USD
@@ -165,25 +195,25 @@ class Backend(JSONBackend):
             table_percent = 'NULL'
 
         if data.get('Girdle'):
-            girdle_thinnest = cached_clean(data['Girdle'], upper=True)
+            girdle_thinnest = cached_clean_upper(data['Girdle'])
             girdle = [girdle_thinnest]
             if data.get('Girdle2'):
-                girdle_thickest = cached_clean(data['Girdle2'], upper=True)
+                girdle_thickest = cached_clean_upper(data['Girdle2'])
                 girdle.append(girdle_thickest)
             girdle = ' - '.join(girdle)
         else:
             girdle = ''
 
-        culet = cached_clean(data.get('Culet'), upper=True)
-        polish = self.grading_aliases.get(cached_clean(data.get('Polish'), upper=True))
-        symmetry = self.grading_aliases.get(cached_clean(data.get('Symmetry'), upper=True))
+        culet = cached_clean_upper(data.get('Culet'))
+        polish = self.grading_aliases.get(cached_clean_upper(data.get('Polish')))
+        symmetry = self.grading_aliases.get(cached_clean_upper(data.get('Symmetry')))
 
         # Fluorescence and color are combined, e.g 'FAINT BLUE'
         fl = data.get('Fluorescence', '')
         if ' ' in fl:
             fl, flcolor = fl.split(' ')
-            fluorescence = cached_clean(fl, upper=True)
-            fluorescence_color = cached_clean(flcolor, upper=True)
+            fluorescence = cached_clean_upper(fl)
+            fluorescence_color = cached_clean_upper(flcolor)
 
             for abbr, id in self.fluorescence_aliases.iteritems():
                 if fluorescence.startswith(abbr.upper()):
@@ -274,8 +304,7 @@ class Backend(JSONBackend):
             '', # city,
             state,
             country,
-            'NULL', # rap_date
-            '{}', # data
+            'NULL' # rap_date
         )
 
         return ret

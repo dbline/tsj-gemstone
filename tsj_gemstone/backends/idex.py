@@ -9,9 +9,9 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 import zipfile
 
 from django.conf import settings
-from django.utils.lru_cache import lru_cache
+from django.utils.functional import memoize
 
-from .base import LRU_CACHE_MAXSIZE, XMLBackend, XMLHandler, ImportSourceError, SkipDiamond, KeyValueError
+from .base import XMLBackend, XMLHandler, ImportSourceError, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -29,7 +29,17 @@ def clean(data, upper=False):
 
     return data
 
-cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
+def clean_upper(data):
+    return clean(data, upper=True)
+
+_clean_cache = {}
+_clean_upper_cache = {}
+
+# Values that are expected to recur within an import can have their
+# cleaned values cached with these wrappers.  Since memoize can't
+# handle kwargs, we have a separate wrapper for using upper=True
+cached_clean = memoize(clean, _clean_cache, 2)
+cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
@@ -104,7 +114,7 @@ class Backend(XMLBackend):
         comment = cached_clean(data.get('rm'))
         owner = cached_clean(data.get('sup'))
         try:
-            cut = self.cut_aliases[cached_clean(data.get('cut'), upper=True)]
+            cut = self.cut_aliases[cached_clean_upper(data.get('cut'))]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -114,9 +124,9 @@ class Backend(XMLBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(data.get('col'), upper=True))
+        color = self.color_aliases.get(cached_clean_upper(data.get('col')))
 
-        certifier = cached_clean(data.get('lab'), upper=True)
+        certifier = cached_clean_upper(data.get('lab'))
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -138,7 +148,7 @@ class Backend(XMLBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean(data.get('cl'), upper=True)
+        clarity = cached_clean_upper(data.get('cl'))
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -146,7 +156,7 @@ class Backend(XMLBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean(data.get('mk'), upper=True))
+        cut_grade = self.grading_aliases.get(cached_clean_upper(data.get('mk')))
         try:
             carat_price = clean(data.get('ap').replace(',', ''))
             if carat_price:
@@ -170,17 +180,17 @@ class Backend(XMLBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-        girdle = cached_clean(data.get('gd'), upper=True)
+        girdle = cached_clean_upper(data.get('gd'))
         if not girdle or girdle == '-':
             girdle = ''
 
-        culet = cached_clean(data.get('cs'), upper=True)
-        polish = self.grading_aliases.get(cached_clean(data.get('pol'), upper=True))
-        symmetry = self.grading_aliases.get(cached_clean(data.get('sym'), upper=True))
+        culet = cached_clean_upper(data.get('cs'))
+        polish = self.grading_aliases.get(cached_clean_upper(data.get('pol')))
+        symmetry = self.grading_aliases.get(cached_clean_upper(data.get('sym')))
 
-        fluorescence = cached_clean(data.get('fl'), upper=True)
+        fluorescence = cached_clean_upper(data.get('fl'))
         fluorescence_id = None
-        fluorescence_color = cached_clean(data.get('fc'), upper=True)
+        fluorescence_color = cached_clean_upper(data.get('fc'))
         fluorescence_color_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
             if fluorescence.startswith(abbr.upper()):
@@ -269,8 +279,7 @@ class Backend(XMLBackend):
             '', # city,
             state,
             country,
-            'NULL', # rap_date
-            '{}', # data
+            'NULL' # rap_date
         )
 
         return ret

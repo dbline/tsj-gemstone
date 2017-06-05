@@ -8,9 +8,9 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
 
 from django.conf import settings
-from django.utils.lru_cache import lru_cache
+from django.utils.functional import memoize
 
-from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
+from .base import CSVBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..utils import moneyfmt
 
@@ -26,7 +26,17 @@ def clean(data, upper=False):
 
     return data
 
-cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
+def clean_upper(data):
+    return clean(data, upper=True)
+
+_clean_cache = {}
+_clean_upper_cache = {}
+
+# Values that are expected to recur within an import can have their
+# cleaned values cached with these wrappers.  Since memoize can't
+# handle kwargs, we have a separate wrapper for using upper=True
+cached_clean = memoize(clean, _clean_cache, 2)
+cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
 
 def split_measurements(measurements):
     try:
@@ -91,7 +101,7 @@ class Backend(CSVBackend):
         #country = cached_clean(country)
 
         try:
-            cut = self.cut_aliases[cached_clean(cut, upper=True)]
+            cut = self.cut_aliases[cached_clean_upper(cut)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -101,9 +111,9 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(color, upper=True))
+        color = self.color_aliases.get(cached_clean_upper(color))
 
-        certifier = cached_clean(certifier, upper=True)
+        certifier = cached_clean_upper(certifier)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -123,7 +133,7 @@ class Backend(CSVBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean(clarity, upper=True)
+        clarity = cached_clean_upper(clarity)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -131,7 +141,7 @@ class Backend(CSVBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
+        cut_grade = self.grading_aliases.get(cached_clean_upper(cut_grade))
         carat_price = clean(carat_price)
         if carat_price:
             carat_price = Decimal(carat_price)
@@ -148,16 +158,16 @@ class Backend(CSVBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-        girdle = cached_clean(girdle, upper=True)
+        girdle = cached_clean_upper(girdle)
         if not girdle or girdle == '-':
             girdle = ''
 
-        culet = cached_clean(culet, upper=True)
-        polish = self.grading_aliases.get(cached_clean(polish, upper=True))
-        symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
+        culet = cached_clean_upper(culet)
+        polish = self.grading_aliases.get(cached_clean_upper(polish))
+        symmetry = self.grading_aliases.get(cached_clean_upper(symmetry))
 
         """
-        fluorescence = cached_clean(fluorescence, upper=True)
+        fluorescence = cached_clean_upper(fluorescence)
         fluorescence_id = None
         fluorescence_color = None
         fluorescence_color_id = None
@@ -169,7 +179,7 @@ class Backend(CSVBackend):
         fluorescence = fluorescence_id
 
         if fluorescence_color:
-            fluorescence_color = cached_clean(fluorescence_color, upper=True)
+            fluorescence_color = cached_clean_upper(fluorescence_color)
             for abbr, id in self.fluorescence_color_aliases.iteritems():
                 if fluorescence_color.startswith(abbr.upper()):
                     fluorescence_color_id = id
@@ -247,7 +257,6 @@ class Backend(CSVBackend):
             '', # state
             '', # country
             'NULL', # rap_date
-            '{}', # data
         )
 
         return ret

@@ -1,16 +1,18 @@
+from decimal import *
 import json
-from decimal import Decimal
-from math import ceil
 
 from django.db.models import Min, Max
+from django.db.models.fields import FieldDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template import RequestContext
+from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
+from .prefs import prefs as gemstone_prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.utils import show_prices
@@ -18,7 +20,6 @@ from tsj_jewelrybox.forms import InquiryForm
 
 from .filtersets import GemstoneFilterSet
 from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
-from .prefs import prefs as gemstone_prefs
 
 # TODO: Move to thinkspace, probably also bring up to date with the
 #       current paginator code in Django.
@@ -125,30 +126,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             response['Cache-Control'] = "no-cache, no-store, must-revalidate"
             return response
         else:
-            raise Exception('Model field name is required for filter processing {0} form field.'.format(get_key))
-
-        # Order is reversed.
-        if order_rev:
-            store_min_max = (store_min_max[1], store_min_max[0])
-        store_type = type(store_min_max[0])
-
-        # Floor / ceiling max and min if the stored values are Decimals or integers
-        if floor_ceil and store_min_max[0] and store_min_max[1]:
-            store_min_max = (int(store_min_max[0]), int(ceil(store_min_max[1])))
-
-        if store_type in (Decimal, int):
-            store_min_max = (str(store_min_max[0]), str(store_min_max[1]))
-
-        get_min_max = (get[get_min_key], get[get_max_key])
-
-        # Skip if full range
-        if get_min_max != store_min_max and get_min_max[0] and get_min_max[1]:
-            if model_field_name:
-                params = {'{0}__{1}__range'.format(get_key, model_field_name):get_min_max}
-            else:
-                params = {'{0}__range'.format(get_key):get_min_max}
-            return diamonds.filter(**params)
-    return diamonds
+            return render(self.request, self.template_name, context)
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond

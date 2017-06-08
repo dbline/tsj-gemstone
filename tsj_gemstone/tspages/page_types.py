@@ -4,7 +4,7 @@ from thinkspace.apps.pages.page_types import PageType
 from tsj_gemstone import views
 
 class GemstoneList(PageType):
-    view = staticmethod(views.gemstone_list)
+    view = staticmethod(views.GemstoneListView.as_view())
 
 class GemstoneDetail(PageType):
     view = staticmethod(views.GemstoneDetailView.as_view())

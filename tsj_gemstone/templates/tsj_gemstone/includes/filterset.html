@@ -3,8 +3,9 @@
 <section class="section-filterset">
     <form action="" method="get" id="form-gemstone">
         <fieldset class="filter-primary">
+        <div class="row">
         {% with filterset.form.cut as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group column col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter no-range">
                     <ul class="list-unstyled">
@@ -24,7 +25,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.price as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="range">
@@ -38,8 +39,10 @@
                 </div>
             </div>
         {% endwith %}
+        </div>
+        <div class="row">
         {% with filterset.form.carat_weight as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="range">
@@ -55,7 +58,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.color as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -73,8 +76,10 @@
                 </div>
             </div>
         {% endwith %}
+        </div>
+        <div class="row">
         {% with filterset.form.cut_grade as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -93,7 +98,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.clarity as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -111,13 +116,14 @@
                 </div>
             </div>
         {% endwith %}
+        </div>
         </fieldset>
         <fieldset class="filter-toggle">
             <a href="#" class="toggle-advanced">Advanced Options<i class="fa fa-caret-down"></i></a>
         </fieldset>
         <fieldset class="filter-advanced" style="display: none;">
         {% with filterset.form.polish as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -136,7 +142,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.symmetry as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -155,7 +161,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.fluorescence as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter">
                     <div class="fields hidden">
@@ -174,7 +180,7 @@
             </div>
         {% endwith %}
         {% with filterset.form.certifier as field %}
-            <div class="form-group {{ field.html_name }}">
+            <div class="form-group col-md-6 {{ field.html_name }}">
                 <h4>{{ field.label }}</h4>
                 <div class="filter no-range">
                     {{ field }}

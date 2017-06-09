@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="table-gemstone">
-    <table>
+    <table class="table-responsive">
         <thead>
             <tr>
                 <th class="shape"><a href="?sort=cut">Shape</a></th>
@@ -81,7 +81,7 @@
                     </td>
                 </tr>
             {% for gemstone in page.object_list %}
-                <tr id="{{ gemstone.pk }}-detail" class="hidden">
+                <tr id="{{ gemstone.pk }}-detail" style="display: none;">
                     <td>
                         <div class="icon">
                             {{ gemstone.cut.icon|safe }}

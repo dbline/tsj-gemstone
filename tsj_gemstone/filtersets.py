@@ -99,15 +99,15 @@ class GemstoneFilterSet(django_filters.FilterSet):
     color = RangeChoiceFilter(queryset=colors, to_field_name='abbr')
 
     gradings = Grading.objects.all()
-    cut_grade = RangeChoiceFilter(queryset=gradings, to_field_name='name', label='Cut')
-    polish = RangeChoiceFilter(queryset=gradings, to_field_name='name')
-    symmetry = RangeChoiceFilter(queryset=gradings, to_field_name='name')
+    cut_grade = RangeChoiceFilter(queryset=gradings, to_field_name='abbr', label='Cut')
+    polish = RangeChoiceFilter(queryset=gradings, to_field_name='abbr')
+    symmetry = RangeChoiceFilter(queryset=gradings, to_field_name='abbr')
 
     clarities = Clarity.objects.all()
     clarity = RangeChoiceFilter(queryset=clarities, to_field_name='abbr')
 
     fluorescences = Fluorescence.objects.all()
-    fluorescence = RangeChoiceFilter(queryset=fluorescences, to_field_name='name')
+    fluorescence = RangeChoiceFilter(queryset=fluorescences, to_field_name='abbr')
 
     distinct_certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct('certifier__id')
     certifiers = Certifier.objects.filter(id__in=distinct_certifiers).exclude(disabled=True)

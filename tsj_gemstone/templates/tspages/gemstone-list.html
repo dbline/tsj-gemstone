@@ -7,22 +7,114 @@
 {% endblock css %}
 
 {% block js %}{{ block.super }}
-    <script type="text/javascript">
-        // Setup some variables that we need
-        DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
-        CLARITIES = [
-            {% for clarity in clarities %}['{{ clarity.order }}', '{{ clarity.abbr }}']{% if not forloop.last %},
-            {% endif %}{% endfor %}
-        ];
-        GRADINGS = [
-            {% for grading in gradings %}['{{ grading.order }}', '{{ grading.name }}']{% if not forloop.last %},
-            {% endif %}{% endfor %}
-        ];
-        CARAT_WEIGHTS = [{{ carat_weights.min }}, {{ carat_weights.max }}];
-        PRICES = [{% if prices.min %}{{ prices.min }}{% else %}0{% endif %}, {% if prices.max %}{{ prices.max }}{% else %}0{% endif %}];
-    </script>
     {% render_mt_bundle 'gemstone' 'js' 'CORE' %}
     {% render_mt_bundle 'tsjbuilder' 'js' 'CORE' %}
+    <script type="text/javascript">
+        DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
+        COLORS = [{% for color in colors %}"{{ color.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        COLORS_RANGE = [{% for color in colors %}"{{ color.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        GRADINGS = [{% for grading in gradings %}"{{ grading.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        GRADINGS_RANGE = [{% for grading in gradings %}"{{ grading.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        CLARITIES = [{% for clarity in clarities %}"{{ clarity.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        CLARITIES_RANGE = [{% for clarity in clarities %}"{{ clarity.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        FLUORESCENCES = [{% for fluorescence in fluorescences %}"{{ fluorescence.name }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        FLUORESCENCES_RANGE = [{% for fluorescence in fluorescences %}"{{ fluorescence.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+
+        $("#price").ionRangeSlider({
+            min: {{ prices.min }},
+            max: {{ prices.max }},
+            from: {{ filterset.data.price_0 }},
+            to: {{ filterset.data.price_1 }},
+            hide_min_max: true,
+            hide_from_to: true,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+        var price_slider = $('#price').data('ionRangeSlider');
+
+        $("#carat_weight").ionRangeSlider({
+            min: {{ carat_weights.min }},
+            max: {{ carat_weights.max }},
+            from: {{ filterset.data.carat_weight_0 }},
+            to: {{ filterset.data.carat_weight_1 }},
+            hide_min_max: true,
+            hide_from_to: true,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+        var carat_weight_slider = $('#carat_weight').data('ionRangeSlider');
+
+        $('#color').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: COLORS,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        $('#cut_grade').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        $('#clarity').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: CLARITIES,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        $('#polish').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        $('#symmetry').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: GRADINGS,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        $('#fluorescence').ionRangeSlider({
+            hide_min_max: true,
+            hide_from_to: true,
+            values: FLUORESCENCES,
+            onFinish: function(data) {
+                updateResults();
+            }
+        });
+
+        function updateResults(url) {
+            // Set some defaults
+            if (url) {
+                var href = url += "&" + $('#form-gemstone').serialize();
+            } else {
+                var url = DIAMOND_LIST_URL;
+                var href = "?" + $('#form-gemstone').serialize();
+            }
+
+            href = href.replace(/%24/g, '').replace(/%2C/g, '');
+
+            History.pushState(null, null, href);
+            return false;
+        }
+    </script>
 {% endblock js %}
 
 {% block bodyclass %}{{ block.super }} gemstone-list{% endblock %}
@@ -47,15 +139,17 @@
             {% ring_builder_steps 'diamond' %}
         </div>
     </div>
-    <div class="section-filters">
-        {% include "tsj_gemstone/includes/filterset_site.html" %}
-    </div>
-    <div class="section-content">
-        <div class="section-gemstones">
-            {% include "tsj_gemstone/includes/gemstones.html" %}
+    <div class="row">
+        <div class="section-filters col-md-12">
+            {% include "tsj_gemstone/includes/filterset_site.html" %}
         </div>
-        <div class="section-pagination bottom">
-            {% include "tsj_gemstone/includes/pagination.html" %}
+        <div class="section-content col-md-12">
+            <div class="section-gemstones">
+                {% include "tsj_gemstone/includes/gemstones.html" %}
+            </div>
+            <div class="section-pagination bottom">
+                {% include "tsj_gemstone/includes/pagination.html" %}
+            </div>
         </div>
     </div>
     <div class="row hidden-print">
@@ -64,26 +158,3 @@
         </div>
     </div>
 {% endblock content %}
-
-{% comment %}
-<div class="column column-filters filters-{{tspages_page.get_options.filter_position|lower }}{% if tspages_page.get_options.filter_position == 'Left' %} col-xl-3 col-lg-4{% endif %} col-xs-12 gemstone-filters">
-                            {% for cut in cuts %}
-                                <li class="nav-item {{ cut.name|slugify }}">
-                                    <input id="{{ cut.name|slugify }}" type="checkbox" name="cut" class="conceal" value="{{ cut.abbr }}" {% if cut.abbr in initial_cuts %}checked="checked"{% endif %} />
-                                    <label for="{{ cut.name|slugify }}" class="form-control-label" data-toggle="tooltip" data-placement="bottom" title="{{ cut.name }}">
-                                        <div class="svg svg-gemstone {{ cut.name|lower }} hidden-xs-down" alt="{{ cut.name }}" >
-                                            {% with "tsj_gemstone/images/outlines/"|add:cut.name|lower|add:".svg" as svginline %}
-                                            {% include svginline %}
-                                            {% endwith %}
-                                        </div>
-                                        <span class="text">{{ cut.name }}</span>
-                                    </label>
-                                </li>
-                            {% endfor %}
-        <div class="column column-results column-results-table{% if tspages_page.get_options.filter_position == 'Left' %} col-xl-6 col-lg-8{% else %} col-xl-9{% endif %} col-xs-12 gemstone-results">
-            {% include "tsj_gemstone/includes/list_partial.html" %}
-        </div>
-        <div class="column column-results column-results-detail{% if tspages_page.get_options.filter_position == 'Left' %} col-xl-3 col-xs-12{% else %} col-xl-3{% endif %} hidden-lg-down">
-            {% include "tsj_gemstone/includes/list_partial_details.html" %}
-        </div>
-{% endcomment %}

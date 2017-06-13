@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 import glob
+import json
 import logging
 import os
 import re
@@ -10,9 +11,9 @@ from urlparse import urlparse
 
 from django.conf import settings
 from django.db import connection, transaction
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
-from .base import CSVBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -28,17 +29,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 # GN combines fluorescence and fluorescence_color
 FLUORESCENCE_MAP = {
@@ -152,15 +143,15 @@ class Backend(CSVBackend):
         if fancy:
             brand = 'FANCY'
             # TODO: The FancyColor model isn't in the dev branch yet
-            #fancy_color = self.fancy_color_aliases.get(cached_clean_upper(color))
+            #fancy_color = self.fancy_color_aliases.get(cached_clean(color, upper=True))
             color = None
         else:
             brand = brand
-            color = self.color_aliases.get(cached_clean_upper(color))
+            color = self.color_aliases.get(cached_clean(color, upper=True))
             fancy_color = None
 
         try:
-            cut = self.cut_aliases[cached_clean_upper(cut)]
+            cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -170,7 +161,7 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        certifier = cached_clean_upper(certifier)
+        certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -190,7 +181,7 @@ class Backend(CSVBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean_upper(clarity)
+        clarity = cached_clean(clarity, upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -198,7 +189,7 @@ class Backend(CSVBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean_upper(cut_grade))
+        cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         carat_price = clean(carat_price.replace(',', ''))
         if carat_price:
             carat_price = Decimal(carat_price)
@@ -215,15 +206,15 @@ class Backend(CSVBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-        girdle = cached_clean_upper(girdle)
+        girdle = cached_clean(girdle, upper=True)
         if not girdle or girdle == '-':
             girdle = ''
 
-        culet = cached_clean_upper(culet)
-        polish = self.grading_aliases.get(cached_clean_upper(polish))
-        symmetry = self.grading_aliases.get(cached_clean_upper(symmetry))
+        culet = cached_clean(culet, upper=True)
+        polish = self.grading_aliases.get(cached_clean(polish, upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
 
-        fluorescence = cached_clean_upper(fluorescence)
+        fluorescence = cached_clean(fluorescence, upper=True)
         if fluorescence in FLUORESCENCE_MAP:
             f, c = FLUORESCENCE_MAP[fluorescence]
             fluorescence_id = self.fluorescence_aliases[f]
@@ -267,6 +258,13 @@ class Backend(CSVBackend):
         if not price:
             raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
+        if sarine_link:
+            data = {'sarine_link': sarine_link}
+            # https://api.sarine.com/viewer/v1/V1XWDF7VPUM/HX3CDW4NJW
+        else:
+            data = {}
+
+
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,
@@ -303,6 +301,7 @@ class Backend(CSVBackend):
             '', # state,
             '', # country,
             'NULL', # rap_date
+            json.dumps(data), # data - Sarine Link
         )
 
         return ret

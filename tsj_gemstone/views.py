@@ -25,12 +25,44 @@ from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, Fluores
 #       current paginator code in Django.
 from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
 
+def _get_queryset_ordering(qs, querystring, opts):
+    # Sorting
+    try:
+        sort = querystring.__getitem__('sort')
+    except KeyError:
+        sort = None
+
+    # Order
+    try:
+        order = querystring.__getitem__('order')
+    except KeyError:
+        order = None
+
+    try:
+        opts.get_field(sort)
+        if order == 'desc':
+            qs = qs.order_by('-%s' % sort)
+        else:
+            qs = qs.order_by(sort)
+    except FieldDoesNotExist:
+        qs = qs.order_by('price')
+
+    return qs
+
 class GemstoneListView(PagesTemplateResponseMixin, ListView):
     model = Diamond
     template_name = 'tspages/gemstone-list.html'
 
     gemstones_template = 'tsj_gemstone/includes/gemstones.html'
     pagination_template = 'tsj_gemstone/includes/pagination.html'
+
+    def get_queryset(self):
+        querystring = self.request.GET
+        qs = self.model.objects.filter(active=True)
+        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'polish', 'symmetry')
+        opts = self.model._meta
+        qs = _get_queryset_ordering(qs, querystring, opts)
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(GemstoneListView, self).get_context_data(**kwargs)
@@ -42,28 +74,39 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             sort = q.__getitem__('sort')
         except KeyError:
             sort = None
+        context['sort'] = sort
 
-        queryset = self.model.objects.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
-
+        # Order
         try:
-            opts = self.model._meta
-            opts.get_field(sort)
-            queryset = queryset.order_by(sort)
-        except FieldDoesNotExist:
-            queryset = queryset.order_by('carat_weight', 'color', 'clarity')
+            order = q.__getitem__('order')
+        except KeyError:
+            order = None
+        context['order'] = order
+
+        queryset = self.object_list
 
         # Minimum and Maximum Values
-        context['cuts'] = Cut.objects.all().order_by('order')
+        """
+        cuts = ['RD', 'PR', 'RA', 'AS', 'CU', 'OV', 'EM', 'PS', 'MQ', 'HS']
+        context['cuts'] = Cut.objects.filter(abbr__in=cuts).order_by('order')
+        context['other_cuts'] = Cut.objects.exclude(abbr__in=cuts).order_by('order')
+        """
+        distinct_cuts = Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
+        context['cuts'] = Cut.objects.filter(id__in=distinct_cuts).order_by('order')
         context['colors'] = Color.objects.all().order_by('-abbr')
-        carat_weights = queryset.aggregate(min=Min('carat_weight'), max=Max('carat_weight'))
-        context['carat_weights'] = carat_weights
-        prices = queryset.aggregate(min=Min('price'), max=Max('price'))
-        prices['min'] = floatformat(prices['min'], 0)
-        prices['max'] = floatformat(prices['max'], 0)
-        context['prices'] = prices
         context['clarities'] = Clarity.objects.all().order_by('-order')
         context['gradings'] = Grading.objects.all().order_by('-order')
         context['fluorescences'] = Fluorescence.objects.all().order_by('-order')
+
+        aggregate = queryset.aggregate(Min('carat_weight'), Max('carat_weight'), Min('price'), Max('price'))
+        carat_weights = {
+            'min': aggregate['carat_weight__min'],
+            'max': aggregate['carat_weight__max'],
+        }
+        prices = {
+            'min': floatformat(aggregate['price__min'], 0),
+            'max': floatformat(aggregate['price__max'], 0),
+        }
 
         initial = {
             'price_0': prices['min'],
@@ -93,14 +136,16 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
         filterset = GemstoneFilterSet(initial, queryset=queryset)
 
         context.update({
+            'carat_weights': carat_weights,
             'filterset': filterset,
             'has_ring_builder': builder_prefs.get('ring'),
             'initial_cuts': self.request.GET.getlist('cut'),
+            'prices': prices,
             'show_prices': show_prices(self.request.user, gemstone_prefs),
             'sort': sort,
         })
 
-        paginator = QuerySetDiggPaginator(filterset, 40, body=5, padding=2)
+        paginator = QuerySetDiggPaginator(filterset, 50, body=5, padding=2)
         try:
             paginator_page = paginator.page(self.request.GET.get('page', 1))
         except:
@@ -154,9 +199,25 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
         has_ring_builder = builder_prefs.get('ring')
 
+        context['colors'] = Color.objects.all().order_by('-abbr')
+        context['clarities'] = Clarity.objects.all().order_by('-order')
+        context['gradings'] = Grading.objects.all().order_by('-order')
+
+        similar_lt = float(self.object.carat_weight) - .15
+        similar_gt = float(self.object.carat_weight) + .15
+
+        similar = Diamond.objects.filter(
+                    carat_weight__range=(similar_lt, similar_gt),
+                    cut=self.object.cut,
+                    color=self.object.color,
+                    clarity=self.object.clarity).\
+                    exclude(pk=self.object.pk).\
+                    order_by('carat_weight', 'color', 'clarity')[:10]
+
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
+            'similar': similar,
             'show_prices': show_prices(self.request.user, gemstone_prefs),
         })
         return context

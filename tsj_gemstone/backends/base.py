@@ -6,6 +6,8 @@ import logging
 import tempfile
 import xml.sax
 
+from xlrd import open_workbook
+
 from psycopg2.extras import Json
 
 from django.conf import settings
@@ -16,6 +18,8 @@ from ..prefs import prefs
 
 logger = logging.getLogger('tsj_gemstone.backends')
 summary_logger = logging.getLogger('tsj_gemstone.backends.summary')
+
+LRU_CACHE_MAXSIZE = 2**16
 
 class KeyValueError(Exception):
     def __init__(self, key, value):
@@ -36,6 +40,8 @@ class ImportSourceError(Exception):
 
 class BaseBackend(object):
     filename = None
+    fp_mode = 'rU'
+    backend_module = None
 
     # Order must match struture of tsj_gemstone_diamond table with the exception
     # of the id column which is excluded when doing an import.
@@ -74,12 +80,16 @@ class BaseBackend(object):
         'city',
         'state',
         'country',
-        'rap_date'
+        'rap_date',
+        'data'
     ))
 
     def __init__(self, filename=None, nodebug=False, task_id=None):
         self.filename = filename
-        self.backend_module = self.__module__.split('.')[-1]
+        # If the subclass hasn't specified a backend (Diamond.source), use
+        # the name of the module.
+        if self.backend_module is None:
+            self.backend_module = self.__module__.split('.')[-1]
         self.nodebug = nodebug
         self.task_id = task_id
 
@@ -124,7 +134,7 @@ class BaseBackend(object):
 
         if fn:
             try:
-                return open(fn, 'rU')
+                return open(fn, self.fp_mode)
             except IOError as e:
                 raise ImportSourceError(str(e))
         else:
@@ -184,8 +194,7 @@ class BaseBackend(object):
         #  - copy_from'ing
 
     def run(self):
-        # TODO: Turned off for development
-        #self.create_import_record()
+        self.create_import_record()
         self.populate_import_data()
 
         try:
@@ -195,10 +204,10 @@ class BaseBackend(object):
             # TODO: Bit of a hack.  We should represent backend-level errors
             #       differently from record-level errors.
             self.import_errors[str(e)] = 1
-            #self.update_import_record('error')
+            self.update_import_record('error')
             return
 
-        #self.update_import_record('processed')
+        self.update_import_record('processed')
 
     def save(self, fp):
         # fp should be a tempfile.NamedTemporaryFile.  We currently assume
@@ -250,11 +259,20 @@ class BaseBackend(object):
         return data
 
 class CSVBackend(BaseBackend):
+    def _get_headers(self, reader):
+        try:
+            return reader.next()
+        except StopIteration as e:
+            raise ImportSourceError('Unable to read headers')
+
+    def _get_reader(self, fp):
+        return csv.reader(fp)
+
     def _run(self):
         fp = self.get_fp()
-        reader = csv.reader(fp)
+        reader = self._get_reader(fp)
+        headers = self._get_headers(reader)
 
-        headers = reader.next()
         blank_columns = 0
         # Count empty columns on the end
         for col in headers:
@@ -265,27 +283,59 @@ class CSVBackend(BaseBackend):
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
-        # To cut down on disk writes, we buffer the rows
-        row_buffer = []
-        buffer_size = 1000
-
-        for line in reader:
-            # Sometimes the feed has blank lines
-            if not line:
-                continue
-
-            # Rather than fail on malformed CSVs, pad rows which have fewer
-            # columns than the header row
-            col_diff = (len(headers) - blank_columns) - len(line)
-            if col_diff > 0:
-                line.extend([''] * col_diff)
-
-            self.try_write_row(writer, line, blank_columns=blank_columns)
+        self._read_rows(reader, writer, headers, blank_columns)
 
         if self.row_buffer:
             writer.writerows(self.row_buffer)
 
         return tmp_file
+
+    def _read_rows(self, reader, writer, headers, blank_columns=None):
+        try:
+            for line in reader:
+                # Sometimes the feed has blank lines
+                if not line:
+                    continue
+
+                # Rather than fail on malformed CSVs, pad rows which have fewer
+                # columns than the header row
+                col_diff = (len(headers) - blank_columns) - len(line)
+                if col_diff > 0:
+                    line.extend([''] * col_diff)
+
+                self.try_write_row(writer, line, blank_columns=blank_columns)
+        except csv.Error as e:
+            raise ImportSourceError(str(e))
+
+# TODO: Move somewhere common, copied from catalog import
+class IterableSheet(object):
+    def __init__(self, sheet):
+        self.current_row = 0
+        self.sheet = sheet
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.current_row > self.sheet.nrows-1:
+            raise StopIteration
+        row = self.sheet.row(self.current_row)
+        self.current_row += 1
+        return [str(cell.value) for cell in row]
+
+class XLSBackend(CSVBackend):
+    fp_mode = 'rb'
+
+    def _get_reader(self, fp):
+        fp = self.get_fp()
+        book = open_workbook(file_contents=fp.read())
+        sheet = IterableSheet(book.sheet_by_index(0))
+        return sheet
+
+    def _read_rows(self, reader, writer, headers, blank_columns=None):
+        # TODO: Catch exceptions that arise from iterating and raise ImportSourceError
+        for line in reader:
+            self.try_write_row(writer, line)
 
 class JSONBackend(BaseBackend):
     def _run(self):

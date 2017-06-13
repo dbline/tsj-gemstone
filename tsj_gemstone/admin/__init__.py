@@ -109,7 +109,7 @@ class DiamondAdmin(ModelAdmin):
         fieldsets = (
             ('Inventory', {
                 'fields': [
-                    ('lot_num', 'stock_number', 'owner', 'source'),
+                    ('active', 'lot_num', 'stock_number', 'owner', 'source'),
                 ]
             }),
             ('Data', {
@@ -138,10 +138,10 @@ class DiamondAdmin(ModelAdmin):
                     ['certifier', 'cert_num'],
                 )
             }),
-            ('Location', {
+            ('Extra', {
                 'fields': (
                     ('city', 'state', 'country'),
-                    ('comment'),
+                    ('comment', 'data'),
                 )
             }),
         )

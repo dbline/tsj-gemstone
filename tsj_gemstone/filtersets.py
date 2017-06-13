@@ -113,8 +113,8 @@ class GemstoneFilterSet(django_filters.FilterSet):
     certifiers = Certifier.objects.filter(id__in=distinct_certifiers).exclude(disabled=True)
     certifier = django_filters.ModelMultipleChoiceFilter(queryset=certifiers, widget=forms.CheckboxSelectMultiple, label='Certificate')
 
-    depth_percent = django_filters.RangeFilter(label='Depth')
-    table_percent = django_filters.RangeFilter(label='Table')
+    #depth_percent = django_filters.RangeFilter(label='Depth')
+    #table_percent = django_filters.RangeFilter(label='Table')
 
     class Meta:
         fields = [
@@ -128,6 +128,6 @@ class GemstoneFilterSet(django_filters.FilterSet):
             'polish',
             'symmetry',
             'fluorescence',
-            'depth_percent',
-            'table_percent',
+            #'depth_percent',
+            #'table_percent',
         ]

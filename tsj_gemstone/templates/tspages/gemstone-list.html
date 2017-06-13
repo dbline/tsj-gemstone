@@ -47,6 +47,10 @@
         var carat_weight_slider = $('#carat_weight').data('ionRangeSlider');
 
         $('#color').ionRangeSlider({
+        {% if filterset.data.color_0 and filterset.data.color_1 %}
+            from: COLORS_RANGE.indexOf('{{ filterset.data.color_0 }}'),
+            to: COLORS_RANGE.indexOf('{{ filterset.data.color_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: COLORS,
@@ -56,6 +60,10 @@
         });
 
         $('#cut_grade').ionRangeSlider({
+        {% if filterset.data.cut_grade_0 and filterset.data.cut_grade_1 %}
+            from: GRADINGS_RANGE.indexOf('{{ filterset.data.cut_grade_0 }}'),
+            to: GRADINGS_RANGE.indexOf('{{ filterset.data.cut_grade_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
@@ -65,6 +73,10 @@
         });
 
         $('#clarity').ionRangeSlider({
+        {% if filterset.data.clarity_0 and filterset.data.clarity_1 %}
+            from: CLARITIES_RANGE.indexOf('{{ filterset.data.clarity_0 }}'),
+            to: CLARITIES_RANGE.indexOf('{{ filterset.data.clarity_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: CLARITIES,
@@ -74,6 +86,10 @@
         });
 
         $('#polish').ionRangeSlider({
+        {% if filterset.data.polish_0 and filterset.data.polish_1 %}
+            from: GRADINGS_RANGE.indexOf('{{ filterset.data.polish_0 }}'),
+            to: GRADINGS_RANGE.indexOf('{{ filterset.data.polish_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
@@ -83,6 +99,10 @@
         });
 
         $('#symmetry').ionRangeSlider({
+        {% if filterset.data.symmetry_0 and filterset.data.symmetry_1 %}
+            from: GRADINGS_RANGE.indexOf('{{ filterset.data.symmetry_0 }}'),
+            to: GRADINGS_RANGE.indexOf('{{ filterset.data.symmetry_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: GRADINGS,
@@ -92,6 +112,10 @@
         });
 
         $('#fluorescence').ionRangeSlider({
+        {% if filterset.data.fluorescence_0 and filterset.data.fluorescence_1 %}
+            from: FLUORESCENCES_RANGE.indexOf('{{ filterset.data.fluorescence_0 }}'),
+            to: FLUORESCENCES_RANGE.indexOf('{{ filterset.data.fluorescence_1 }}'),
+        {% endif %}
             hide_min_max: true,
             hide_from_to: true,
             values: FLUORESCENCES,
@@ -139,7 +163,7 @@
             {% ring_builder_steps 'diamond' %}
         </div>
     </div>
-    <div class="row">
+    <div class="row row-content">
         <div class="section-filters col-md-12">
             {% include "tsj_gemstone/includes/filterset_site.html" %}
         </div>

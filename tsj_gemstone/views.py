@@ -187,7 +187,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             'type': 'gemstone',
         }
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated() and hasattr(self.request.user, 'account_set'):
             try:
                 inquiry_form = InquiryForm(account=self.request.user.account_set.all()[0], initial=initial)
             except IndexError:

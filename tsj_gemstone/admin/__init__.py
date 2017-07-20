@@ -160,14 +160,14 @@ class DiamondAdmin(ModelAdmin):
         return fieldsets
 
     def get_urls(self):
-        from django.conf.urls import url, patterns
+        from django.conf.urls import url
 
         def wrap(view):
             def wrapper(*args, **kwargs):
                 return self.admin_site.admin_view(view)(*args, **kwargs)
             return update_wrapper(wrapper, view)
 
-        urls = patterns('',
+        urls = [
            url('^start-import/$',
                wrap(start_import),
                name='start-gemstone-backends-import'),
@@ -177,7 +177,7 @@ class DiamondAdmin(ModelAdmin):
            url('^import-log/(\d+)/$',
                wrap(import_log_detail),
                name='import-log-detail'),
-        ) + super(DiamondAdmin, self).get_urls()
+        ] + super(DiamondAdmin, self).get_urls()
 
         return urls
 

@@ -1,6 +1,7 @@
 from decimal import *
 import json
 
+from django.contrib.auth.models import User
 from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
 from django.http import HttpResponse
@@ -191,8 +192,8 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
         if self.request.user.is_authenticated() and hasattr(self.request.user, 'account_set'):
             try:
-                inquiry_form = InquiryForm(account=self.request.user.account_set.all()[0], initial=initial)
-            except IndexError:
+                inquiry_form = InquiryForm(account=self.request.user.account, initial=initial)
+            except User.account.RelatedObjectDoesNotExist:
                 inquiry_form = InquiryForm(initial=initial)
         else:
             inquiry_form = InquiryForm(initial=initial)

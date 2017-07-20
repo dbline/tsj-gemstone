@@ -279,5 +279,7 @@ class ImportLogEntry(models.Model):
     class Meta:
         verbose_name = 'Import Log Entry'
         verbose_name_plural = 'Import Log Entries'
-        order_with_respect_to = 'import_log'
+        # 1.9 compat: tsj_gemstone.ImportLogEntry: (models.E021) 'ordering' and 'order_with_respect_to' cannot be used together
+        # MATT: We really just want to drop these import models anyway
+        #order_with_respect_to = 'import_log'
         ordering = ['-added', 'csv_line']

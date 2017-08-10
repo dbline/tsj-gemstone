@@ -6,6 +6,9 @@ from tsj_gemstone import views
 class GemstoneList(PageType):
     view = staticmethod(views.GemstoneListView.as_view())
 
+class LabGrownGemstoneList(PageType):
+    view = staticmethod(views.LabGrownGemstoneListView.as_view())
+
 class GemstoneDetail(PageType):
     view = staticmethod(views.GemstoneDetailView.as_view())
     regex_suffix = r'(?P<pk>[\d-]+)/'
@@ -15,5 +18,6 @@ class GemstonePrint(PageType):
     regex_suffix = r'(?P<pk>[\d-]+)/print/'
 
 page_types.register('gemstone-list', GemstoneList)
+page_types.register('gemstone-lab-grown-list', LabGrownGemstoneList)
 page_types.register('gemstone-detail', GemstoneDetail)
 page_types.register('gemstone-print', GemstonePrint)

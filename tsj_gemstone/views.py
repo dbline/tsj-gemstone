@@ -88,6 +88,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         # Minimum and Maximum Values
         """
+        TODO: Other Cuts
         cuts = ['RD', 'PR', 'RA', 'AS', 'CU', 'OV', 'EM', 'PS', 'MQ', 'HS']
         context['cuts'] = Cut.objects.filter(abbr__in=cuts).order_by('order')
         context['other_cuts'] = Cut.objects.exclude(abbr__in=cuts).order_by('order')
@@ -177,6 +178,10 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
     @method_decorator(requires_csrf_token)
     def dispatch(self, *args, **kwargs):
         return super(GemstoneListView, self).dispatch(*args, **kwargs)
+
+class LabGrownGemstoneListView(GemstoneListView):
+    def get_queryset(self):
+        return self.model.objects.filter(manmade=True)
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond

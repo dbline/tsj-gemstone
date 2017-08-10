@@ -174,6 +174,10 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
         else:
             return render(self.request, self.template_name, context)
 
+    @method_decorator(requires_csrf_token)
+    def dispatch(self, *args, **kwargs):
+        return super(GemstoneListView, self).dispatch(*args, **kwargs)
+
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
 

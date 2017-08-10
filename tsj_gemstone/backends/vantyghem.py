@@ -85,7 +85,10 @@ class Backend(CSVBackend):
             unused_shade,
             length,
             width,
-            depth
+            depth,
+            city,
+            state,
+            country,
         ) = line
 
         (
@@ -263,9 +266,9 @@ class Backend(CSVBackend):
             self.nvl(width),
             self.nvl(depth),
             comment,
-            '', #city,
-            '', #state,
-            '', #country,
+            city,
+            state,
+            country,
             'NULL', # rap_date
             '{}', # data
         )

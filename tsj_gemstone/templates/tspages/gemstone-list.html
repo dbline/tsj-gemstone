@@ -145,7 +145,7 @@
     </script>
 {% endblock js %}
 
-{% block bodyclass %}{{ block.super }} gemstone-list{% endblock %}
+{% block bodyclass %}{{ block.super }} gemstone-list filter-{{ tspages_page.get_options.filter_position|slugify }}{% endblock %}
 
 {% block breadcrumb-trail-last %}
 <li class="nav-item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
@@ -168,10 +168,10 @@
         </div>
     </div>
     <div class="row row-content">
-        <div class="section-filters col-md-12">
+        <div class="section-filters{% if tspages_page.get_options.filter_position == "Top" %} col-12{% else %} col-lg-3{% endif %}">
             {% include "tsj_gemstone/includes/filterset_site.html" %}
         </div>
-        <div class="section-content col-md-12">
+        <div class="section-content{% if tspages_page.get_options.filter_position == "Top" %} col-12{% else %} col-lg-9{% endif %}">
             <div class="section-gemstones">
                 {% include "tsj_gemstone/includes/gemstones.html" %}
             </div>

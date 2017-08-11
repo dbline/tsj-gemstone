@@ -91,7 +91,7 @@ class RangeDecimalFilter(django_filters.Filter):
         return qs
 
 class GemstoneFilterSet(django_filters.FilterSet):
-    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple, label='Shape')
+    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple, label='Shape', to_field_name='abbr')
     price = RangeDecimalFilter()
     carat_weight = RangeDecimalFilter(label='Carat')
 

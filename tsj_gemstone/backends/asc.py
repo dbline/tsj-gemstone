@@ -10,9 +10,9 @@ from urllib2 import Request, urlopen, URLError, HTTPError
 import zipfile
 
 from django.conf import settings
-from django.utils.functional import memoize
+from django.utils.lru_cache import lru_cache
 
-from .base import XMLBackend, XMLHandler, ImportSourceError, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, XMLBackend, XMLHandler, ImportSourceError, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -30,17 +30,7 @@ def clean(data, upper=False):
 
     return data
 
-def clean_upper(data):
-    return clean(data, upper=True)
-
-_clean_cache = {}
-_clean_upper_cache = {}
-
-# Values that are expected to recur within an import can have their
-# cleaned values cached with these wrappers.  Since memoize can't
-# handle kwargs, we have a separate wrapper for using upper=True
-cached_clean = memoize(clean, _clean_cache, 2)
-cached_clean_upper = memoize(clean_upper, _clean_upper_cache, 2)
+cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 class ASCHandler(XMLHandler):
     def __init__(self, backend, writer):
@@ -104,7 +94,7 @@ class Backend(XMLBackend):
 
         stock_number = clean(data.get('WEBITEM'))
         try:
-            cut = self.cut_aliases[cached_clean_upper(data.get('Stone1Shape'))]
+            cut = self.cut_aliases[cached_clean(data.get('Stone1Shape'), upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
@@ -115,7 +105,7 @@ class Backend(XMLBackend):
             active = 'f'
             #raise SkipDiamond('No quantity on hand.')
 
-        flag = cached_clean_upper(data.get('WebItemFlag'))
+        flag = cached_clean(data.get('WebItemFlag'), upper=True)
         if flag == 'I':
             active = 'f'
 
@@ -125,9 +115,9 @@ class Backend(XMLBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean_upper(data.get('Stone1Color')))
+        color = self.color_aliases.get(cached_clean(data.get('Stone1Color'), upper=True))
 
-        certifier = cached_clean_upper(data.get('StoneCertLab1'))
+        certifier = cached_clean(data.get('StoneCertLab1'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
             if not certifier or certifier.find('NONE') >= 0 or certifier == 'N':
@@ -149,7 +139,7 @@ class Backend(XMLBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean_upper(data.get('Stone1Clarity'))
+        clarity = cached_clean(data.get('Stone1Clarity'), upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -157,7 +147,7 @@ class Backend(XMLBackend):
         except KeyError as e:
             raise KeyValueError('clarity', e.args[0])
 
-        cut_grade = self.grading_aliases.get(cached_clean_upper(data.get('StoneCutGrade1')))
+        cut_grade = self.grading_aliases.get(cached_clean(data.get('StoneCutGrade1'), upper=True))
 
         try:
             price = clean(data.get('LastCost').replace(',', ''))
@@ -182,15 +172,15 @@ class Backend(XMLBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-        girdle = cached_clean_upper(data.get('gd'))
+        girdle = cached_clean(data.get('gd'), upper=True)
         if not girdle or girdle == '-':
             girdle = ''
 
-        culet = cached_clean_upper(data.get('cs'))
-        polish = self.grading_aliases.get(cached_clean_upper(data.get('StonePolish1')))
-        symmetry = self.grading_aliases.get(cached_clean_upper(data.get('StoneSymmetry1')))
+        culet = cached_clean(data.get('cs'), upper=True)
+        polish = self.grading_aliases.get(cached_clean(data.get('StonePolish1'), upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(data.get('StoneSymmetry1'), upper=True))
 
-        fluorescence = cached_clean_upper(data.get('StoneFluorescence1')).split()
+        fluorescence = cached_clean(data.get('StoneFluorescence1'), upper=True).split()
         fluorescence_id = None
         if fluorescence:
             for name, id in self.fluorescence_aliases.iteritems():
@@ -199,7 +189,7 @@ class Backend(XMLBackend):
                     continue
         fluorescence = fluorescence_id
 
-        fluorescence_color = cached_clean_upper(data.get('fc'))
+        fluorescence_color = cached_clean(data.get('fc'), upper=True)
         fluorescence_color_id = None
         if fluorescence_color:
             for abbr, id in self.fluorescence_color_aliases.iteritems():
@@ -272,7 +262,8 @@ class Backend(XMLBackend):
             '', # city
             '', # state
             '', # country
-            'NULL' # rap_date
+            'NULL', # rap_date
+            '{}', # data
         )
 
         return ret

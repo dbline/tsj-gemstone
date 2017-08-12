@@ -1,0 +1,201 @@
+{% load humanize thinkspace_utils %}
+
+<section class="section-filterset">
+    <form action="" method="get" id="form-gemstone">
+        <fieldset class="filter-primary">
+        <div class="row">
+        {% with filterset.form.cut as field %}
+            <div class="form-group column col-sm-12 col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter no-range">
+                    <ul class="list-inline">
+                    {% for cut in cuts %}
+                        {% with field.value|in_value:cut.pk as checked %}
+                            <li class="{{ cut.name|slugify }}{% if checked %} active{% endif %}">
+                                <label for="{{ field.auto_id }}_{{ forloop.counter0 }}" data-toggle="tooltip" data-placement="bottom" title="{{ cut.name }}">
+                                    <input type="checkbox" id="{{ field.auto_id }}_{{ forloop.counter0 }}" value="{{ cut.pk }}" name="{{ field.html_name }}" {% if checked %}checked{% endif %}>
+                                    <div class="svg svg-gemstone {{ cut.name|lower }} hidden-xs-down" alt="{{ cut.name }}">
+                                    {% with "tsj_gemstone/images/outlines/"|add:cut.name|lower|add:".svg" as svginline %}
+                                        {% include svginline %}
+                                    {% endwith %}
+                                    </div>
+                                    <span class="text">{{ cut.name }}</span>
+                                </label>
+                            </li>
+                        {% endwith %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endwith %}
+        {% with filterset.form.price as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="range">
+                        <input id="price" class="slider" type="text"
+                            data-type="double"
+                        />
+                    </div>
+                    <div class="fields">
+                        {{ field }}
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        </div>
+        <div class="row">
+        {% with filterset.form.carat_weight as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="range">
+                        <input id="carat_weight" class="slider" type="text"
+                            data-type="double"
+                            data-step=".01"
+                        />
+                    </div>
+                    <div class="fields">
+                        {{ field }}
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        {% with filterset.form.color as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="color" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.color_0 %}
+                            value="{{ filterset.data.color_0 }};{{ filterset.data.color_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        </div>
+        <div class="row">
+        {% with filterset.form.cut_grade as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="cut_grade" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.cut_grade_0 %}
+                            value="{{ filterset.data.cut_grade_0 }};{{ filterset.data.cut_grade_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        {% with filterset.form.clarity as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="clarity" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.clarity_0 %}
+                            value="{{ filterset.data.clarity_0 }};{{ filterset.data.clarity_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        </div>
+        </fieldset>
+        <fieldset class="filter-toggle">
+            <a href="#" class="btn btn-primary toggle-advanced">Advanced Options<i class="fa fa-caret-down"></i></a>
+        </fieldset>
+        <fieldset class="filter-advanced" style="display: none;">
+        <div class="row">
+        {% with filterset.form.polish as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="polish" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.polish_0 %}
+                            value="{{ filterset.data.polish_0 }};{{ filterset.data.polish_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        {% with filterset.form.symmetry as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="symmetry" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.symmetry_0 %}
+                            value="{{ filterset.data.symmetry_0 }};{{ filterset.data.symmetry_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        </div>
+        <div class="row">
+        {% with filterset.form.fluorescence as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter">
+                    <div class="fields conceal">
+                        {{ field }}
+                    </div>
+                    <div class="range">
+                        <input id="fluorescence" class="slider" type="text"
+                            data-type="double"
+                            data-grid="true"
+                        {% if filterset.data.fluorescence_0 %}
+                            value="{{ filterset.data.fluorescence_0 }};{{ filterset.data.fluorescence_1 }}"
+                        {% endif %}
+                        />
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        {% with filterset.form.certifier as field %}
+            <div class="form-group col-md-6 {{ field.html_name }}">
+                <h4>{{ field.label }}</h4>
+                <div class="filter no-range">
+                    {{ field }}
+                </div>
+            </div>
+        {% endwith %}
+        </div>
+        </fieldset>
+    </form>
+</section>
+<a class="toggle-filters btn btn-primary" href="#">Hide <i class="fa fa-caret-up"></i></a>

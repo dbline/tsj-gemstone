@@ -1,176 +1,187 @@
+from decimal import *
 import json
-from decimal import Decimal
-from math import ceil
 
 from django.contrib.auth.models import User
 from django.db.models import Min, Max
+from django.db.models.fields import FieldDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.template import RequestContext
+from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from .prefs import prefs as gemstone_prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.utils import show_prices
-from tsj_gemstone.models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
-from tsj_gemstone.digg_paginator import QuerySetDiggPaginator
 from tsj_jewelrybox.forms import InquiryForm
 
-_min_max = {}
-def min_max(force_update=True):
-    if force_update or not _min_max:
-        _min_max['cuts'] = Cut.objects.all().order_by('order')
-        _min_max['colors'] = Color.objects.all()
-        _min_max['carat_weights'] = Diamond.objects.aggregate(min=Min('carat_weight'), max=Max('carat_weight'))
-        _min_max['prices'] = Diamond.objects.aggregate(min=Min('price'), max=Max('price'))
-        _min_max['clarities'] = Clarity.objects.exclude(abbr='N').values('order', 'name', 'abbr').order_by('order')
-        _min_max['gradings'] = Grading.objects.values('order', 'name').order_by('-order')
-        _min_max['fluorescence'] = Fluorescence.objects.all()
-        _min_max['fluorescence_colors'] = FluorescenceColor.objects.all()
-        certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct()
-        _min_max['certifiers'] = Certifier.objects.filter(id__in=certifiers).exclude(disabled=True)
+from .filtersets import GemstoneFilterSet
+from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
 
-    return _min_max
+# TODO: Move to thinkspace, probably also bring up to date with the
+#       current paginator code in Django.
+from tsj_catalog_local.digg_paginator import QuerySetDiggPaginator
 
-def set_match(diamonds, get, get_key, store, store_key, field):
-    """
-    Apply given filter, if the whole set is selected, skip.
-    Note that get_key is used in the filter key.
-    """
-
-    # Skip if key missing.
-    if get_key in get:
-        getlist = get.getlist(get_key)
-
-        # Skip if full set
-        if set(getlist) != set(store[store_key].values_list(field, flat=True)):
-            return diamonds.filter(**{'{0}__{1}__in'.format(get_key, field):getlist})
-
-    return diamonds
-
-def full_range_match(diamonds, get, get_key, store, store_key, model_field_name=None, order_rev=False, floor_ceil=False):
-    """
-    Apply given filter, if the whole range is selected, skip.
-    Note that the get_key is used in the filter key.
-    """
-    get_min_key, get_max_key = '{0}_min'.format(get_key), '{0}_max'.format(get_key)
-
-    # Skip if key missing.
-    if get_min_key in get and get_max_key in get:
-        # Min means that it's an aggregate
-        if 'min' in store[store_key]:
-            store_min_max = (store[store_key]['min'], store[store_key]['max'])
-        elif model_field_name and model_field_name in store[store_key][0]:
-            count = store[store_key].count()
-            store_min_max = (store[store_key][0][model_field_name], store[store_key][count-1][model_field_name])
-        else:
-            raise Exception('Model field name is required for filter processing {0} form field.'.format(get_key))
-
-        # Order is reversed.
-        if order_rev:
-            store_min_max = (store_min_max[1], store_min_max[0])
-        store_type = type(store_min_max[0])
-
-        # Floor / ceiling max and min if the stored values are Decimals or integers
-        if floor_ceil and store_min_max[0] and store_min_max[1]:
-            store_min_max = (int(store_min_max[0]), int(ceil(store_min_max[1])))
-
-        if store_type in (Decimal, int):
-            store_min_max = (str(store_min_max[0]), str(store_min_max[1]))
-
-        get_min_max = (get[get_min_key], get[get_max_key])
-
-        # Skip if full range
-        if get_min_max != store_min_max and get_min_max[0] and get_min_max[1]:
-            if model_field_name:
-                params = {'{0}__{1}__range'.format(get_key, model_field_name):get_min_max}
-            else:
-                params = {'{0}__range'.format(get_key):get_min_max}
-            return diamonds.filter(**params)
-    return diamonds
-
-@csrf_protect
-def gemstone_list(request, sort_by='', template='tsj_gemstone/tspages/gemstone-list.html',
-                 list_partial_template='tsj_gemstone/includes/list_partial.html',
-                 details_partial_template='tsj_gemstone/includes/list_partial_details.html',
-                 paginator_full_partial_template='tsj_gemstone/includes/paginator_full_partial.html',
-                 extra_context={}):
-
-    has_ring_builder = builder_prefs.get('ring')
-
-    context = {
-        'has_ring_builder': has_ring_builder,
-        'initial_cuts': request.GET.getlist('cut'),
-        'show_prices': show_prices(request.user, gemstone_prefs),
-    }
-
-    q = request.GET
-
+def _get_queryset_ordering(qs, querystring, opts):
     # Sorting
     try:
-        sort = q.__getitem__('sort')
+        sort = querystring.__getitem__('sort')
     except KeyError:
         sort = None
 
-    diamonds = Diamond.objects.filter(active=True).select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
+    # Order
+    try:
+        order = querystring.__getitem__('order')
+    except KeyError:
+        order = None
 
-    if sort:
-        diamonds = diamonds.order_by(sort)
-    else:
-        diamonds = diamonds.order_by('carat_weight', 'color', 'clarity')
+    try:
+        opts.get_field(sort)
+        if order == 'desc':
+            qs = qs.order_by('-%s' % sort)
+        else:
+            qs = qs.order_by(sort)
+    except FieldDoesNotExist:
+        qs = qs.order_by('price')
 
-    min_maxs = min_max()
+    return qs
 
-    if not request.is_ajax():
-        #Send all of the available filter data to the template
-        context.update(min_maxs)
-        context['show_lab_grown_filter'] = Diamond.objects.filter(manmade=True).exists()
+class GemstoneListView(PagesTemplateResponseMixin, ListView):
+    model = Diamond
+    template_name = 'tspages/gemstone-list.html'
 
-    # Show lab-grown only
-    if request.GET.get('manmade') == '1':
-        diamonds = diamonds.filter(manmade=True)
-    # Show natural only by default (0 means 'show all')
-    elif request.GET.get('manmade') != '0':
-        diamonds = diamonds.exclude(manmade=True)
-        context['only_natural'] = True
+    gemstones_template = 'tsj_gemstone/includes/gemstones.html'
+    pagination_template = 'tsj_gemstone/includes/pagination.html'
 
-    diamonds = set_match(diamonds, request.GET, 'cut', min_maxs, 'cuts', 'abbr')
-    diamonds = full_range_match(diamonds, request.GET, 'price', min_maxs, 'prices', floor_ceil=True)
-    diamonds = full_range_match(diamonds, request.GET, 'carat_weight', min_maxs, 'carat_weights')
-    if request.GET.get('color_min') and request.GET.get('color_max'):
-        color_list = [chr(x) for x in xrange(ord(request.GET['color_min']), ord(request.GET['color_max'])+1)]
-        diamonds = diamonds.filter(color__abbr__in=color_list)
-    diamonds = full_range_match(diamonds, request.GET, 'clarity', min_maxs, 'clarities', 'order')
-    diamonds = set_match(diamonds, request.GET, 'certifier', min_maxs, 'certifiers', 'abbr')
-    diamonds = full_range_match(diamonds, request.GET, 'cut_grade', min_maxs, 'gradings', 'order', order_rev=True)
-    diamonds = full_range_match(diamonds, request.GET, 'polish', min_maxs, 'gradings', 'order', order_rev=True)
-    diamonds = full_range_match(diamonds, request.GET, 'symmetry', min_maxs, 'gradings', 'order', order_rev=True)
+    def get_queryset(self):
+        querystring = self.request.GET
+        qs = self.model.objects.filter(active=True)
+        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'polish', 'symmetry')
+        opts = self.model._meta
+        qs = _get_queryset_ordering(qs, querystring, opts)
+        return qs
 
-    paginator = QuerySetDiggPaginator(diamonds, 125, body=5, padding=2)
-    try: paginator_page = paginator.page(request.GET.get('page', 1))
-    except: paginator_page = paginator.page(paginator.num_pages)
+    def get_context_data(self, **kwargs):
+        context = super(GemstoneListView, self).get_context_data(**kwargs)
 
-    context.update(dict(
-        paginator = paginator,
-        page = paginator_page,
-    ))
-    context.update(extra_context)
+        q = self.request.GET
 
-    if request.is_ajax():
-        response_dict = dict(
-            list_partial = render_to_string(list_partial_template, context, RequestContext(request)),
-            details_partial = render_to_string(details_partial_template, context, RequestContext(request)),
-            paginator_full_partial = render_to_string(paginator_full_partial_template, context, RequestContext(request)),
-        )
-        response = HttpResponse(json.dumps(response_dict), content_type='application/javascript')
-        response['Cache-Control'] = "no-cache, no-store, must-revalidate"
-        return response
-    else:
-        return render(request, template, context)
+        # Sorting
+        try:
+            sort = q.__getitem__('sort')
+        except KeyError:
+            sort = None
+        context['sort'] = sort
+
+        # Order
+        try:
+            order = q.__getitem__('order')
+        except KeyError:
+            order = None
+        context['order'] = order
+
+        queryset = self.object_list
+
+        # Minimum and Maximum Values
+        """
+        TODO: Other Cuts
+        cuts = ['RD', 'PR', 'RA', 'AS', 'CU', 'OV', 'EM', 'PS', 'MQ', 'HS']
+        context['cuts'] = Cut.objects.filter(abbr__in=cuts).order_by('order')
+        context['other_cuts'] = Cut.objects.exclude(abbr__in=cuts).order_by('order')
+        """
+        distinct_cuts = Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
+        context['cuts'] = Cut.objects.filter(id__in=distinct_cuts).order_by('order')
+        context['colors'] = Color.objects.all().order_by('-abbr')
+        context['clarities'] = Clarity.objects.all().order_by('-order')
+        context['gradings'] = Grading.objects.all().order_by('-order')
+        context['fluorescences'] = Fluorescence.objects.all().order_by('-order')
+
+        aggregate = queryset.aggregate(Min('carat_weight'), Max('carat_weight'), Min('price'), Max('price'))
+        carat_weights = {
+            'min': aggregate['carat_weight__min'],
+            'max': aggregate['carat_weight__max'],
+        }
+        prices = {
+            'min': floatformat(aggregate['price__min'], 0),
+            'max': floatformat(aggregate['price__max'], 0),
+        }
+
+        initial = {
+            'price_0': prices['min'],
+            'price_1': prices['max'],
+            'carat_weight_0': carat_weights['min'],
+            'carat_weight_1': carat_weights['max'],
+            'cut_grade_0': '',
+            'cut_grade_1': '',
+            'color_0': '',
+            'color_1': '',
+            'clarity_0': '',
+            'clarity_1': '',
+            'polish_0': '',
+            'polish_1': '',
+            'symmetry_0': '',
+            'symmetry_1': '',
+            'fluorescence_0': '',
+            'fluorescence_1': '',
+        }
+
+        # Initial
+        if q.__contains__('carat_weight_0'):
+            initial = q
+        else:
+            initial.update(q)
+
+        filterset = GemstoneFilterSet(initial, queryset=queryset)
+
+        context.update({
+            'carat_weights': carat_weights,
+            'filterset': filterset,
+            'has_ring_builder': builder_prefs.get('ring'),
+            'initial_cuts': self.request.GET.getlist('cut'),
+            'prices': prices,
+            'show_prices': show_prices(self.request.user, gemstone_prefs),
+            'sort': sort,
+        })
+
+        paginator = QuerySetDiggPaginator(filterset, 50, body=5, padding=2)
+        try:
+            paginator_page = paginator.page(self.request.GET.get('page', 1))
+        except:
+            paginator_page = paginator.page(paginator.num_pages)
+
+        context.update(dict(
+            paginator = paginator,
+            page = paginator_page,
+        ))
+
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        gemstones_template = self.gemstones_template
+        pagination_template = self.pagination_template
+
+        if self.request.is_ajax():
+            response_dict = dict(
+                gemstones = render_to_string(gemstones_template, context, RequestContext(self.request)),
+                pagination = render_to_string(pagination_template, context, RequestContext(self.request)),
+            )
+            response = HttpResponse(json.dumps(response_dict), content_type='application/javascript')
+            response['Cache-Control'] = "no-cache, no-store, must-revalidate"
+            return response
+        else:
+            return render(self.request, self.template_name, context)
+
+    @method_decorator(requires_csrf_token)
+    def dispatch(self, *args, **kwargs):
+        return super(GemstoneListView, self).dispatch(*args, **kwargs)
+
+class LabGrownGemstoneListView(GemstoneListView):
+    def get_queryset(self):
+        return self.model.objects.filter(manmade=True)
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
@@ -188,7 +199,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             'type': 'gemstone',
         }
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated() and hasattr(self.request.user, 'account_set'):
             try:
                 inquiry_form = InquiryForm(account=self.request.user.account, initial=initial)
             except User.account.RelatedObjectDoesNotExist:
@@ -198,9 +209,25 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
         has_ring_builder = builder_prefs.get('ring')
 
+        context['colors'] = Color.objects.all().order_by('-abbr')
+        context['clarities'] = Clarity.objects.all().order_by('-order')
+        context['gradings'] = Grading.objects.all().order_by('-order')
+
+        similar_lt = float(self.object.carat_weight) - .15
+        similar_gt = float(self.object.carat_weight) + .15
+
+        similar = Diamond.objects.filter(
+                    carat_weight__range=(similar_lt, similar_gt),
+                    cut=self.object.cut,
+                    color=self.object.color,
+                    clarity=self.object.clarity).\
+                    exclude(pk=self.object.pk).\
+                    order_by('carat_weight', 'color', 'clarity')[:10]
+
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
+            'similar': similar,
             'show_prices': show_prices(self.request.user, gemstone_prefs),
         })
         return context

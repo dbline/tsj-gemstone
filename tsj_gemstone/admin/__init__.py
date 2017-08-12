@@ -109,7 +109,7 @@ class DiamondAdmin(ModelAdmin):
         fieldsets = (
             ('Inventory', {
                 'fields': [
-                    ('lot_num', 'stock_number', 'owner', 'source'),
+                    ('active', 'lot_num', 'stock_number', 'owner', 'source'),
                 ]
             }),
             ('Data', {
@@ -135,24 +135,26 @@ class DiamondAdmin(ModelAdmin):
             }),
             ('Certificate', {
                 'fields': (
-                    ['certifier', 'cert_num'],
+                    ['certifier', 'cert_num', 'cert_image', 'cert_image_local'],
                 )
             }),
-            ('Location', {
+            ('Extra', {
                 'fields': (
                     ('city', 'state', 'country'),
-                    ('comment'),
+                    ('comment', 'data'),
                 )
             }),
         )
 
+        """
         if obj is None or obj.source == 'local':
             # Local diamonds have a locally uploaded certificate
             fieldsets[4][1]['fields'][0].append('cert_image_local')
         else:
             # Imported diamonds have a certificate URL
             fieldsets[4][1]['fields'][0].append('cert_image')
-
+        """
+        
         if obj and obj.source in ('rapaport', 'rapnet10'):
             # Add rap_date to the Inventory section
             fieldsets[0][1]['fields'].append(('rap_date',))

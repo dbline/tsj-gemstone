@@ -223,6 +223,24 @@ class DiamondBase(TimeStampedModel):
         c = Context({'item': self, 'order_item': order_item, 'prefs': company_prefs})
         return t.render(c)
 
+    def get_report_url(self):
+        if self.certifier and self.cert_num:
+            if self.certifier.abbr == 'GIA':
+                url = 'https://www.gia.edu/report-check?reportno=%s' % self.cert_num
+            elif self.certifier.abbr == 'AGS':
+                url = 'http://www.agslab.com/reportTypes/pdqr.php?StoneID=%s&Weight=%s&D=1' % (self.cert_num, self.carat_weight)
+            elif self.certifier.abbr == 'EGL':
+                url = 'http://www.eglusa.com/verify-a-report-results/?st_num=%s' % self.cert_num[2:]
+            elif self.certifier.abbr == 'IGI':
+                url = 'http://igiworldwide.com/verify.php?r=%s' % self.cert_num
+            elif self.certifier.abbr == 'HRD':
+                url = 'http://ws2.hrdantwerp.com/HRD.CertificateService.WebAPI/certificate?certificateNumber=%s&certificateType=CERT' % self.cert_num
+            else:
+                url = None
+        else:
+            url = None
+        return url
+
     def get_cert_image_type(self):
         if self.cert_image:
             type, encoding = mimetypes.guess_type(self.cert_image)

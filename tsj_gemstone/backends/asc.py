@@ -261,7 +261,7 @@ class Backend(XMLBackend):
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            comment,
+            '', # comment,
             '', # city,
             '', # state,
             '', # country,

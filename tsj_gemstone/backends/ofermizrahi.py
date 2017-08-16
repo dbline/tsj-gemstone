@@ -268,6 +268,9 @@ class Backend(CSVBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence),
             'NULL', # self.nvl(fluorescence_color),
+            'NULL', # self.nvl(fancy_color_id),
+            'NULL', # self.nvl(fancy_color_intensity_id),
+            'NULL', # self.nvl(fancy_color_overtone_id),            
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -275,6 +278,8 @@ class Backend(CSVBackend):
             '', # city
             '', # state
             '', # country
+            'f', # manmade,
+            'f', # laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

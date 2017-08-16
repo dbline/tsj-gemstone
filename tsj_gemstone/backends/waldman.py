@@ -179,6 +179,9 @@ class Backend(XLSBackend):
             self.nvl(symmetry),
             'NULL', #self.nvl(fluorescence_id),
             'NULL', #self.nvl(fluorescence_color_id),
+            'NULL', # self.nvl(fancy_color_id),
+            'NULL', # self.nvl(fancy_color_intensity_id),
+            'NULL', # self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -186,6 +189,8 @@ class Backend(XLSBackend):
             '', #city,
             '', #state,
             '', #country,
+            'f', # manmade,
+            'f', # laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

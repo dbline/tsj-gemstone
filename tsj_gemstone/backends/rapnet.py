@@ -338,6 +338,9 @@ class Backend(BaseBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
             self.nvl(fluorescence_color_id),
+            'NULL', # self.nvl(fancy_color_id),
+            'NULL', # self.nvl(fancy_color_intensity_id),
+            'NULL', # self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -345,6 +348,8 @@ class Backend(BaseBackend):
             '', # city,
             '', # state,
             '', # country,
+            'f', # manmade,
+            'f', # laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

@@ -456,6 +456,9 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         nvl(symmetry),
         'NULL', # nvl(fluorescence),
         'NULL', # nvl(fluorescence_color),
+        'NULL', # self.nvl(fancy_color_id),
+        'NULL', # self.nvl(fancy_color_intensity_id),
+        'NULL', # self.nvl(fancy_color_overtone_id),
         nvl(length),
         nvl(width),
         nvl(depth),
@@ -463,6 +466,8 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         '', # city
         '', # state
         '', # country
+        'f', # manmade,
+        'f', # laser_inscribed,
         'NULL', # rap_date
         '{}', # data
     )

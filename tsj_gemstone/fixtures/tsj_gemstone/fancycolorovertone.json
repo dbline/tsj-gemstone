@@ -1,0 +1,146 @@
+[
+{
+    "fields": {
+        "name": "brown greenish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "brownish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 2
+},
+{
+    "fields": {
+        "name": "brownish orange",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 3
+},
+{
+    "fields": {
+        "name": "brownish yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 5
+},
+{
+    "fields": {
+        "name": "gray greenish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 6
+},
+{
+    "fields": {
+        "name": "gray yellowish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 7
+},
+{
+    "fields": {
+        "name": "grayish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 8
+},
+{
+    "fields": {
+        "name": "grayish pinkish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 10
+},
+{
+    "fields": {
+        "name": "green",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 12
+},
+{
+    "fields": {
+        "name": "greenish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 13
+},
+{
+    "fields": {
+        "name": "greenish yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 14
+},
+{
+    "fields": {
+        "name": "orange",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 15
+},
+{
+    "fields": {
+        "name": "pinkish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 18
+},
+{
+    "fields": {
+        "name": "pinkish orangy",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 19
+},
+{
+    "fields": {
+        "name": "purplish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 20
+},
+{
+    "fields": {
+        "name": "yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 21
+},
+{
+    "fields": {
+        "name": "yellowish",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 22
+},
+{
+    "fields": {
+        "name": "yellowish green",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorovertone",
+    "pk": 23
+}
+]

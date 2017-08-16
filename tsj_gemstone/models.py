@@ -8,7 +8,7 @@ import mimetypes
 from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
 from ts_company.prefs import prefs as company_prefs
-from tsj_gemstone.managers import DictManager
+from tsj_gemstone.managers import DictManager, NameDictManager
 from tsj_gemstone.utils import moneyfmt
 
 class Cut(models.Model):
@@ -139,6 +139,46 @@ class Certifier(models.Model):
         verbose_name_plural = 'Certifiers'
         ordering = ['abbr']
 
+class FancyColor(models.Model):
+    name = models.CharField(max_length=100)
+    aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    objects = NameDictManager()
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Fancy Color'
+        verbose_name_plural = 'Fancy Colors'
+        ordering = ['name']
+
+class FancyColorIntensity(models.Model):
+    name = models.CharField(max_length=100)
+    aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    order = models.PositiveSmallIntegerField(default=9999)
+    objects = NameDictManager()
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Fancy Color Intensity'
+        verbose_name_plural = 'Fancy Color Intensities'
+        ordering = ['order', 'name']
+
+class FancyColorOvertone(models.Model):
+    name = models.CharField(max_length=100)
+    aliases = models.TextField(blank=True, help_text='One entry per line. Case-insensitive.')
+    objects = NameDictManager()
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Fancy Color Overtone'
+        verbose_name_plural = 'Fancy Color Overtones'
+        ordering = ['name']
+
 class DiamondMarkup(models.Model):
     start_price = models.DecimalField('Start Price', max_digits=10, decimal_places=2)
     end_price = models.DecimalField('End Price', max_digits=10, decimal_places=2)
@@ -179,6 +219,9 @@ class DiamondBase(TimeStampedModel):
     symmetry = models.ForeignKey(Grading, verbose_name='Symmetry', null=True, blank=True, related_name='%(class)s_symmetry_set')
     fluorescence = models.ForeignKey(Fluorescence, verbose_name='Fluorescence', null=True, blank=True, related_name='%(class)s_fluorescence_set')
     fluorescence_color = models.ForeignKey(FluorescenceColor, verbose_name='Fluorescence Color', null=True, blank=True, related_name='%(class)s_fluorescence_color_set')
+    fancy_color = models.ForeignKey(FancyColor, verbose_name='Fancy Color', null=True, blank=True)
+    fancy_color_intensity = models.ForeignKey(FancyColorIntensity, verbose_name='Fancy Color Intensity', null=True, blank=True)
+    fancy_color_overtone = models.ForeignKey(FancyColorOvertone, verbose_name='Fancy Color Overtone', null=True, blank=True)
     length = models.DecimalField('Length', max_digits=5, decimal_places=2, null=True, blank=True)
     width = models.DecimalField('Width', max_digits=5, decimal_places=2, null=True, blank=True)
     depth = models.DecimalField('Depth', max_digits=5, decimal_places=2, null=True, blank=True)
@@ -187,6 +230,7 @@ class DiamondBase(TimeStampedModel):
     state = models.CharField('State', max_length=255, blank=True)
     country = models.CharField('Country', max_length=255, blank=True)
     manmade = models.NullBooleanField(default=False, verbose_name='Man-made')
+    laser_inscribed = models.NullBooleanField(default=False, verbose_name='Laser Inscribed')
 
     # TODO: Abstract Rapaport information to a different model
     rap_date = models.DateTimeField('Date Added', blank=True, null=True)

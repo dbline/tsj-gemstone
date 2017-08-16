@@ -1,0 +1,202 @@
+[
+{
+    "fields": {
+        "name": "black",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 1
+},
+{
+    "fields": {
+        "name": "blue",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 2
+},
+{
+    "fields": {
+        "name": "brown",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 3
+},
+{
+    "fields": {
+        "name": "brown orange",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 4
+},
+{
+    "fields": {
+        "name": "brown pink",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 5
+},
+{
+    "fields": {
+        "name": "brown purple",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 6
+},
+{
+    "fields": {
+        "name": "brown yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 7
+},
+{
+    "fields": {
+        "name": "champagne",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 8
+},
+{
+    "fields": {
+        "name": "gray",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 9
+},
+{
+    "fields": {
+        "name": "gray green",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 10
+},
+{
+    "fields": {
+        "name": "green",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 11
+},
+{
+    "fields": {
+        "name": "green gray",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 12
+},
+{
+    "fields": {
+        "name": "green yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 13
+},
+{
+    "fields": {
+        "name": "orange",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 14
+},
+{
+    "fields": {
+        "name": "orange brown",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 15
+},
+{
+    "fields": {
+        "name": "orange yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 16
+},
+{
+    "fields": {
+        "name": "pink",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 17
+},
+{
+    "fields": {
+        "name": "pink purple",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 18
+},
+{
+    "fields": {
+        "name": "purple",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 19
+},
+{
+    "fields": {
+        "name": "violet",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 20
+},
+{
+    "fields": {
+        "name": "white",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 21
+},
+{
+    "fields": {
+        "name": "yellow",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 22
+},
+{
+    "fields": {
+        "name": "yellow brown",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 23
+},
+{
+    "fields": {
+        "name": "yellow gray",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 24
+},
+{
+    "fields": {
+        "name": "yellow orange",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolor",
+    "pk": 25
+}
+]

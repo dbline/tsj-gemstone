@@ -254,14 +254,19 @@ class Backend(XMLBackend):
             self.nvl(polish),
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
-            'NULL', # self.nvl(fluorescence_color_id)
+            'NULL', # self.nvl(fluorescence_color_id),
+            'NULL', # self.nvl(fancy_color_id),
+            'NULL', # self.nvl(fancy_color_intensity_id),
+            'NULL', # self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            '', # comment
-            '', # city
-            '', # state
-            '', # country
+            comment,
+            '', # city,
+            '', # state,
+            '', # country,
+            'f', # manmade,
+            'f', # laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

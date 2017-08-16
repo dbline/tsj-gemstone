@@ -1,1 +1,112 @@
-[{"pk": 1, "model": "tsj_gemstone.clarity", "fields": {"order": 10, "desc": "", "aliases": "", "name": "FL", "abbr": "FL"}}, {"pk": 2, "model": "tsj_gemstone.clarity", "fields": {"order": 20, "desc": "", "aliases": "", "name": "IF", "abbr": "IF"}}, {"pk": 3, "model": "tsj_gemstone.clarity", "fields": {"order": 30, "desc": "", "aliases": "", "name": "VVS1", "abbr": "VVS1"}}, {"pk": 4, "model": "tsj_gemstone.clarity", "fields": {"order": 40, "desc": "", "aliases": "", "name": "VVS2", "abbr": "VVS2"}}, {"pk": 5, "model": "tsj_gemstone.clarity", "fields": {"order": 50, "desc": "", "aliases": "", "name": "VS1", "abbr": "VS1"}}, {"pk": 6, "model": "tsj_gemstone.clarity", "fields": {"order": 60, "desc": "", "aliases": "", "name": "VS2", "abbr": "VS2"}}, {"pk": 7, "model": "tsj_gemstone.clarity", "fields": {"order": 70, "desc": "", "aliases": "", "name": "SI1", "abbr": "SI1"}}, {"pk": 8, "model": "tsj_gemstone.clarity", "fields": {"order": 80, "desc": "", "aliases": "", "name": "SI2", "abbr": "SI2"}}, {"pk": 9, "model": "tsj_gemstone.clarity", "fields": {"order": 90, "desc": "", "aliases": "", "name": "SI3", "abbr": "SI3"}}, {"pk": 10, "model": "tsj_gemstone.clarity", "fields": {"order": 100, "desc": "", "aliases": "", "name": "I1", "abbr": "I1"}}, {"pk": 11, "model": "tsj_gemstone.clarity", "fields": {"order": 110, "desc": "", "aliases": "", "name": "I2", "abbr": "I2"}}, {"pk": 12, "model": "tsj_gemstone.clarity", "fields": {"order": 120, "desc": "", "aliases": "", "name": "13", "abbr": "I3"}}, {"pk": 13, "model": "tsj_gemstone.clarity", "fields": {"order": 130, "desc": "", "aliases": "", "name": "N", "abbr": "N"}}]
+[
+{
+    "fields": {
+        "order": 10,
+        "desc": "",
+        "aliases": "",
+        "name": "FL",
+        "abbr": "FL"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 1
+},
+{
+    "fields": {
+        "order": 20,
+        "desc": "",
+        "aliases": "",
+        "name": "IF",
+        "abbr": "IF"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 2
+},
+{
+    "fields": {
+        "order": 30,
+        "desc": "",
+        "aliases": "",
+        "name": "VVS1",
+        "abbr": "VVS1"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 3
+},
+{
+    "fields": {
+        "order": 40,
+        "desc": "",
+        "aliases": "",
+        "name": "VVS2",
+        "abbr": "VVS2"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 4
+},
+{
+    "fields": {
+        "order": 50,
+        "desc": "",
+        "aliases": "",
+        "name": "VS1",
+        "abbr": "VS1"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 5
+},
+{
+    "fields": {
+        "order": 60,
+        "desc": "",
+        "aliases": "",
+        "name": "VS2",
+        "abbr": "VS2"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 6
+},
+{
+    "fields": {
+        "order": 70,
+        "desc": "",
+        "aliases": "",
+        "name": "SI1",
+        "abbr": "SI1"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 7
+},
+{
+    "fields": {
+        "order": 80,
+        "desc": "",
+        "aliases": "",
+        "name": "SI2",
+        "abbr": "SI2"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 8
+},
+{
+    "fields": {
+        "order": 90,
+        "desc": "",
+        "aliases": "",
+        "name": "SI3",
+        "abbr": "SI3"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 9
+},
+{
+    "fields": {
+        "order": 100,
+        "desc": "",
+        "aliases": "",
+        "name": "I1",
+        "abbr": "I1"
+    },
+    "model": "tsj_gemstone.clarity",
+    "pk": 10
+}
+]

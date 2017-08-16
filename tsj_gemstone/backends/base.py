@@ -73,6 +73,9 @@ class BaseBackend(object):
         'symmetry_id',
         'fluorescence_id',
         'fluorescence_color_id',
+        'fancy_color_id',
+        'fancy_color_intensity_id',
+        'fancy_color_overtone_id',
         'length',
         'width',
         'depth',
@@ -80,6 +83,8 @@ class BaseBackend(object):
         'city',
         'state',
         'country',
+        'manmade',
+        'laser_inscribed',
         'rap_date',
         'data'
     ))
@@ -150,6 +155,9 @@ class BaseBackend(object):
         self.grading_aliases = models.Grading.objects.as_dict()
         self.fluorescence_aliases = models.Fluorescence.objects.as_dict()
         self.fluorescence_color_aliases = models.FluorescenceColor.objects.as_dict()
+        self.fancy_colors = models.FancyColor.objects.as_dict()
+        self.fancy_color_intensities = models.FancyColorIntensity.objects.as_dict()
+        self.fancy_color_overtones = models.FancyColorOvertone.objects.as_dict()
         self.certifier_aliases = models.Certifier.objects.as_dict_disabled()
 
         self.markup_list = models.DiamondMarkup.objects.values_list('start_price', 'end_price', 'percent')

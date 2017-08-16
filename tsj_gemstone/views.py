@@ -19,7 +19,7 @@ from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.utils import show_prices
 from tsj_jewelrybox.forms import InquiryForm
 
-from .filtersets import GemstoneFilterSet
+from .filtersets import GemstoneFilterSet, FancyColorFilterSet
 from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
 
 # TODO: Move to thinkspace, probably also bring up to date with the
@@ -53,6 +53,7 @@ def _get_queryset_ordering(qs, querystring, opts):
 class GemstoneListView(PagesTemplateResponseMixin, ListView):
     model = Diamond
     template_name = 'tspages/gemstone-list.html'
+    filterset = GemstoneFilterSet
 
     gemstones_template = 'tsj_gemstone/includes/gemstones.html'
     pagination_template = 'tsj_gemstone/includes/pagination.html'
@@ -135,7 +136,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
         else:
             initial.update(q)
 
-        filterset = GemstoneFilterSet(initial, queryset=queryset)
+        filterset = self.filterset(initial, queryset=queryset)
 
         context.update({
             'carat_weights': carat_weights,
@@ -178,6 +179,13 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
     @method_decorator(requires_csrf_token)
     def dispatch(self, *args, **kwargs):
         return super(GemstoneListView, self).dispatch(*args, **kwargs)
+
+class FancyColorGemstoneListView(GemstoneListView):
+    template_name = 'tspages/gemstone-fancy-list.html'
+    filterset = FancyColorFilterSet
+
+    def get_queryset(self):
+        return self.model.objects.filter(fancy_color__isnull=False)
 
 class LabGrownGemstoneListView(GemstoneListView):
     def get_queryset(self):

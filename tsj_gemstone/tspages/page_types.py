@@ -6,6 +6,9 @@ from tsj_gemstone import views
 class GemstoneList(PageType):
     view = staticmethod(views.GemstoneListView.as_view())
 
+class FancyColorGemstoneList(PageType):
+    view = staticmethod(views.FancyColorGemstoneListView.as_view())
+
 class LabGrownGemstoneList(PageType):
     view = staticmethod(views.LabGrownGemstoneListView.as_view())
 
@@ -19,5 +22,6 @@ class GemstonePrint(PageType):
 
 page_types.register('gemstone-list', GemstoneList)
 page_types.register('gemstone-lab-grown-list', LabGrownGemstoneList)
+page_types.register('gemstone-fancy-color-list', FancyColorGemstoneList)
 page_types.register('gemstone-detail', GemstoneDetail)
 page_types.register('gemstone-print', GemstonePrint)

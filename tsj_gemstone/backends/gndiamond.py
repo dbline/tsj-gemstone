@@ -122,7 +122,7 @@ class Backend(CSVBackend):
             trade_show,
             cert_num,
             show_cert, # Yes/No
-            fancy, # Just Yellow so far
+            fancy_color, # Just Yellow so far
             sarine_link
         ) = line
 
@@ -139,16 +139,14 @@ class Backend(CSVBackend):
         stock_number = clean(stock_number, upper=True)
         owner = 'GN'
 
-        # Brand (Forever After, Hearts & Arrows, Fancy Yellow)
-        if fancy:
-            brand = 'FANCY'
-            # TODO: The FancyColor model isn't in the dev branch yet
-            #fancy_color = self.fancy_color_aliases.get(cached_clean(color, upper=True))
+        # Color
+        if fancy_color:
             color = None
+            fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
+            fancy_color_id = self.fancy_colors.get(fancy_color)
         else:
-            brand = brand
+            fancy_color_id = None
             color = self.color_aliases.get(cached_clean(color, upper=True))
-            fancy_color = None
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
@@ -293,6 +291,9 @@ class Backend(CSVBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
             self.nvl(fluorescence_color_id),
+            self.nvl(fancy_color_id),
+            'NULL', # self.nvl(fancy_color_intensity_id),
+            'NULL', # self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -300,6 +301,8 @@ class Backend(CSVBackend):
             '', # city,
             '', # state,
             '', # country,
+            'f', # manmade,
+            'f', # laser_inscribed,
             'NULL', # rap_date
             json.dumps(data), # data - Sarine Link
         )

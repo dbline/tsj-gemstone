@@ -1,0 +1,83 @@
+[
+{
+    "fields": {
+        "order": 8,
+        "name": "faint",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 1
+},
+{
+    "fields": {
+        "order": 4,
+        "name": "fancy",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 2
+},
+{
+    "fields": {
+        "order": 3,
+        "name": "fancy dark",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 3
+},
+{
+    "fields": {
+        "order": 0,
+        "name": "fancy deep",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 4
+},
+{
+    "fields": {
+        "order": 2,
+        "name": "fancy intense",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 5
+},
+{
+    "fields": {
+        "order": 5,
+        "name": "fancy light",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 6
+},
+{
+    "fields": {
+        "order": 1,
+        "name": "fancy vivid",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 7
+},
+{
+    "fields": {
+        "order": 6,
+        "name": "light",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 8
+},
+{
+    "fields": {
+        "order": 7,
+        "name": "very light",
+        "aliases": ""
+    },
+    "model": "tsj_gemstone.fancycolorintensity",
+    "pk": 9
+}
+]

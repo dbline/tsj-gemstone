@@ -1,7 +1,7 @@
 from django import forms
 from django.db.models import Min, Max, Q
 
-from tsj_gemstone.models import Certifier, Clarity, Color, Cut, Diamond, Fluorescence, Grading
+from tsj_gemstone.models import Certifier, Clarity, Color, Cut, Diamond, FancyColorIntensity, Fluorescence, Grading
 
 import django_filters
 
@@ -122,6 +122,50 @@ class GemstoneFilterSet(django_filters.FilterSet):
             'price',
             'carat_weight',
             'color',
+            'cut_grade',
+            'clarity',
+            'certifier',
+            'polish',
+            'symmetry',
+            'fluorescence',
+            #'depth_percent',
+            #'table_percent',
+        ]
+
+class FancyColorFilterSet(django_filters.FilterSet):
+    cut = django_filters.ModelMultipleChoiceFilter(queryset=Cut.objects.all().order_by('order'), widget=forms.CheckboxSelectMultiple, label='Shape', to_field_name='abbr')
+    price = RangeDecimalFilter()
+    carat_weight = RangeDecimalFilter(label='Carat')
+
+    fancy_color = django_filters.CharFilter(name='fancy_color__name', lookup_type='icontains')
+    intensities = FancyColorIntensity.objects.all()
+    fancy_color_intensity = django_filters.ModelMultipleChoiceFilter(queryset=intensities, widget=forms.CheckboxSelectMultiple, label='Intensity')
+
+    gradings = Grading.objects.all()
+    cut_grade = RangeChoiceFilter(queryset=gradings, to_field_name='abbr', label='Cut')
+    polish = RangeChoiceFilter(queryset=gradings, to_field_name='abbr')
+    symmetry = RangeChoiceFilter(queryset=gradings, to_field_name='abbr')
+
+    clarities = Clarity.objects.all()
+    clarity = RangeChoiceFilter(queryset=clarities, to_field_name='abbr')
+
+    fluorescences = Fluorescence.objects.all()
+    fluorescence = RangeChoiceFilter(queryset=fluorescences, to_field_name='abbr')
+
+    distinct_certifiers = Diamond.objects.values_list('certifier', flat=True).order_by('certifier__id').distinct('certifier__id')
+    certifiers = Certifier.objects.filter(id__in=distinct_certifiers).exclude(disabled=True)
+    certifier = django_filters.ModelMultipleChoiceFilter(queryset=certifiers, widget=forms.CheckboxSelectMultiple, label='Certificate')
+
+    #depth_percent = django_filters.RangeFilter(label='Depth')
+    #table_percent = django_filters.RangeFilter(label='Table')
+
+    class Meta:
+        fields = [
+            'cut',
+            'price',
+            'carat_weight',
+            'fancy_color',
+            'fancy_color_intensity',
             'cut_grade',
             'clarity',
             'certifier',

@@ -22,6 +22,26 @@ def list_to_dict(row_list):
 
     return dict(result_list)
 
+def lower_list_to_dict(row_list):
+    result_list = []
+    for record in row_list:
+        name = None
+        id, name, aliases = record
+        id = int(id)
+        name = name.strip()
+        aliases = aliases.splitlines()
+
+        #Append the primary element to the result list then loop through all of the aliases and names and do the same
+        result_list.append((name, id))
+        for alias in aliases:
+            alias = alias.strip()
+            if alias:
+                result_list.append((alias, id))
+        if name:
+            result_list.append((name.strip(), id))
+
+    return dict(result_list)
+
 def list_to_dict_disabled(row_list):
     result_list = []
     for record in row_list:
@@ -69,3 +89,9 @@ class DictManager(models.Manager):
             except:
                 cursor.execute('SELECT id, abbr, aliases FROM %s;' % self.model._meta.db_table)
         return list_to_dict_disabled(cursor.fetchall())
+
+class NameDictManager(models.Manager):
+    def as_dict(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT id, name, aliases FROM %s;' % self.model._meta.db_table)
+        return lower_list_to_dict(cursor.fetchall())

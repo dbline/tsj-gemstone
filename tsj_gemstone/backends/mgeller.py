@@ -69,16 +69,16 @@ class Backend(CSVBackend):
             unused_pavilion_depth,
             unused_pavilion_angle,
             unused_treatment,
-            unused_laser_inscription,
+            laser_inscription,
             comment,
             unused_parcel_stone_count,
             cert_num,
             stock_number, # Vendor stock number in CSV
             unused_matching_stock_number,
             unused_is_matched_pair_separable,
-            unused_fancy_color,
-            unused_fancy_color_intensity,
-            unused_fancy_color_overtone,
+            fancy_color,
+            fancy_color_intensity,
+            fancy_color_overtone,
             unused_guaranteed_until,
             unused_terms,
             unused_rapnet_only,
@@ -192,6 +192,24 @@ class Backend(CSVBackend):
             if not fluorescence_color_id: fluorescence_color_id = None
         fluorescence_color = fluorescence_color_id
 
+        if fancy_color:
+            fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
+            fancy_color_id = self.fancy_colors.get(fancy_color)
+        else:
+            fancy_color_id = None
+
+        if fancy_color_intensity:
+            fancy_color_intensity = cached_clean(fancy_color_intensity.replace('-', ' ').lower())
+            fancy_color_intensity_id = self.fancy_color_intensities.get(fancy_color_intensity)
+        else:
+            fancy_color_intensity_id = None
+
+        if fancy_color_overtone:
+            fancy_color_overtone = cached_clean(fancy_color_overtone.replace('-', ' ').lower())
+            fancy_color_overtone_id = self.fancy_color_overtones.get(fancy_color_overtone)
+        else:
+            fancy_color_overtone_id = None
+
         cert_num = clean(cert_num)
         if not cert_num:
             cert_num = ''
@@ -211,6 +229,11 @@ class Backend(CSVBackend):
             manmade = 't'
         else:
             manmade = 'f'
+
+        if laser_inscription == '1':
+            laser_inscribed = 't'
+        else:
+            laser_inscribed = 'f'
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
@@ -259,6 +282,9 @@ class Backend(CSVBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
             self.nvl(fluorescence_color_id),
+            self.nvl(fancy_color_id),
+            self.nvl(fancy_color_intensity_id),
+            self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -266,6 +292,8 @@ class Backend(CSVBackend):
             '', #city,
             '', #state,
             '', #country,
+            manmade, # manmade
+            laser_inscribed, # laser_inscribed
             'NULL', # rap_date
             '{}', # data
         )

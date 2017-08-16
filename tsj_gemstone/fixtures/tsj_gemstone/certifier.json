@@ -1,1 +1,170 @@
-[{"pk": 326, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "AGA", "abbr": "AGA"}}, {"pk": 2, "model": "tsj_gemstone.certifier", "fields": {"url": "http://www.agslab.com/", "desc": "", "aliases": "", "name": "AGS", "abbr": "AGS"}}, {"pk": 329, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "DCLA", "abbr": "DCLA"}}, {"pk": 327, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EDGL", "abbr": "EDGL"}}, {"pk": 3, "model": "tsj_gemstone.certifier", "fields": {"url": "http://66.134.214.118/", "desc": "", "aliases": "EGL Israel\nEGL - ISRAEL\nEGL USA\nEGL PR\nEGLBL\nEGLBLG\nEGLIN\nEGLISL\nEGLLA\nEGLU\nEGLUSA\nEGLUSALA\nEGU\nEGI\nEGB\nEG B\nEGL B\nEGL IS\nEGLA\nEGLINT\nEGLUSA NY\nEGL PRE-CERT\nEGP\nEGL USA PRE-CERT", "name": "EGL", "abbr": "EGL"}}, {"pk": 324, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EGL BELGIUM", "abbr": "EGL BELGIUM"}}, {"pk": 308, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EGL INTERNATIONAL", "abbr": "EGL INTERNATIONAL"}}, {"pk": 320, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EGL OTHER", "abbr": "EGL OTHER"}}, {"pk": 330, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EGL PRECERT", "abbr": "EGL PRECERT"}}, {"pk": 183, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "EGLUSA USA", "abbr": "EGLUSA USA"}}, {"pk": 6, "model": "tsj_gemstone.certifier", "fields": {"url": "http://www.gia.edu/", "desc": "", "aliases": "GIAF\nG.I.A.", "name": "GIA", "abbr": "GIA"}}, {"pk": 321, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "HRD", "abbr": "HRD"}}, {"pk": 322, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "IGC", "abbr": "IGC"}}, {"pk": 311, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "IGI", "abbr": "IGI"}}, {"pk": 331, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "NGTC", "abbr": "NGTC"}}, {"pk": 319, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "OTHER", "abbr": "OTHER"}}, {"pk": 328, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "OWN", "abbr": "OWN"}}, {"pk": 323, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "PGS", "abbr": "PGS"}}, {"pk": 325, "model": "tsj_gemstone.certifier", "fields": {"url": "", "desc": "", "aliases": "", "name": "WGI", "abbr": "WGI"}}]
+[
+{
+    "fields": {
+        "name": "AGS",
+        "url": "http://www.agslab.com/",
+        "disabled": false,
+        "abbr": "AGS",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 2
+},
+{
+    "fields": {
+        "name": "EGL",
+        "url": "http://www.eglusa.com/",
+        "disabled": false,
+        "abbr": "EGL",
+        "aliases": "EGL Israel\r\nEGL - ISRAEL\r\nEGL USA\r\nEGL PR\r\nEGLBL\r\nEGLBLG\r\nEGLIN\r\nEGLISL\r\nEGLLA\r\nEGLU\r\nEGLUSA\r\nEGLUSALA\r\nEGU\r\nEGI\r\nEGB\r\nEG B\r\nEGL B\r\nEGL IS\r\nEGLA\r\nEGLINT\r\nEGLUSA NY\r\nEGL PRE-CERT\r\nEGP\r\nEGL USA PRE-CERT\r\nEGL BELGIUM\r\nEGL INTERNATIONAL\r\nEGL OTHER\r\nEGL PRECERT\r\nEGLUSA USA",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 3
+},
+{
+    "fields": {
+        "name": "GIA",
+        "url": "https://www.gia.edu/",
+        "disabled": false,
+        "abbr": "GIA",
+        "aliases": "GIAF\r\nG.I.A.",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 6
+},
+{
+    "fields": {
+        "name": "IGI",
+        "url": "http://igiworldwide.com/",
+        "disabled": false,
+        "abbr": "IGI",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 311
+},
+{
+    "fields": {
+        "name": "OTHER",
+        "url": "",
+        "disabled": false,
+        "abbr": "OTHER",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 319
+},
+{
+    "fields": {
+        "name": "HRD",
+        "url": "http://www.hrdantwerp.com/",
+        "disabled": false,
+        "abbr": "HRD",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 321
+},
+{
+    "fields": {
+        "name": "IGC",
+        "url": "",
+        "disabled": false,
+        "abbr": "IGC",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 322
+},
+{
+    "fields": {
+        "name": "PGS",
+        "url": "",
+        "disabled": false,
+        "abbr": "PGS",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 323
+},
+{
+    "fields": {
+        "name": "WGI",
+        "url": "",
+        "disabled": false,
+        "abbr": "WGI",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 325
+},
+{
+    "fields": {
+        "name": "AGA",
+        "url": "",
+        "disabled": false,
+        "abbr": "AGA",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 326
+},
+{
+    "fields": {
+        "name": "EDGL",
+        "url": "",
+        "disabled": false,
+        "abbr": "EDGL",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 327
+},
+{
+    "fields": {
+        "name": "OWN",
+        "url": "",
+        "disabled": false,
+        "abbr": "OWN",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 328
+},
+{
+    "fields": {
+        "name": "DCLA",
+        "url": "",
+        "disabled": false,
+        "abbr": "DCLA",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 329
+},
+{
+    "fields": {
+        "name": "NGTC",
+        "url": "",
+        "disabled": false,
+        "abbr": "NGTC",
+        "aliases": "",
+        "desc": ""
+    },
+    "model": "tsj_gemstone.certifier",
+    "pk": 331
+}
+]

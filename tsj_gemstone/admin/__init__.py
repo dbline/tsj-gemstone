@@ -37,6 +37,18 @@ class FluorescenceColorAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('name', 'abbr', 'aliases')
 
+class FancyColorAdmin(ModelAdmin):
+    save_on_top = True
+    list_display = ('name', 'aliases')
+
+class FancyColorIntensityAdmin(ModelAdmin):
+    save_on_top = True
+    list_display = ('name', 'aliases', 'order')
+
+class FancyColorOvertoneAdmin(ModelAdmin):
+    save_on_top = True
+    list_display = ('name', 'aliases')
+
 class CertifierAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('name', 'abbr', 'aliases', 'url', 'disabled')
@@ -101,7 +113,7 @@ class DiamondAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner', 'active')
     list_display_links = ('stock_number',)
-    list_filter = ('cut', 'color', 'clarity', 'certifier', 'active', SourceFilter)
+    list_filter = ('cut', 'color', 'fancy_color', 'clarity', 'certifier', 'active', SourceFilter)
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
 
     def get_fieldsets(self, request, obj=None):
@@ -117,6 +129,7 @@ class DiamondAdmin(ModelAdmin):
                     ('carat_weight', 'carat_price', 'price'),
                     ('cut', 'color', 'clarity'),
                     ('cut_grade'),
+                    ('fancy_color', 'fancy_color_intensity', 'fancy_color_overtone'),
                 )
             }),
             ('Measurements', {
@@ -154,7 +167,7 @@ class DiamondAdmin(ModelAdmin):
             # Imported diamonds have a certificate URL
             fieldsets[4][1]['fields'][0].append('cert_image')
         """
-        
+
         if obj and obj.source in ('rapaport', 'rapnet10'):
             # Add rap_date to the Inventory section
             fieldsets[0][1]['fields'].append(('rap_date',))
@@ -331,6 +344,9 @@ site.register(models.Clarity, ClarityAdmin)
 site.register(models.Grading, GradingAdmin)
 site.register(models.Fluorescence, FluorescenceAdmin)
 site.register(models.FluorescenceColor, FluorescenceColorAdmin)
+site.register(models.FancyColor, FancyColorAdmin)
+site.register(models.FancyColorIntensity, FancyColorIntensityAdmin)
+site.register(models.FancyColorOvertone, FancyColorOvertoneAdmin)
 site.register(models.Certifier, CertifierAdmin)
 site.register(models.DiamondMarkup, DiamondMarkupAdmin)
 site.register(models.Diamond, DiamondAdmin)

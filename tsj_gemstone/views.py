@@ -177,8 +177,6 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
         gemstones_template = self.gemstones_template
         pagination_template = self.pagination_template
 
-        print context['results']
-
         if self.request.is_ajax():
             response_dict = dict(
                 gemstones = render_to_string(gemstones_template, context, RequestContext(self.request)),

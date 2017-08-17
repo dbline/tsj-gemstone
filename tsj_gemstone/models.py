@@ -180,8 +180,20 @@ class FancyColorOvertone(models.Model):
         ordering = ['name']
 
 class DiamondMarkup(models.Model):
-    start_price = models.DecimalField('Start Price', max_digits=10, decimal_places=2)
-    end_price = models.DecimalField('End Price', max_digits=10, decimal_places=2)
+    start_price = models.DecimalField('Min Price', max_digits=10, decimal_places=2)
+    end_price = models.DecimalField('Max Price', max_digits=10, decimal_places=2)
+    minimum_carat_weight = models.DecimalField('Min Carat Weight',
+            max_digits=5, decimal_places=2, blank=True, null=True,
+            help_text="The minimum carat weight for this markup to be applied.")
+    maximum_carat_weight = models.DecimalField('Max Carat Weight',
+            max_digits=5, decimal_places=2, blank=True, null=True,
+            help_text="The maximum carat weight for this markup to be applied.")
+    minimum_price = models.DecimalField('Min Price',
+            max_digits=10, decimal_places=2, blank=True, null=True,
+            help_text="The minimum price for this markup to be applied.")
+    maximum_price = models.DecimalField('Max Price',
+            max_digits=10, decimal_places=2, blank=True, null=True,
+            help_text="The maximum price for this markup to be applied.")
     percent = models.DecimalField(max_digits=5, decimal_places=2, help_text='Markup percent (35.00 for 35%)')
 
     def __unicode__(self):

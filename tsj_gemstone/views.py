@@ -53,6 +53,7 @@ def _get_queryset_ordering(qs, querystring, opts):
 class GemstoneListView(PagesTemplateResponseMixin, ListView):
     model = Diamond
     template_name = 'tspages/gemstone-list.html'
+    no_template_name = 'tspages/gemstone-no-list.html'
     filterset = GemstoneFilterSet
 
     gemstones_template = 'tsj_gemstone/includes/gemstones.html'
@@ -87,86 +88,96 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         queryset = self.object_list
 
-        # Minimum and Maximum Values
-        """
-        TODO: Other Cuts
-        cuts = ['RD', 'PR', 'RA', 'AS', 'CU', 'OV', 'EM', 'PS', 'MQ', 'HS']
-        context['cuts'] = Cut.objects.filter(abbr__in=cuts).order_by('order')
-        context['other_cuts'] = Cut.objects.exclude(abbr__in=cuts).order_by('order')
-        """
-        distinct_cuts = Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
-        context['cuts'] = Cut.objects.filter(id__in=distinct_cuts).order_by('order')
-        context['colors'] = Color.objects.all().order_by('-abbr')
-        context['clarities'] = Clarity.objects.all().order_by('-order')
-        context['gradings'] = Grading.objects.all().order_by('-order')
-        context['fluorescences'] = Fluorescence.objects.all().order_by('-order')
+        if queryset:
 
-        aggregate = queryset.aggregate(Min('carat_weight'), Max('carat_weight'), Min('price'), Max('price'))
-        carat_weights = {
-            'min': aggregate['carat_weight__min'],
-            'max': aggregate['carat_weight__max'],
-        }
-        prices = {
-            'min': floatformat(aggregate['price__min'], 0),
-            'max': floatformat(aggregate['price__max'], 0),
-        }
+            # Minimum and Maximum Values
+            """
+            TODO: Other Cuts
+            cuts = ['RD', 'PR', 'RA', 'AS', 'CU', 'OV', 'EM', 'PS', 'MQ', 'HS']
+            context['cuts'] = Cut.objects.filter(abbr__in=cuts).order_by('order')
+            context['other_cuts'] = Cut.objects.exclude(abbr__in=cuts).order_by('order')
+            """
+            distinct_cuts = Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct('cut__id')
+            context['cuts'] = Cut.objects.filter(id__in=distinct_cuts).order_by('order')
+            context['colors'] = Color.objects.all().order_by('-abbr')
+            context['clarities'] = Clarity.objects.all().order_by('-order')
+            context['gradings'] = Grading.objects.all().order_by('-order')
+            context['fluorescences'] = Fluorescence.objects.all().order_by('-order')
 
-        initial = {
-            'price_0': prices['min'],
-            'price_1': prices['max'],
-            'carat_weight_0': carat_weights['min'],
-            'carat_weight_1': carat_weights['max'],
-            'cut_grade_0': '',
-            'cut_grade_1': '',
-            'color_0': '',
-            'color_1': '',
-            'clarity_0': '',
-            'clarity_1': '',
-            'polish_0': '',
-            'polish_1': '',
-            'symmetry_0': '',
-            'symmetry_1': '',
-            'fluorescence_0': '',
-            'fluorescence_1': '',
-        }
+            aggregate = queryset.aggregate(Min('carat_weight'), Max('carat_weight'), Min('price'), Max('price'))
+            carat_weights = {
+                'min': aggregate['carat_weight__min'],
+                'max': aggregate['carat_weight__max'],
+            }
+            prices = {
+                'min': floatformat(aggregate['price__min'], 0),
+                'max': floatformat(aggregate['price__max'], 0),
+            }
 
-        # Initial, Check for Carat Weight and Price
-        if q.__contains__('carat_weight_0'):
-            if not q.__contains__('price_0'):
-                q['price_0'] = prices['min']
-                q['price_1'] = prices['max']
-            initial = q
+            initial = {
+                'price_0': prices['min'],
+                'price_1': prices['max'],
+                'carat_weight_0': carat_weights['min'],
+                'carat_weight_1': carat_weights['max'],
+                'cut_grade_0': '',
+                'cut_grade_1': '',
+                'color_0': '',
+                'color_1': '',
+                'clarity_0': '',
+                'clarity_1': '',
+                'polish_0': '',
+                'polish_1': '',
+                'symmetry_0': '',
+                'symmetry_1': '',
+                'fluorescence_0': '',
+                'fluorescence_1': '',
+            }
+
+            # Initial, Check for Carat Weight and Price
+            if q.__contains__('carat_weight_0'):
+                if not q.__contains__('price_0'):
+                    q['price_0'] = prices['min']
+                    q['price_1'] = prices['max']
+                initial = q
+            else:
+                initial.update(q)
+
+            filterset = self.filterset(initial, queryset=queryset)
+
+            context.update({
+                'carat_weights': carat_weights,
+                'filterset': filterset,
+                'has_ring_builder': builder_prefs.get('ring'),
+                'initial_cuts': self.request.GET.getlist('cut'),
+                'prices': prices,
+                'results': True,
+                'show_prices': show_prices(self.request.user, gemstone_prefs),
+                'sort': sort,
+            })
+
+            paginator = QuerySetDiggPaginator(filterset, 50, body=5, padding=2)
+            try:
+                paginator_page = paginator.page(self.request.GET.get('page', 1))
+            except:
+                paginator_page = paginator.page(paginator.num_pages)
+
+            context.update(dict(
+                paginator = paginator,
+                page = paginator_page,
+            ))
+
         else:
-            initial.update(q)
-
-        filterset = self.filterset(initial, queryset=queryset)
-
-        context.update({
-            'carat_weights': carat_weights,
-            'filterset': filterset,
-            'has_ring_builder': builder_prefs.get('ring'),
-            'initial_cuts': self.request.GET.getlist('cut'),
-            'prices': prices,
-            'show_prices': show_prices(self.request.user, gemstone_prefs),
-            'sort': sort,
-        })
-
-        paginator = QuerySetDiggPaginator(filterset, 50, body=5, padding=2)
-        try:
-            paginator_page = paginator.page(self.request.GET.get('page', 1))
-        except:
-            paginator_page = paginator.page(paginator.num_pages)
-
-        context.update(dict(
-            paginator = paginator,
-            page = paginator_page,
-        ))
+            context.update({
+                'results': False,
+            })
 
         return context
 
     def render_to_response(self, context, **response_kwargs):
         gemstones_template = self.gemstones_template
         pagination_template = self.pagination_template
+
+        print context['results']
 
         if self.request.is_ajax():
             response_dict = dict(
@@ -177,7 +188,10 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             response['Cache-Control'] = "no-cache, no-store, must-revalidate"
             return response
         else:
-            return render(self.request, self.template_name, context)
+            if context['results']:
+                return render(self.request, self.template_name, context)
+            else:
+                return render(self.request, self.no_template_name, context)
 
     @method_decorator(requires_csrf_token)
     def dispatch(self, *args, **kwargs):

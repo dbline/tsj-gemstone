@@ -1,5 +1,5 @@
 {% extends 'tsj_core/base_page.html' %}
-{% load thinkspace_pages tsj_builder_tags tsj_ui_tags %}
+{% load thinkspace_pages tsj_ui_tags %}
 {% load render_mt_bundle from tsj_ui_tags %}
 
 {% block css %}{{ block.super }}
@@ -8,7 +8,6 @@
 
 {% block js %}{{ block.super }}
     {% render_mt_bundle 'gemstone' 'js' 'CORE' %}
-    {% render_mt_bundle 'tsjbuilder' 'js' 'CORE' %}
     <script type="text/javascript">
         DIAMOND_LIST_URL = '{% page 'gemstone-list' %}'
         COLORS = [{% for color in colors %}"{{ color.abbr }}"{% if not forloop.last %},{% endif %}{% endfor %}]
@@ -23,8 +22,8 @@
         $("#price").ionRangeSlider({
             min: {{ prices.min }},
             max: {{ prices.max }},
-            from: {{ filterset.data.price_0 }},
-            to: {{ filterset.data.price_1 }},
+            from: {% firstof filterset.data.price_0 prices.min %},
+            to: {% firstof filterset.data.price_1 prices.max %},
             hide_min_max: true,
             hide_from_to: true,
             onFinish: function(data) {
@@ -160,11 +159,6 @@
     <div class="row hidden-print">
         <div class="column col-xs-12">
             {% widget_dock above_content %}
-        </div>
-    </div>
-    <div class="row row-ringbuilder hidden-print">
-        <div class="column col-xs-12">
-            {% ring_builder_steps 'diamond' %}
         </div>
     </div>
     <div class="row row-content">

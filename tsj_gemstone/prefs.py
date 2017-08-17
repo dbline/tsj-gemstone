@@ -6,6 +6,10 @@ from thinkspace.apps.preferences.forms import PreferencesForm
 from thinkspace.apps.preferences.options import AppPreferences
 
 class GemstonePreferencesForm(PreferencesForm):
+    MARKUP_CHOICES = (
+        ('price', 'Price'),
+        ('carat_weight', 'Carat Weight'),
+    )
     PRICE_CHOICES = (
         ('none', 'Off'), #TODO: Eventually change stored value to 'off' to standardize with tsj_catalog
         ('admin', 'Admin'),
@@ -18,7 +22,7 @@ class GemstonePreferencesForm(PreferencesForm):
         ('rapnet10', 'Download Listing Service'),
         ('rapnetii', 'Instant Inventory'),
     )
-
+    markup = forms.ChoiceField(choices=MARKUP_CHOICES, required=True, help_text='Control how diamonds are marked up.')
     rapaport_username = forms.CharField(label='Username', help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(label='Password', help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
     rapaport_url = forms.URLField(label='DLS URL', required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
@@ -69,6 +73,7 @@ class GemstonePreferences(AppPreferences):
             'fields': (
                 'show_prices',
                 'group',
+                'markup',
                 'rapaport_minimum_carat_weight',
                 'rapaport_maximum_carat_weight',
                 'rapaport_minimum_price',

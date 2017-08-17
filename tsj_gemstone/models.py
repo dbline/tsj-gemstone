@@ -180,8 +180,6 @@ class FancyColorOvertone(models.Model):
         ordering = ['name']
 
 class DiamondMarkup(models.Model):
-    start_price = models.DecimalField('Min Price', max_digits=10, decimal_places=2)
-    end_price = models.DecimalField('Max Price', max_digits=10, decimal_places=2)
     minimum_carat_weight = models.DecimalField('Min Carat Weight',
             max_digits=5, decimal_places=2, blank=True, null=True,
             help_text="The minimum carat weight for this markup to be applied.")
@@ -197,7 +195,13 @@ class DiamondMarkup(models.Model):
     percent = models.DecimalField(max_digits=5, decimal_places=2, help_text='Markup percent (35.00 for 35%)')
 
     def __unicode__(self):
-        return u'%d - %d: %d' % (self.start_price, self.end_price, self.percent)
+        if self:
+            if self.minimum_carat_weight:
+                return u'%s - %s: %s' % (self.minimum_carat_weight, self.maximum_carat_weight, self.percent)
+            else:
+                return u'%s - %s: %s' % (self.minimum_price, self.maximum_price, self.percent)
+        else:
+            return 'DiamondMarkup'
 
     class Meta:
         verbose_name = 'Diamond Markup'

@@ -69,7 +69,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(GemstoneListView, self).get_context_data(**kwargs)
 
-        q = self.request.GET
+        q = self.request.GET.copy()
 
         # Sorting
         try:
@@ -130,8 +130,11 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             'fluorescence_1': '',
         }
 
-        # Initial
+        # Initial, Check for Carat Weight and Price
         if q.__contains__('carat_weight_0'):
+            if not q.__contains__('price_0'):
+                q['price_0'] = prices['min']
+                q['price_1'] = prices['max']
             initial = q
         else:
             initial.update(q)

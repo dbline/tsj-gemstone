@@ -61,6 +61,8 @@ class GemstonePreferencesForm(PreferencesForm):
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
 
+    sarine_template = forms.CharField(label='Sarine Template', help_text='ID for overriding default Sarine Template', required=False)
+
     def clean_group(self):
         group = self.cleaned_data.get('group')
         if isinstance(group, Group):
@@ -103,6 +105,11 @@ class GemstonePreferences(AppPreferences):
         (_('ASC'), {
             'fields': (
                 'asc',
+            ),
+        }),
+        (_('Sarine'), {
+            'fields': (
+                'sarine_template',
             ),
         }),
         (_('Additional feeds'), {

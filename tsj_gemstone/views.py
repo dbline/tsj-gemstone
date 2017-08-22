@@ -250,8 +250,9 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
-            'similar': similar,
+            'sarine_template': gemstone_prefs.get('sarine_template'),
             'show_prices': show_prices(self.request.user, gemstone_prefs),
+            'similar': similar,
         })
         return context
 

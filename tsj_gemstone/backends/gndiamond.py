@@ -250,11 +250,20 @@ class Backend(CSVBackend):
 
         price = None
         for markup in self.markup_list:
-            if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                price = (price_before_markup * (1 + markup[2]/100))
-                break
+            if prefs.get('markup') == 'carat_weight':
+                if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                    price = (price_before_markup * (1 + markup[2]/100))
+                    break
+            else:
+                if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                    price = (price_before_markup * (1 + markup[2]/100))
+                    break
+
         if not price:
-            raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+            if prefs.get('markup') == 'carat_weight':
+                raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
+            else:
+                raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
         if sarine_link:
             data = {'sarine_link': sarine_link}

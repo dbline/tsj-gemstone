@@ -160,7 +160,10 @@ class BaseBackend(object):
         self.fancy_color_overtones = models.FancyColorOvertone.objects.as_dict()
         self.certifier_aliases = models.Certifier.objects.as_dict_disabled()
 
-        self.markup_list = models.DiamondMarkup.objects.values_list('start_price', 'end_price', 'percent')
+        if prefs.get('markup') == 'carat_weight':
+            self.markup_list = models.DiamondMarkup.objects.values_list('minimum_carat_weight', 'maximum_carat_weight', 'percent')
+        else:
+            self.markup_list = models.DiamondMarkup.objects.values_list('minimum_price', 'maximum_price', 'percent')
 
         self.pref_values = (
             Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),

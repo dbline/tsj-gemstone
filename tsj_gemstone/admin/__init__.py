@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from .. import models
+from ..prefs import prefs as prefs
 from ..tasks import import_site_gemstone_backends
 
 class CutAdmin(ModelAdmin):
@@ -92,7 +93,20 @@ class CertifierAdmin(ModelAdmin):
 
 class DiamondMarkupAdmin(ModelAdmin):
     save_on_top = True
-    list_display = ('percent', 'start_price', 'end_price')
+
+    def get_list_display(self, request):
+        if prefs.get('markup') == 'carat_weight':
+            list_display = ('percent', 'minimum_carat_weight', 'maximum_carat_weight')
+        else:
+            list_display = ('percent', 'minimum_price', 'maximum_price')
+        return list_display
+
+    def get_fields(self, request, obj=None):
+        if prefs.get('markup') == 'carat_weight':
+            fields = ('minimum_carat_weight', 'maximum_carat_weight', 'percent')
+        else:
+            fields = ('minimum_price', 'maximum_price', 'percent')
+        return fields
 
 class SourceFilter(SimpleListFilter):
     parameter_name = 'source'

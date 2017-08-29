@@ -1,11 +1,13 @@
 from django import forms
 from django.db.models import Q
+from django.utils.text import slugify
 
 from ckeditor.widgets import CKEditorWidget
 
 from thinkspace.apps.pages.library import WidgetLibrary
 from thinkspace.apps.pages.widgets import TemplatedWidget
 from thinkspace.apps.preferences.forms import PreferencesForm
+from thinkspace.apps.pages.urlresolvers import reverse
 from tsj_gemstone import models
 
 register = WidgetLibrary()
@@ -120,6 +122,39 @@ class MegaMenuGemstoneMaxSizeWidget(TemplatedWidget):
     verbose_name = 'Gemstones Max Size'
 
     def render(self, context):
+        context['sizes'] = self.get_sizes()
+        return super(MegaMenuGemstoneMaxSizeWidget, self).render(context)
+
+    def get_content(self):
+        """
+        Get a list of links for Menu Widget (not MM)
+        """
+        sizes = self.get_sizes()
+        gemstone_list_page = reverse('gemstone-list')
+
+        content_list = []
+        if sizes:
+            length = len(sizes)
+            for i, size in enumerate(sizes):
+                
+                if i == length - 1:
+                    title = '%.2f Carats & Up' % size['min']
+                else:
+                    title = '%.2f - %.2f Carats' % (size['min'], size['max'])
+
+                item = {
+                    'url': '%s?carat_weight_min=%.2f&carat_weight_max=%.2f' % (gemstone_list_page,
+                                                                           size['min'], 
+                                                                           size['max']),
+                    'title': title,
+                    'slug': slugify(title)
+                }
+
+                content_list.append(item)
+
+        return content_list
+
+    def get_sizes(self):
         max_size = int(self.preferences.get('max_size',4))
         sizes = []
 
@@ -141,10 +176,7 @@ class MegaMenuGemstoneMaxSizeWidget(TemplatedWidget):
             'min': max_size,
             'max': 99.99
         })
-
-        context['sizes'] = sizes
-        return super(MegaMenuGemstoneMaxSizeWidget, self).render(context)
-
+        return sizes
 
 class MegaMenuGemstoneShapesWidgetForm(PreferencesForm):
 
@@ -183,19 +215,42 @@ class MegaMenuGemstoneShapesWidget(TemplatedWidget):
     verbose_name = 'Gemstone Shapes'
 
     def render(self, context):
+        context['widget_style'] = self.preferences.get('hide_gemstones')
+        context['icon_style'] = self.preferences.get('icon_style', ICON_CHOICES[0][0])
+        context['widget_object_list'] = self.get_shapes()
+        return super(MegaMenuGemstoneShapesWidget, self).render(context)
+
+    def get_content(self):
+        """
+        Get a list of links for Menu Widget (not MM)
+        """
+        shapes = self.get_shapes()
+        gemstone_list_page = reverse('gemstone-list')
+
+        content_list = []
+        if shapes:
+            for cut in shapes:
+                item = {
+                    'url': '%s?cut=%s' % (gemstone_list_page, cut.abbr),
+                    'title': cut.name,
+                    'slug': slugify(cut.abbr)
+                }
+                content_list.append(item)
+
+        return content_list
+
+    def get_shapes(self):
         cuts = models.Diamond.objects.values_list('cut', flat=True).order_by('cut__id').distinct()
         if cuts:
             qs = models.Cut.objects.filter(id__in=cuts)
         else:
             qs = models.Cut.objects.all()
 
-        hide_gemstones = context['widget_style'] = self.preferences.get('hide_gemstones')
+        hide_gemstones = self.preferences.get('hide_gemstones')
         if hide_gemstones:
             qs = qs.filter(~Q(id__in=hide_gemstones))
 
-        context['icon_style'] = self.preferences.get('icon_style', ICON_CHOICES[0][0])
-        context['widget_object_list'] = qs
-        return super(MegaMenuGemstoneShapesWidget, self).render(context)
+        return qs
 
 
 class MegaMenuGemstoneBudgetWidgetForm(PreferencesForm):
@@ -220,6 +275,42 @@ class MegaMenuGemstoneBudgetWidget(TemplatedWidget):
     verbose_name = 'Gemstones Budget'
 
     def render(self, context):
+        context['budget'] = self.get_budget()
+        return super(MegaMenuGemstoneBudgetWidget, self).render(context)
+
+    def get_content(self):
+        """
+        Get a list of links for Menu Widget (not MM)
+        """
+        budget = self.get_budget()
+        gemstone_list_page = reverse('gemstone-list')
+
+        content_list = []
+        if budget:
+            length = len(budget)
+            first = True
+            for i, value in enumerate(budget):
+
+                if first:
+                    first = False
+                    title = 'Under $%s' % value['max']
+                elif i == length - 1:
+                    title = '$%s &amp Up' % value['min']
+                else:
+                    title = '$%s - $%s' % (value['min'], value['max'])
+
+                item = {
+                    'url': '%s?price_min=%s&price_max=%s' % (gemstone_list_page, 
+                                                             value['min'],
+                                                             value['max']),
+                    'title': title,
+                    'slug': slugify(title)
+                }
+                content_list.append(item)
+
+        return content_list
+
+    def get_budget(self):
         max_budget = int(self.preferences.get('max_budget',5)) * 1000
         budget = []
 
@@ -230,15 +321,12 @@ class MegaMenuGemstoneBudgetWidget(TemplatedWidget):
                 'min': 0 if value == 1000 else value - 500,
                 'max': value
             })
-
         budget.append({
             'min': max_budget,
             'max': 99999999
         })
 
-        context['budget'] = budget
-        return super(MegaMenuGemstoneBudgetWidget, self).render(context)
-
+        return budget
 
 register.widget('gemstone', GemstoneWidget, form=GemstoneWidgetForm)
 register.widget('megamenu-gemstone-max-size', MegaMenuGemstoneMaxSizeWidget, form=MegaMenuGemstoneMaxSizeWidgetForm)

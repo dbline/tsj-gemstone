@@ -109,6 +109,13 @@ class MegaMenuGemstoneMaxSizeWidgetForm(PreferencesForm):
 
     max_size = forms.ChoiceField(choices=MAX_SIZE_CHOICES,
         required=False, help_text='Gemstone max size')
+    show_more_text = forms.CharField(
+        label='Show More Text',
+        required=False)
+    show_more_url = forms.CharField(
+        label='Show More URL',
+        required=False,
+        help_text='Leave empty to disable Show More link')
     class_attr = forms.CharField(
         required=False,
         label='CSS Class',
@@ -123,6 +130,8 @@ class MegaMenuGemstoneMaxSizeWidget(TemplatedWidget):
 
     def render(self, context):
         context['sizes'] = self.get_sizes()
+        context['show_more_text'] = self.preferences.get('show_more_text', None)
+        context['show_more_url'] = self.preferences.get('show_more_url', None)
         return super(MegaMenuGemstoneMaxSizeWidget, self).render(context)
 
     def get_content(self):
@@ -189,6 +198,13 @@ class MegaMenuGemstoneShapesWidgetForm(PreferencesForm):
     icon_style = forms.ChoiceField(choices=ICON_STYLE_CHOICES,
         required=False, help_text='Gemstone icon style')
     hide_gemstones=forms.MultipleChoiceField(label='Hide', required=False)
+    show_more_text = forms.CharField(
+        label='Show More Text',
+        required=False)
+    show_more_url = forms.CharField(
+        label='Show More URL',
+        required=False,
+        help_text='Leave empty to disable Show More link')
     class_attr = forms.CharField(
         required=False,
         label='CSS Class',
@@ -218,6 +234,8 @@ class MegaMenuGemstoneShapesWidget(TemplatedWidget):
         context['widget_style'] = self.preferences.get('hide_gemstones')
         context['icon_style'] = self.preferences.get('icon_style', ICON_CHOICES[0][0])
         context['widget_object_list'] = self.get_shapes()
+        context['show_more_text'] = self.preferences.get('show_more_text', None)
+        context['show_more_url'] = self.preferences.get('show_more_url', None)
         return super(MegaMenuGemstoneShapesWidget, self).render(context)
 
     def get_content(self):
@@ -262,6 +280,13 @@ class MegaMenuGemstoneBudgetWidgetForm(PreferencesForm):
 
     max_budget = forms.ChoiceField(choices=MAX_BUDGET_CHOICES,
         required=False, help_text='Gemstone max budget')
+    show_more_text = forms.CharField(
+        label='Show More Text',
+        required=False)
+    show_more_url = forms.CharField(
+        label='Show More URL',
+        required=False,
+        help_text='Leave empty to disable Show More link')
     class_attr = forms.CharField(
         required=False,
         label='CSS Class',
@@ -276,6 +301,8 @@ class MegaMenuGemstoneBudgetWidget(TemplatedWidget):
 
     def render(self, context):
         context['budget'] = self.get_budget()
+        context['show_more_text'] = self.preferences.get('show_more_text', None)
+        context['show_more_url'] = self.preferences.get('show_more_url', None)
         return super(MegaMenuGemstoneBudgetWidget, self).render(context)
 
     def get_content(self):

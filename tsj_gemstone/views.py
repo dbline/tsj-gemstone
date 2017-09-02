@@ -88,7 +88,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         queryset = self.object_list
 
-        if queryset:
+        if queryset.exists():
 
             # Minimum and Maximum Values
             """

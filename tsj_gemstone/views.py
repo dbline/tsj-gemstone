@@ -145,6 +145,11 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
                     q['price_0'] = prices['min']
                     q['price_1'] = prices['max']
                 initial = q
+            elif q.__contains__('price_0') and q.__contains__('price_1'):
+                if not q.__contains__('carat_weight_0'):
+                    q['carat_weight_0'] = carat_weights['min']
+                    q['carat_weight_1'] = carat_weights['max']
+                initial = q
             else:
                 initial.update(q)
 

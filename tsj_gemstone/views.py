@@ -88,6 +88,12 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         queryset = self.object_list
 
+        arguments = self.request.tspages_page.get_kwargs_dict()
+        # Check Source
+        if arguments.get('sources'):
+            sources = arguments.get('sources')
+            queryset = queryset.filter(source__in=sources)
+
         if queryset.exists():
 
             # Minimum and Maximum Values

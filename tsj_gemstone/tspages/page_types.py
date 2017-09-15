@@ -2,9 +2,11 @@ from thinkspace.apps.pages.library import page_types
 from thinkspace.apps.pages.page_types import PageType
 
 from tsj_gemstone import views
+from tsj_gemstone.forms import GemstoneListArgumentForm
 
 class GemstoneList(PageType):
     view = staticmethod(views.GemstoneListView.as_view())
+    argument_form = GemstoneListArgumentForm
 
 class FancyColorGemstoneList(PageType):
     view = staticmethod(views.FancyColorGemstoneListView.as_view())

@@ -1,6 +1,7 @@
 import csv
 
-file = open('/home/vagrant/.virtualenvs/tsj-multi/src/tsj-gemstone/tsj_gemstone/tests/data/spicer.csv')
+#file = open('/home/vagrant/.virtualenvs/tsj-multi/src/tsj-gemstone/tsj_gemstone/tests/data/spicer.csv')
+file = open('/home/ubuntu/.virtualenvs/tsj-mt/src/tsj-gemstone/tsj_gemstone/tests/data/spicer.csv')
 
 reader = csv.reader(file)
 
@@ -39,6 +40,8 @@ for row in reader:
         for section in sections:
             if last_key:
                 value = section.split()[:1][0]
+                if value == 'Fire':
+                    value = section.split()[1]
                 dia[last_key] = value
 
             key = section.split()[-2:]

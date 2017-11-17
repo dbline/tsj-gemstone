@@ -90,6 +90,9 @@ class Backend(JSONBackend):
     def write_diamond_row(self, data):
         minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = self.pref_values
 
+        if not data.get('IsDiamond'):
+            raise SkipDiamond('Is not a diamond.')
+
         stock_number = clean(str(data.get('SerialNumber')))
         comment = cached_clean(data.get('Comments'))
         try:
@@ -104,6 +107,9 @@ class Backend(JSONBackend):
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
         color = self.color_aliases.get(cached_clean(data.get('Color'), upper=True))
+
+        if not color:
+            raise SkipDiamond('Not a standard color.')
 
         certifier = cached_clean(data.get('Certification'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported

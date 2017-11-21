@@ -119,6 +119,7 @@ class Backend(XMLBackend):
         ) = self.pref_values
 
         stock_number = clean(data.get('stock_number'))
+
         try:
             cut = self.cut_aliases[cached_clean(data.get('shape'), upper=True)]
         except KeyError as e:
@@ -131,6 +132,8 @@ class Backend(XMLBackend):
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
         color = self.color_aliases.get(cached_clean(data.get('colour'), upper=True))
+        if not color:
+            raise SkipDiamond('No color was specified.')
 
         certifier = cached_clean(data.get('certtype'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported

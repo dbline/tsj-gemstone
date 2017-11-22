@@ -85,7 +85,11 @@ class Backend(CSVBackend):
             unused_shade,
             length,
             width,
-            depth
+            depth,
+            unused_city,
+            unused_state,
+            unused_country,
+            unused_video_url,
         ) = line
 
         (

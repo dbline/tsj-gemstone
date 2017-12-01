@@ -136,6 +136,8 @@ class Backend(CSVBackend):
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
         color = self.color_aliases.get(cached_clean(color, upper=True))
+        if not color:
+            raise SkipDiamond('No color was specified.')
 
         certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported

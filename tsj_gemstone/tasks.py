@@ -2,7 +2,7 @@ import logging
 
 from django.db import connection
 
-from celery import task, current_task
+from celery import shared_task, current_task
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ try:
 except ImportError:
     set_site = False
 
-@task
+@shared_task
 def import_gemstone_backends(router, dry_run=False, nodebug=False, verbosity=1):
     cursor = connection.cursor()
     cursor.execute("""
@@ -34,7 +34,7 @@ def import_gemstone_backends(router, dry_run=False, nodebug=False, verbosity=1):
         for row in cursor.fetchall():
             import_site_gemstone_backends.delay(schema=row[0], dry_run=dry_run, nodebug=nodebug, verbosity=verbosity)
 
-@task
+@shared_task
 def import_site_gemstone_backends(schema=None, dry_run=False, nodebug=False, verbosity=1):
     if set_site and not schema:
         assert schema, "Schema required for MT"

@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 import glob
+import json
 import logging
 import os
 import re
@@ -136,6 +137,8 @@ class Backend(CSVBackend):
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
         color = self.color_aliases.get(cached_clean(color, upper=True))
+        if not color:
+            raise SkipDiamond('No color was specified.')
 
         certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
@@ -242,6 +245,14 @@ class Backend(CSVBackend):
         elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
 
+        lot_num = clean(lot_num)
+        if lot_num == 'Y':
+            v360_link = 'https://v360.in/viewer4.0/vision360.html?d=' + stock_number + '&z=1&v=4&surl=https%3a%2f%2fs3.v360.in%2f244%2f'
+            v360_image = 'https://v360.in/V360Images.aspx?cid=LondonGold&d=' + stock_number
+            data = {'v360_link': v360_link, 'v360_image': v360_image}
+        else:
+            data = {}
+
         if price_before_markup is None:
             raise SkipDiamond('No price specified')
 
@@ -308,7 +319,7 @@ class Backend(CSVBackend):
             'f', # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date
-            '{}', # data
+            json.dumps(data), # data
         )
 
         return ret

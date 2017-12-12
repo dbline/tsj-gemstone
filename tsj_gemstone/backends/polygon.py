@@ -246,7 +246,7 @@ class Backend(CSVBackend):
             cert_image = ''
 
         lot_num = clean(lot_num)
-        if lot_num == 'Y':
+        if lot_num == 'v360':
             v360_link = 'https://v360.in/viewer4.0/vision360.html?d=' + stock_number + '&z=1&v=4&surl=https%3a%2f%2fs3.v360.in%2f244%2f'
             # TODO: Currently set up for London Gold we'll need some prefs for any retailer specific ID's
             v360_image = 'https://v360.in/V360Images.aspx?cid=LondonGold&d=' + stock_number

@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+import glob
 import logging
 import os
 import re
@@ -12,6 +13,7 @@ from django.utils.lru_cache import lru_cache
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
+from ..prefs import prefs
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)
@@ -36,9 +38,24 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
+    infile_glob = '/glusterfs/ftp_home/puregrownftp/{id}*.csv'
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/puregrowndiamonds.csv')
-    # We haven't established an FTP upload yet
-    #default_filename = ''
+
+    def get_default_filename(self):
+        user_id = prefs.get('puregrowndiamonds')
+
+        if not user_id:
+            # TODO: We shouldn't be able to get here anymore, enabled checks the pref
+            logger.warning('Missing Pure Grown Diamonds ID, aborting import.')
+            return
+
+        files = sorted(glob.glob(self.infile_glob.format(id=user_id)))
+        if len(files):
+            fn = files[-1]
+        else:
+            raise ImportSourceError('No Pure Grown Diamonds file for ID {}, aborting import.'.format(user_id))
+
+        return fn
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
@@ -48,6 +65,7 @@ class Backend(CSVBackend):
             cut,
             color,
             clarity,
+            unused_hearstandarrows,
             carat_weight,
             certifier,
             cut_grade,
@@ -67,9 +85,9 @@ class Backend(CSVBackend):
             culet,
             unused_comment,
             origin,
-            unused_memo,
-            unused_inscription,
             unused_measurements,
+            cert_image,
+            unused_video_link,
         ) = line
 
         (
@@ -174,13 +192,9 @@ class Backend(CSVBackend):
         if not cert_num:
             cert_num = ''
 
-        """
-        cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
-        if not cert_image:
+        cert_image = cert_image.strip()
+        if verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
-        elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
-            cert_image = ''
-        """
 
         #length, width, depth = split_measurements(measurements)
 
@@ -235,7 +249,7 @@ class Backend(CSVBackend):
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
             cert_num,
-            '', # cert_image,
+            cert_image,
             '', # cert_image_local,
             depth_percent,
             table_percent,

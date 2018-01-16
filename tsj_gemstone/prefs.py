@@ -42,6 +42,7 @@ class GemstonePreferencesForm(PreferencesForm):
     idex_access_key = forms.CharField(label='IDEX Access Key', help_text="Your IDEX access key", required=False)
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
+    puregrowndiamonds = forms.CharField(label='Pure Grown Diamonds', help_text="Your Pure Grown Diamonds ID", required=False)
 
     brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
@@ -105,6 +106,11 @@ class GemstonePreferences(AppPreferences):
         (_('ASC'), {
             'fields': (
                 'asc',
+            ),
+        }),
+        (_('Pure Grown Diamonds'), {
+            'fields': (
+                'puregrowndiamonds',
             ),
         }),
         (_('Sarine'), {

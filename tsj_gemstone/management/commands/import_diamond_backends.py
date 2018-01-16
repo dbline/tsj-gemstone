@@ -32,6 +32,8 @@ class Command(MultisiteCommand, LabelCommand):
     )
 
     def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+
         parser.add_argument('--async',
             action='store_true',
             dest='async',

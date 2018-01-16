@@ -11,6 +11,7 @@ __all__ = (
     'ofermizrahi',
     'premiergem',
     'polygon',
+    'puregrowndiamonds',
     'rapnet',
     'rapnet10',
     'rdi',

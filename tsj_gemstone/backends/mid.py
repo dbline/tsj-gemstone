@@ -13,6 +13,7 @@ from django.utils.lru_cache import lru_cache
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
+from ..prefs import prefs
 from ..utils import moneyfmt
 
 logger = logging.getLogger(__name__)

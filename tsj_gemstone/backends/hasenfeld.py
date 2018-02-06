@@ -39,7 +39,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/hasenfeld.csv')
-    default_filename = '/glusterfs/ftp_home/hasenfeldftp/Fire and Ice Upload.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'hasenfeldftp/Fire and Ice Upload.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         try:

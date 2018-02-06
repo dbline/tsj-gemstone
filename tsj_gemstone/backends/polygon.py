@@ -40,7 +40,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    infile_glob = '/glusterfs/ftp_home/polygonftp/{id}*.csv'
+    infile_glob = os.path.join(settings.FTP_ROOT, 'polygonftp/{id}*.csv')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/polygon.csv')
 
     @property

@@ -38,7 +38,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    infile_glob = '/glusterfs/ftp_home/puregrownftp/{id}*.csv'
+    infile_glob = os.path.join(settings.FTP_ROOT, 'puregrownftp/{id}*.csv')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/puregrowndiamonds.csv')
 
     def get_default_filename(self):

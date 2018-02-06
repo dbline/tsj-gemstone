@@ -40,7 +40,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mgeller.csv')
-    default_filename = '/glusterfs/ftp_home/mgellerftp/mgeller.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'mgellerftp/mgeller.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/brilliantediamond.csv')
-    default_filename = '/glusterfs/ftp_home/brilliante/RapaportUpload.txt'
+    default_filename = os.path.join(settings.FTP_ROOT, 'brilliante/RapaportUpload.txt')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

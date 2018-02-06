@@ -65,7 +65,7 @@ class ASCHandler(XMLHandler):
 class Backend(XMLBackend):
     handler_class = ASCHandler
 
-    infile_glob = '/glusterfs/ftp_home/{username}/data/ASC_ITEM_*XML'
+    infile_glob = os.path.join(settings.FTP_ROOT, '{username}/data/ASC_ITEM_*XML')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/asc.xml')
 
     def get_default_filename(self):

@@ -30,7 +30,7 @@ cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 class Backend(XLSBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/waldman.xlsx')
-    infile_glob = '/glusterfs/ftp_home/waldmancanadaftp/*xlsx'
+    infile_glob = os.path.join(settings.FTP_ROOT, 'waldmancanadaftp/*xlsx')
 
     def get_default_filename(self):
         fn = max(glob.iglob(self.infile_glob), key=os.path.getctime)

@@ -30,7 +30,7 @@ cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rdi.csv')
-    default_filename = '/glusterfs/ftp_home/rdiftp/rdidiamonds.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'rdiftp/rdidiamonds.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

@@ -21,10 +21,6 @@ from ..utils import moneyfmt
 from tsj_pointofsale.prefs import prefs as pos_prefs
 from tsj_gemstone.prefs import prefs
 
-partial_import = pos_prefs.get('partial_import', True)
-
-FTP_ROOT = os.environ.get('FTP_ROOT', '/glusterfs/ftp_home/')
-
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
@@ -49,23 +45,24 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
+
     def __init__(self, *args, **kwargs):
         super(Backend, self).__init__(*args, **kwargs)
         self.logger = logging.getLogger(__name__)
-        
-        
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
-    if partial_import:
-        infile_glob = os.path.join(FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')
-    else:
-        infile_glob = os.path.join(FTP_ROOT, 'spicerftp/*-INVENTORY-FULL.CSV')
+        self.partial_import = pos_prefs.get('partial_import', True)
 
     @property
     def enabled(self):
         return self.backend_module in prefs.get('polygon_id')
 
     def get_default_filename(self):
-        files = sorted(glob.glob(self.infile_glob))
+        if self.partial_import:
+            infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')
+        else:
+            infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY-FULL.CSV')
+
+        files = sorted(glob.glob(infile_glob))
         if len(files):
             fn = files[-1]
             self.logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
@@ -89,7 +86,7 @@ class Backend(CSVBackend):
     def _read_rows(self, reader, writer, headers, blank_columns=None):
         existing_sns = set(models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
 
-        if not partial_import:
+        if not self.partial_import:
             # Only mark active discontinued if we're running everything.
             models.Diamond.objects.filter(source=self.backend_module).update(active=False)
 

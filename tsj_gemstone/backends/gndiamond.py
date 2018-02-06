@@ -78,7 +78,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    infile_glob = '/glusterfs/ftp_home/gndiamond/upload/Diamond*txt'
+    infile_glob = os.path.join(settings.FTP_ROOT, 'gndiamond/upload/Diamond*txt')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/gndiamond.csv')
 
     def get_default_filename(self):

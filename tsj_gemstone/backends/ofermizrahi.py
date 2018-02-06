@@ -40,7 +40,7 @@ def split_measurements(measurements):
 class Backend(CSVBackend):
     # This is for development only. Load a much smaller version of the diamonds database from the tests directory.
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/ofermizrahi.csv')
-    default_filename = '/glusterfs/ftp_home/ofermizrahi/OMDfullInventory.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'ofermizrahi/OMDfullInventory.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

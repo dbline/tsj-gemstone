@@ -16,11 +16,11 @@ class LabGrownGemstoneList(PageType):
 
 class GemstoneDetail(PageType):
     view = staticmethod(views.GemstoneDetailView.as_view())
-    regex_suffix = r'(?P<pk>[\d-]+)/'
+    regex_suffix = r'(?P<pk>[\d]+)/'
 
 class GemstonePrint(PageType):
     view = staticmethod(views.GemstonePrintView.as_view())
-    regex_suffix = r'(?P<pk>[\d-]+)/print/'
+    regex_suffix = r'(?P<pk>[\d]+)/print/'
 
 page_types.register('gemstone-list', GemstoneList)
 page_types.register('gemstone-lab-grown-list', LabGrownGemstoneList)

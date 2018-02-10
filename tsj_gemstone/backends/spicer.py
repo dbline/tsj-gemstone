@@ -41,23 +41,6 @@ def split_measurements(measurements):
 
     return length, width, depth
 
-one_word = [
-    'Lab',
-    'Cert',
-    'Carat',
-    'Color',
-    'Clarity',
-    'Polish',
-    'Symmetry',
-    'Cut',
-]
-
-two_words = [
-    'Diamond Shape',
-    'Sarine Number',
-    'Sarine Template',
-]
-
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
     infile_glob = '/glusterfs/ftp_home/spicerftp/*-INVENTORY.CSV'
@@ -163,6 +146,25 @@ class Backend(CSVBackend):
             lowest_price,
             inventory_type,
             price_method,
+            date_status,
+            date_entered,
+            date_created,
+            cut,
+            carat_weight,
+            color,
+            clarity,
+            cut_grade,
+            polish,
+            symmetry,
+            certifier,
+            cert_num,
+            collection,
+            placement,
+            length,
+            width,
+            depth,
+            fluorescence,
+            v360_link,
             additional_info
         ) = line
 
@@ -183,65 +185,21 @@ class Backend(CSVBackend):
         else:
             status = 'f'
 
-        """
-        Harmony Loose Diamond With One 0.70Ct Round Brilliant Cut D Si1 Diamond Lab: GIA Cert: 6225820160 Sarine Number: AUPRDJ8M18G Sarine Template: SPRGCHRMD3 Carat: 0.7 Color: D Clarity: SI2 Cut: Very Good Polish: Very Good Symmetry: Very Good Diamond Shape: Oval
-
-        {
-            'Symmetry': 'Excellent',
-            'Color': 'I',
-            'Sarine Number': 'Y2BC0QWA238',
-            'Carat': '0.6',
-            'Lab': 'GIA',
-            'Diamond Shape': 'Round',
-            'Cert': '2186348789',
-            'Sarine Template': 'SPRGCHRMD3',
-            'Polish': 'Very',
-            'Clarity': 'VS2'
-        }
-
-        """
-
-        dia = {}
-
-        if category_id == '190':
-            sections = description.split(': ')
-            last_key = None
-            for section in sections:
-                if last_key:
-                    value = section.split()[:1][0]
-                    if value == 'Fire':
-                        value = section.split()[1]
-                    dia[last_key] = value
-
-                key = section.split()[-2:]
-                key = ' '.join(key)
-                if key in two_words:
-                    last_key = key
-                else:
-                    key = section.split()[-1:][0]
-                    if key in one_word:
-                        last_key = key
-                    else:
-                        last_key = None
-        else:
+        if category_id != '190':
             raise SkipDiamond('Not a diamond')
 
         try:
-            cut = dia['Diamond Shape']
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
             raise KeyValueError('cut_aliases', e.args[0])
 
         try:
-            carat_weight = dia['Carat']
             carat_weight = Decimal(str(cached_clean(carat_weight)))
         except KeyError as e:
             raise KeyValueError('carat_weight', e.args[0])
 
-        color = dia['Color']
         color = self.color_aliases.get(cached_clean(color, upper=True))
 
-        certifier = dia['Lab']
         certifier = cached_clean(certifier, upper=True)
 
         try:
@@ -259,7 +217,6 @@ class Backend(CSVBackend):
         else:
             certifier = certifier_id
 
-        clarity = dia['Clarity']
         clarity = cached_clean(clarity, upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
@@ -269,7 +226,6 @@ class Backend(CSVBackend):
             raise KeyValueError('clarity', e.args[0])
 
         try:
-            cut_grade = dia['Cut']
             cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         except KeyError as e:
             raise KeyValueError('cut', e.args[0])
@@ -283,40 +239,30 @@ class Backend(CSVBackend):
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 
-        polish = dia['Polish']
         polish = self.grading_aliases.get(cached_clean(polish, upper=True))
-
-        symmetry = dia['Symmetry']
         symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
 
-        cert_num = dia['Cert']
+        fluorescence = cached_clean(fluorescence, upper=True)
+        fluorescence_id = None
+        for abbr, id in self.fluorescence_aliases.iteritems():
+            if fluorescence.startswith(abbr.upper()):
+                fluorescence_id = id
+                #fluorescence_color = fluorescence.replace(abbr.upper(), '')
+                break
+        fluorescence = fluorescence_id
+        fluorescence_color_id = None
+
         cert_num = clean(cert_num)
         if not cert_num:
             cert_num = ''
 
         depth_percent = None
         table_percent = None
-        fluorescence_id = None
-        fluorescence_color_id = None
-        length = None
-        width = None
-        depth = None
 
-        data = {}
-
-        try:
-            sarine_id = dia['Sarine Number']
-            if sarine_id != 'NA':
-                data['sarine_id'] = sarine_id
-        except KeyError as e:
-            raise KeyValueError('sarine_id', e.args[0])
-
-        try:
-            sarine_template = dia['Sarine Template']
-            if sarine_template != 'NA':
-                data['sarine_template'] = sarine_template
-        except KeyError as e:
-            raise KeyValueError('sarine_template', e.args[0])
+        if v360_link:
+            data = {'v360_link': v360_link}
+        else:
+            data = {}
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(

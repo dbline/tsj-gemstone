@@ -146,9 +146,8 @@ class Backend(CSVBackend):
             lowest_price,
             inventory_type,
             price_method,
-            date_status,
-            date_entered,
-            date_created,
+            style_number,
+            memo,
             cut,
             carat_weight,
             color,
@@ -165,7 +164,12 @@ class Backend(CSVBackend):
             depth,
             fluorescence,
             v360_link,
-            additional_info
+            title,
+            meta_title,
+            meta_keywords,
+            meta_description,
+            desc,
+            category
         ) = line
 
         (

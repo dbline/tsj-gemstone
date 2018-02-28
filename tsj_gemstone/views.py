@@ -52,8 +52,8 @@ def _get_queryset_ordering(qs, querystring, opts):
 
 class GemstoneListView(PagesTemplateResponseMixin, ListView):
     model = Diamond
-    template_name = 'tspages/gemstone-list.html'
-    no_template_name = 'tspages/gemstone-no-list.html'
+    template_name = 'tsj_gemstone/tspages/gemstone-list.html'
+    no_template_name = 'tsj_gemstone/tspages/gemstone-no-list.html'
     filterset = GemstoneFilterSet
 
     gemstones_template = 'tsj_gemstone/includes/gemstones.html'
@@ -207,7 +207,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
         return super(GemstoneListView, self).dispatch(*args, **kwargs)
 
 class FancyColorGemstoneListView(GemstoneListView):
-    template_name = 'tspages/gemstone-fancy-list.html'
+    template_name = 'tsj_gemstone/tspages/gemstone-fancy-list.html'
     filterset = FancyColorFilterSet
 
     def get_queryset(self):

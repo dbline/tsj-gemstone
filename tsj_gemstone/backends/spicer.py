@@ -118,7 +118,7 @@ class Backend(CSVBackend):
             self.import_errors[str(e)] += 1
             logger.error('Diamond import exception', exc_info=e)
         else:
-            if diamond_row.stock_number in existing_sns:
+            if partial_import and diamond_row.stock_number in existing_sns:
                 diamond = models.Diamond.objects.get(stock_number=diamond_row.stock_number)
                 if diamond_row.active == 't':
                     diamond.active = True
@@ -286,10 +286,15 @@ class Backend(CSVBackend):
         depth_percent = None
         table_percent = None
 
+        data = {}
         if v360_link:
-            data = {'v360_link': v360_link}
-        else:
-            data = {}
+            data.update({'v360_link': v360_link})
+
+        if self.nvl(description):
+            if self.nvl(memo):
+                data.update({'alt_description': description + memo})
+            else:
+                data.update({'alt_description': description})
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
@@ -325,7 +330,7 @@ class Backend(CSVBackend):
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            self.nvl(description), # comment,
+            '', # comment,
             '', #city,
             '', #state,
             '', #country,

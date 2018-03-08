@@ -105,11 +105,14 @@ class Backend(CSVBackend):
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
             self.import_skip[str(e)] += 1
+            logger.info('Skipping Diamond "%s" - SkipDiamond' % diamond_row.stock_number)
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
+            logger.info('Skipping Diamond "%s" - KeyValueError' % diamond_row.stock_number)
         except KeyError as e:
             self.import_errors[str(e)] += 1
             logger.info('KeyError', exc_info=e)
+            logger.info('Skipping Diamond "%s" - KeyValueError' % diamond_row.stock_number)
         except ValueError as e:
             self.import_errors[str(e)] += 1
             logger.info('ValueError', exc_info=e)
@@ -131,6 +134,7 @@ class Backend(CSVBackend):
                 except:
                     pass
                 diamond.save()
+                logger.info('Adding Diamond "%s"' % diamond_row.stock_number)
             else:
                 if len(self.row_buffer) > self.buffer_size:
                     writer.writerows(self.row_buffer)

@@ -118,7 +118,7 @@ class Backend(CSVBackend):
             self.import_errors[str(e)] += 1
             logger.error('Diamond import exception', exc_info=e)
         else:
-            if partial_import and diamond_row.stock_number in existing_sns:
+            if diamond_row.stock_number in existing_sns:
                 diamond = models.Diamond.objects.get(stock_number=diamond_row.stock_number)
                 if diamond_row.active == 't':
                     diamond.active = True
@@ -127,6 +127,7 @@ class Backend(CSVBackend):
                 diamond.data = diamond_row.data
                 diamond.price = diamond_row.price
                 diamond.carat_price = diamond_row.carat_price
+
                 try:
                     diamond.certifier_id = diamond_row.certifier_id
                 except:

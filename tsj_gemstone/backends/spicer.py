@@ -105,10 +105,10 @@ class Backend(CSVBackend):
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
             self.import_skip[str(e)] += 1
-            logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
+            #logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
-            logger.info('Skipping Diamond "%s" - KeyValueError' % repr(e))
+            logger.info('Skipping Diamond "%s" - %s:%s ' % repr(e), repr(e.key), repr(e.value))
         except KeyError as e:
             self.import_errors[str(e)] += 1
             logger.info('KeyError', exc_info=e)
@@ -214,11 +214,14 @@ class Backend(CSVBackend):
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
+            logger.info('Skipping Diamond "%s" - Cut Aliases' % stock_number)
             raise KeyValueError('cut_aliases', e.args[0],)
+
 
         try:
             carat_weight = Decimal(str(cached_clean(carat_weight)))
         except KeyError as e:
+            logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])
 
         color = self.color_aliases.get(cached_clean(color, upper=True))
@@ -228,6 +231,7 @@ class Backend(CSVBackend):
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
         except KeyError as e:
+            logger.info('Skipping Diamond "%s" - Certifier Aliases' % stock_number)
             raise KeyValueError('certifier_aliases', e.args[0])
 
         if certifier_disabled:
@@ -246,11 +250,13 @@ class Backend(CSVBackend):
         try:
             clarity = self.clarity_aliases[clarity]
         except KeyError as e:
+            logger.info('Skipping Diamond "%s" - Clarity Aliases' % stock_number)
             raise KeyValueError('clarity', e.args[0])
 
         try:
             cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         except KeyError as e:
+            logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
             raise KeyValueError('cut', e.args[0])
 
         try:

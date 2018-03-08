@@ -108,15 +108,12 @@ class Backend(CSVBackend):
             #logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
-            logger.info('Skipping Diamond "%s" - %s:%s ' % repr(e), repr(e.key), repr(e.value))
         except KeyError as e:
             self.import_errors[str(e)] += 1
             logger.info('KeyError', exc_info=e)
-            logger.info('Skipping Diamond "%s" - KeyError' % repr(e))
         except ValueError as e:
             self.import_errors[str(e)] += 1
             logger.info('ValueError', exc_info=e)
-            logger.info('Skipping Diamond "%s" - KeyError' % repr(e))
         except Exception as e:
             self.import_errors[str(e)] += 1
             logger.error('Diamond import exception', exc_info=e)

@@ -132,7 +132,7 @@ class Backend(CSVBackend):
                 except:
                     pass
                 diamond.save()
-                logger.info('Adding Diamond "%s"' % diamond_row.stock_number)
+                logger.info('Updating Existing Diamond "%s"' % diamond_row.stock_number)
             else:
                 if len(self.row_buffer) > self.buffer_size:
                     writer.writerows(self.row_buffer)
@@ -140,6 +140,7 @@ class Backend(CSVBackend):
                 else:
                     self.row_buffer.append(diamond_row)
                 self.import_successes += 1
+                logger.info('Adding New Diamond "%s"' % diamond_row.stock_number)
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

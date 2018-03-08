@@ -105,17 +105,18 @@ class Backend(CSVBackend):
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
             self.import_skip[str(e)] += 1
-            logger.info('Skipping Diamond "%s" - SkipDiamond' % diamond_row.stock_number)
+            logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
-            logger.info('Skipping Diamond "%s" - KeyValueError' % diamond_row.stock_number)
+            logger.info('Skipping Diamond "%s" - KeyValueError' % repr(e))
         except KeyError as e:
             self.import_errors[str(e)] += 1
             logger.info('KeyError', exc_info=e)
-            logger.info('Skipping Diamond "%s" - KeyValueError' % diamond_row.stock_number)
+            logger.info('Skipping Diamond "%s" - KeyError' % repr(e))
         except ValueError as e:
             self.import_errors[str(e)] += 1
             logger.info('ValueError', exc_info=e)
+            logger.info('Skipping Diamond "%s" - KeyError' % repr(e))
         except Exception as e:
             self.import_errors[str(e)] += 1
             logger.error('Diamond import exception', exc_info=e)
@@ -213,7 +214,7 @@ class Backend(CSVBackend):
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
-            raise KeyValueError('cut_aliases', e.args[0])
+            raise KeyValueError('cut_aliases', e.args[0],)
 
         try:
             carat_weight = Decimal(str(cached_clean(carat_weight)))

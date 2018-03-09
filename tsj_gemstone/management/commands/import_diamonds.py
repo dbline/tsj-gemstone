@@ -58,4 +58,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # TODO: Start Celery task if async=True
         backend = get_backend(options.get('backend'))
-        backend.Backend(filename=options.get('file'), nodebug=options.get('nodebug')).run()
+        backend_instance = backend.Backend(filename=options.get('file'), nodebug=options.get('nodebug'))
+        if hasattr(backend_instance, "logger"):
+            self.add_log_handler(backend_instance.logger, **options)
+        backend_instance.run()
+
+    def add_log_handler(self, of_logger, **options):
+        verbosity = int(options['verbosity'])
+
+        log_level = [logging.WARNING, logging.INFO, logging.INFO, logging.DEBUG][verbosity]
+        log_handler = logging.StreamHandler(stream=self.stdout)
+        of_logger.addHandler(log_handler)
+        log_handler.setLevel(log_level)
+        if of_logger.getEffectiveLevel() > log_level:
+            of_logger.setLevel(log_level)

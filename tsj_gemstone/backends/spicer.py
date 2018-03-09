@@ -13,6 +13,7 @@ from urlparse import urlparse
 from django.conf import settings
 from django.db import connection, transaction
 from django.utils.lru_cache import lru_cache
+from django.conf import settings
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
@@ -47,6 +48,13 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
+    
+    
+    def __init__(self, *args, **kwargs):
+        super(Backend, self).__init__(*args, **kwargs)
+        self.logger = logging.getLogger(__name__)
+        
+        
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
     if partial_import:
         infile_glob = os.path.join(FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')
@@ -57,7 +65,7 @@ class Backend(CSVBackend):
         files = sorted(glob.glob(self.infile_glob))
         if len(files):
             fn = files[-1]
-            logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
+            self.logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
             return fn
 
     def save(self, fp):
@@ -71,7 +79,7 @@ class Backend(CSVBackend):
                 cursor = connection.cursor()
                 cursor.copy_from(fp, 'tsj_gemstone_diamond', null='NULL', columns=self.Row._fields)
             except Exception as e:
-                logger.exception("Error on copy_from for %s" % self.backend_module)
+                self.logger.exception("Error on copy_from for %s" % self.backend_module)
 
         fp.close()
 
@@ -105,18 +113,18 @@ class Backend(CSVBackend):
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
             self.import_skip[str(e)] += 1
-            #logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
+            #self.logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
         except KeyError as e:
             self.import_errors[str(e)] += 1
-            logger.info('KeyError', exc_info=e)
+            self.logger.info('KeyError', exc_info=e)
         except ValueError as e:
             self.import_errors[str(e)] += 1
-            logger.info('ValueError', exc_info=e)
+            self.logger.info('ValueError', exc_info=e)
         except Exception as e:
             self.import_errors[str(e)] += 1
-            logger.error('Diamond import exception', exc_info=e)
+            self.logger.error('Diamond import exception', exc_info=e)
         else:
             if diamond_row.stock_number in existing_sns:
                 diamond = models.Diamond.objects.get(stock_number=diamond_row.stock_number)
@@ -133,7 +141,7 @@ class Backend(CSVBackend):
                 except:
                     pass
                 diamond.save()
-                logger.info('Updating Existing Diamond "%s"' % diamond_row.stock_number)
+                self.logger.info('Updating Existing Diamond "%s"' % diamond_row.stock_number)
             else:
                 if len(self.row_buffer) > self.buffer_size:
                     writer.writerows(self.row_buffer)
@@ -141,7 +149,7 @@ class Backend(CSVBackend):
                 else:
                     self.row_buffer.append(diamond_row)
                 self.import_successes += 1
-                logger.info('Adding New Diamond "%s"' % diamond_row.stock_number)
+                self.logger.info('Adding New Diamond "%s"' % diamond_row.stock_number)
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
@@ -213,14 +221,14 @@ class Backend(CSVBackend):
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:
-            logger.info('Skipping Diamond "%s" - Cut Aliases' % stock_number)
+            self.logger.info('Skipping Diamond "%s" - Cut Aliases' % stock_number)
             raise KeyValueError('cut_aliases', e.args[0],)
 
 
         try:
             carat_weight = Decimal(str(cached_clean(carat_weight)))
         except KeyError as e:
-            logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
+            self.logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])
 
         color = self.color_aliases.get(cached_clean(color, upper=True))
@@ -230,7 +238,7 @@ class Backend(CSVBackend):
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
         except KeyError as e:
-            logger.info('Skipping Diamond "%s" - Certifier Aliases' % stock_number)
+            self.logger.info('Skipping Diamond "%s" - Certifier Aliases' % stock_number)
             raise KeyValueError('certifier_aliases', e.args[0])
 
         if certifier_disabled:
@@ -249,13 +257,13 @@ class Backend(CSVBackend):
         try:
             clarity = self.clarity_aliases[clarity]
         except KeyError as e:
-            logger.info('Skipping Diamond "%s" - Clarity Aliases' % stock_number)
+            self.logger.info('Skipping Diamond "%s" - Clarity Aliases' % stock_number)
             raise KeyValueError('clarity', e.args[0])
 
         try:
             cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         except KeyError as e:
-            logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
+            self.logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
             raise KeyValueError('cut', e.args[0])
 
         try:

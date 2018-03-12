@@ -1,5 +1,10 @@
+import json
+
 from django.db import models
 from django.template import Context, loader
+from django.utils.functional import cached_property
+from django.core.urlresolvers import reverse as django_reverse
+
 
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
@@ -317,6 +322,15 @@ class DiamondBase(TimeStampedModel):
     class Meta:
         abstract = True
         ordering = ['carat_weight']
+
+    @cached_property
+    def frontend_edit_links(self):
+    # https://docs.djangoproject.com/en/1.8/ref/contrib/admin/#admin-reverse-urls
+        ret = {
+            "Edit Gemstone": ("detail", django_reverse("admin:tsj_gemstone_diamond_change", args=(self.pk,)), "fa fa-pencil", "Edit gemstone data, sizes, certificate, etc."),
+            "View All Gemstones": ("list", django_reverse("admin:tsj_gemstone_diamond_changelist"), "fa fa-th", "View and filter gemstones"),
+        }
+        return json.dumps(ret).replace("'", "\\'")
 
 class Diamond(DiamondBase):
     class Meta(DiamondBase.Meta):

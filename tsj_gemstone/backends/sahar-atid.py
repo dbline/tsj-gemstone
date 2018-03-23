@@ -152,15 +152,8 @@ class Backend(CSVBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-        girdle = girdle_thin or ''
-        if girdle_thin != girdle_thick and girdle_thick:
-            if girdle_thin:
-                girdle += ' - ' + girdle_thick
-            else:
-                girdle = girdle_thick
 
-        girdle = cached_clean(girdle, upper=True)
-        if not girdle or girdle == '-':
+        if not girdle or girdle == '':
             girdle = ''
 
         culet = cached_clean(culet, upper=True)

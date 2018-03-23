@@ -213,10 +213,12 @@ class Backend(CSVBackend):
         measurements = clean(measurements)
         length, width, depth = split_measurements(measurements)
 
+        """
         if manmade == '1':
             manmade = 't'
         else:
             manmade = 'f'
+        """
 
         data = {}
         if v360_link:

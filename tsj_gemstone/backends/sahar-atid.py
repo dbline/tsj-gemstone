@@ -46,12 +46,7 @@ class Backend(CSVBackend):
 
     @property
     def enabled(self):
-        try:
-            if self.backend_module in prefs.get('polygon_id'):
-               return True
-            return False
-        except:
-           return False
+        return self.backend_module in prefs.get('polygon_id')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

@@ -19,4 +19,5 @@ __all__ = (
     'stuller',
     'vantyghem',
     'waldman',
+    'sahar-atid',
 )

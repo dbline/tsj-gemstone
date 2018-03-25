@@ -44,6 +44,13 @@ class Backend(CSVBackend):
     debug_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
     default_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
 
+    def enabled(self):
+        try:
+            if self.backend_module in prefs.get('polygon_id'):
+                return True
+            return False
+        except:
+            return False
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
             line = line[:-blank_columns]

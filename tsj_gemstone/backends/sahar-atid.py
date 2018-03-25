@@ -44,6 +44,7 @@ class Backend(CSVBackend):
     debug_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
     default_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
 
+    @property
     def enabled(self):
         return False
         #try:

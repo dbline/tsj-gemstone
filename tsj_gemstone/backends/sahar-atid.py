@@ -7,7 +7,7 @@ from string import ascii_letters, digits, whitespace, punctuation
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
-
+import IPython
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
@@ -45,6 +45,7 @@ class Backend(CSVBackend):
     default_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
 
     def enabled(self):
+        IPython.embed()
         try:
             if self.backend_module in prefs.get('polygon_id'):
                 return True

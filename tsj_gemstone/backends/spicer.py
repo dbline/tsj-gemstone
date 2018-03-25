@@ -19,6 +19,7 @@ from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..utils import moneyfmt
 from tsj_pointofsale.prefs import prefs as pos_prefs
+from tsj_gemstone.prefs import prefs
 
 partial_import = pos_prefs.get('partial_import', True)
 

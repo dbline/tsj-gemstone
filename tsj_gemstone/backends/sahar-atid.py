@@ -48,7 +48,7 @@ class Backend(CSVBackend):
     def enabled(self):
         try:
             if self.backend_module in prefs.get('polygon_id'):
-               return False
+               return True
             return False
         except:
            return False

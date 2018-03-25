@@ -48,7 +48,7 @@ class Backend(CSVBackend):
         IPython.embed()
         try:
             if self.backend_module in prefs.get('polygon_id'):
-                return True
+                return False
             return False
         except:
             return False

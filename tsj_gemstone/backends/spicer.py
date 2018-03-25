@@ -48,8 +48,6 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    
-    
     def __init__(self, *args, **kwargs):
         super(Backend, self).__init__(*args, **kwargs)
         self.logger = logging.getLogger(__name__)
@@ -60,6 +58,10 @@ class Backend(CSVBackend):
         infile_glob = os.path.join(FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')
     else:
         infile_glob = os.path.join(FTP_ROOT, 'spicerftp/*-INVENTORY-FULL.CSV')
+
+    @property
+    def enabled(self):
+        return self.backend_module in prefs.get('polygon_id')
 
     def get_default_filename(self):
         files = sorted(glob.glob(self.infile_glob))

@@ -20,6 +20,7 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
+POLYGON_ID_PATTERN = re.compile('^\d{4,7}\Z')
 
 def clean(data, upper=False):
     data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')
@@ -44,7 +45,7 @@ class Backend(CSVBackend):
 
     @property
     def enabled(self):
-        return prefs.get('polygon_id')
+        return POLYGON_ID_PATTERN.match(prefs.get('polygon_id'))
 
     def get_default_filename(self):
         polygon_id = prefs.get('polygon_id')

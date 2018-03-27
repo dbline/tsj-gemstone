@@ -19,6 +19,6 @@ __all__ = (
     'stuller',
     'vantyghem',
     'waldman',
-    'sahar_atid.py',
+    'sahar_atid',
     'spicer',
 )

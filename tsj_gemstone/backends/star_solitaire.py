@@ -314,7 +314,7 @@ class Backend(CSVBackend):
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            self.nvl(comment),
+            comment,
             self.nvl(city),
             self.nvl(state),
             self.nvl(country),

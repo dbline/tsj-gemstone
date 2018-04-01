@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     # debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mgeller.csv')
-    debug_filename = '/glusterfs/ftp_home/starsolitaire-ftp/1123-diamonds.csv'
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/star_solitaire.csv')
     default_filename = '/glusterfs/ftp_home/starsolitaire-ftp/1123-diamonds.csv'
 
     @property

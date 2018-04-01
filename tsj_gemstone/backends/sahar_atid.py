@@ -40,8 +40,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    # debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mgeller.csv')
-    debug_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/sahar_atid.csv')
     default_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
 
     @property

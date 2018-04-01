@@ -54,7 +54,7 @@ class GemstonePreferencesForm(PreferencesForm):
     premiergem = forms.BooleanField(required=False, label='Premier Gem')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
-    star_solitaire = forms.BooleanField(required=False, label='Star Solitaire')
+    sahar_atid = forms.BooleanField(required=False, label='Sahar Atid')
     stuller = forms.BooleanField(required=False)
     mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
     vantyghem = forms.BooleanField(required=False, label='Vantyghem (Canadian Dollar)')

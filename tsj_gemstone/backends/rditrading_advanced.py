@@ -42,7 +42,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/rditrading_advanced.csv')
-    infile_glob = '/glusterfs/ftp_home/rdi-tradingftp/data/*csv'
+    infile_glob = '/glusterfs/ftp_home/rdi-global-diamond-feed/*csv'
 
     def get_default_filename(self):
         fn = max(glob.iglob(self.infile_glob), key=os.path.getctime)

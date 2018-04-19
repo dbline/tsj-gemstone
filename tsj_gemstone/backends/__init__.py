@@ -16,6 +16,7 @@ __all__ = (
     'rapnet10',
     'rdi',
     'rditrading',
+    'rditrading_advanced',
     'stuller',
     'vantyghem',
     'waldman',

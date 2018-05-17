@@ -155,8 +155,11 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
             filterset = self.filterset(initial, queryset=queryset)
 
+            count = filterset.count()
+
             context.update({
                 'carat_weights': carat_weights,
+                'count': count,
                 'filterset': filterset,
                 'has_ring_builder': builder_prefs.get('ring'),
                 'initial_cuts': self.request.GET.getlist('cut'),

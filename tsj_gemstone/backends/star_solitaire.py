@@ -7,7 +7,7 @@ from string import ascii_letters, digits, whitespace, punctuation
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
-import IPython
+
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
@@ -42,7 +42,7 @@ def split_measurements(measurements):
 class Backend(CSVBackend):
     # debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/mgeller.csv')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/star_solitaire.csv')
-    default_filename = '/glusterfs/ftp_home/starsolitaire-ftp/1123-diamonds.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'starsolitaire-ftp/1123-diamonds.csv')
 
     @property
     def enabled(self):

@@ -7,7 +7,7 @@ from string import ascii_letters, digits, whitespace, punctuation
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
-import IPython
+
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/sahar_atid.csv')
-    default_filename = '/glusterfs/ftp_home/sahar-atid-diamond-feed/DIAMOND-LIST.csv'
+    default_filename = os.path.join(settings.FTP_ROOT, 'sahar-atid-diamond-feed/DIAMOND-LIST.csv')
 
     @property
     def enabled(self):

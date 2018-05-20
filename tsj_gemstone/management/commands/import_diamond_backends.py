@@ -3,6 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import LabelCommand
 
+from tsj_core.flags import Flags
 from tsj_gemstone import tasks
 
 from poc_command_overrides.management.utils import MultisiteCommand, set_site
@@ -51,6 +52,10 @@ class Command(MultisiteCommand, LabelCommand):
         )
 
     def handle_label(self, router, **options):
+        if Flags.readonly:
+            logger.info('Skipping diamond import, readonly flag is enabled')
+            return
+
         # We don't want to simply rely on CELERY_ALWAYS_EAGER here because
         # even in production (where the setting would be False) we may want
         # to run the command on the console (e.g, to see synchronous

@@ -6,6 +6,7 @@ import re
 from string import ascii_letters, digits, whitespace, punctuation
 import tempfile
 
+from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
 from .base import LRU_CACHE_MAXSIZE, XLSBackend, SkipDiamond, KeyValueError

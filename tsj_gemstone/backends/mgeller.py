@@ -94,7 +94,9 @@ class Backend(CSVBackend):
             minimum_price,
             maximum_price,
             must_be_certified,
-            verify_cert_images
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
         ) = self.pref_values
 
         #comment = cached_clean(comment)
@@ -227,9 +229,15 @@ class Backend(CSVBackend):
         length, width, depth = split_measurements(measurements)
 
         if manmade == '1':
-            manmade = 't'
+            if not include_lab_grown:
+                raise SkipDiamond("Don't include lab-grown")
+            else:
+                manmade = 't'
         else:
-            manmade = 'f'
+            if not include_mined:
+                raise SkipDiamond("Don't include mined")
+            else:
+                manmade = 'f'
 
         if laser_inscription == '1':
             laser_inscribed = 't'

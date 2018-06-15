@@ -89,7 +89,16 @@ class Backend(JSONBackend):
         return ret
 
     def write_diamond_row(self, data):
-        minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = self.pref_values
+        (
+            minimum_carat_weight,
+            maximum_carat_weight,
+            minimum_price,
+            maximum_price,
+            must_be_certified,
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
+        ) = self.pref_values
 
         if not data.get('IsDiamond'):
             raise SkipDiamond('Is not a diamond.')

@@ -306,7 +306,16 @@ def write_diamond_row(line, cut_aliases, color_aliases, clarity_aliases, grading
         unused_total_price,
     ) = line
 
-    minimum_carat_weight, maximum_carat_weight, minimum_price, maximum_price, must_be_certified, verify_cert_images = pref_values
+    (
+        minimum_carat_weight,
+        maximum_carat_weight,
+        minimum_price,
+        maximum_price,
+        must_be_certified,
+        verify_cert_images,
+        include_mined,
+        include_lab_grown
+    ) = self.pref_values
 
     #owner = cached_clean(owner).title()
     #comment = cached_clean(comment)

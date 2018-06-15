@@ -106,9 +106,11 @@ class Backend(CSVBackend):
             minimum_price,
             maximum_price,
             must_be_certified,
-            verify_cert_images
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
         ) = self.pref_values
-
+        
         #owner = cached_clean(owner).title()
         comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)

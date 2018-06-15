@@ -115,7 +115,9 @@ class Backend(XMLBackend):
             minimum_price,
             maximum_price,
             must_be_certified,
-            verify_cert_images
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
         ) = self.pref_values
 
         stock_number = clean(data.get('stock_number'))

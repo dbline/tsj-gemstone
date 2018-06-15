@@ -192,9 +192,15 @@ class Backend(CSVBackend):
         length, width, depth = split_measurements(measurements)
 
         if manmade == '1':
-            manmade = 't'
+            if not include_lab_grown:
+                raise SkipDiamond("Don't include lab-grown")
+            else:
+                manmade = 't'
         else:
-            manmade = 'f'
+            if not include_mined:
+                raise SkipDiamond("Don't include mined")
+            else:
+                manmade = 'f'
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
@@ -262,7 +268,7 @@ class Backend(CSVBackend):
             '', #city,
             '', #state,
             '', #country,
-            'f', # manmade,
+            manmade, # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date
             '{}', # data

@@ -107,7 +107,9 @@ class Backend(CSVBackend):
             minimum_price,
             maximum_price,
             must_be_certified,
-            verify_cert_images
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
         ) = self.pref_values
 
         comment = cached_clean(comment)
@@ -217,13 +219,6 @@ class Backend(CSVBackend):
             width = None
         if depth == '0':
             depth = None
-
-        """
-        if manmade == '1':
-            manmade = 't'
-        else:
-            manmade = 'f'
-        """
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')

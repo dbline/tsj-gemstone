@@ -104,7 +104,9 @@ class Backend(CSVBackend):
             minimum_price,
             maximum_price,
             must_be_certified,
-            verify_cert_images
+            verify_cert_images,
+            include_mined,
+            include_lab_grown
         ) = self.pref_values
 
         #comment = cached_clean(comment)
@@ -240,13 +242,6 @@ class Backend(CSVBackend):
             laser_inscribed = 't'
         else:
             laser_inscribed = 'f'
-
-        """
-        if manmade == '1':
-            manmade = 't'
-        else:
-            manmade = 'f'
-        """
 
         #data = {}
         #if v360_link:

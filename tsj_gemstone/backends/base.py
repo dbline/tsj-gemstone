@@ -172,6 +172,8 @@ class BaseBackend(object):
             Decimal(prefs.get('rapaport_maximum_price', '200000')),
             prefs.get('rapaport_must_be_certified', True),
             prefs.get('rapaport_verify_cert_images', False),
+            prefs.get('include_mined', True),
+            prefs.get('include_lab_grown', False),
         )
 
     def create_import_record(self):

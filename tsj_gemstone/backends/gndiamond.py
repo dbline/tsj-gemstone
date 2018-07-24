@@ -123,7 +123,8 @@ class Backend(CSVBackend):
             cert_num,
             show_cert, # Yes/No
             fancy_color, # Just Yellow so far
-            sarine_link
+            sarine_link,
+            customer
         ) = line
 
         (

@@ -63,7 +63,7 @@ class Backend(CSVBackend):
         table_percent,
         girdle_min,
         girdle_max,
-        girdle_condition,
+        girdle,
         culet,
         polish,
         symmetry,

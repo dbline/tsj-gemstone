@@ -40,8 +40,8 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/177-diamonds.csv')
-    default_filename = os.path.join(settings.FTP_ROOT, 'dnrdiamonds/1177-diamonds.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/sahar_atid.csv')
+    default_filename = os.path.join(settings.FTP_ROOT, 'sahar-atid-diamond-feed/DIAMOND-LIST.csv')
 
     @property
     def enabled(self):
@@ -61,40 +61,21 @@ class Backend(CSVBackend):
         carat_price,
         depth_percent,
         table_percent,
-        unused_girdle_min,
-        unused_girdle_max,
-        girdle,
+        girdle_thin,
+        girdle_thick,
         culet,
         polish,
         symmetry,
         fluorescence,
         fluorescence_color,
-        unused_crown_height,
-        unused_crown_angle,
-        unused_pavilion_depth,
-        unused_pavilion_angle,
-        unused_laser_inscription,
         comment,
         cert_num,
         cert_image,
-        unused_diamond_image,
         stock_number,
-        unused_pair_vendor_stock_number,
-        unused_is_matched_pair_separable,
         fancy_color,
         fancy_color_intensity,
         fancy_color_overtone,
-        unused_status,
-        unused_raplist,
-        unused_rappercent,
-        unused_shade,
-        unused_measlength,
-        unused_measwidth,
-        unused_measdepth,
-        city,
-        state,
-        country,
-        v360_link,
+        unused_parcelstonecount,
         ) = line
 
         (
@@ -297,11 +278,11 @@ class Backend(CSVBackend):
             self.nvl(width),
             self.nvl(depth),
             comment,
-            city, #city,
-            state, #state,
-            country,
+            '', #city,
+            '', #state,
+            '', #country
             'f', # manmade,
-            'f', # laser_inscribed,
+            'f', # laser_inscribed
             'NULL', # rap_date
             json.dumps(data), # data
         )

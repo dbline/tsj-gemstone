@@ -23,4 +23,5 @@ __all__ = (
     'sahar_atid',
     'star_solitaire',
     'spicer',
+    'dnr_dia',
 )

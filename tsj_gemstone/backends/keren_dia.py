@@ -212,9 +212,10 @@ class Backend(CSVBackend):
         length, width, depth = split_measurements(measurements)
 
         data = {}
+        """
         if v360_link:
             data.update({'v360_link': v360_link})
-
+        """
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 

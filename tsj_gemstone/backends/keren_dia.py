@@ -62,7 +62,7 @@ class Backend(CSVBackend):
         depth_percent,
         table_percent,
         girdle_thin,
-        girdle_thick,
+        girdle,
         culet,
         polish,
         symmetry,

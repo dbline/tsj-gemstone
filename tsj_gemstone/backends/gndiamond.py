@@ -124,7 +124,9 @@ class Backend(CSVBackend):
             show_cert, # Yes/No
             fancy_color, # Just Yellow so far
             sarine_link,
-            customer
+            customer,
+            store,
+            v360_link
         ) = line
 
         (
@@ -271,6 +273,8 @@ class Backend(CSVBackend):
         if sarine_link:
             data = {'sarine_link': sarine_link}
             # https://api.sarine.com/viewer/v1/V1XWDF7VPUM/HX3CDW4NJW
+        elif v360_link:
+            data = {'v360_link': v360_link}
         else:
             data = {}
 

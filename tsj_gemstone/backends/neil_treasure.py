@@ -256,6 +256,8 @@ class Backend(CSVBackend):
                         raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
             else:
+                price = None
+                carat_price = None
                 raise SkipDiamond('No carat_price specified')
 
         # Order must match structure of tsj_gemstone_diamond table

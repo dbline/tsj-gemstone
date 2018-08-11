@@ -25,4 +25,5 @@ __all__ = (
     'spicer',
     'dnr_dia',
     'keren_dia',
+    'neil_treasure',
 )

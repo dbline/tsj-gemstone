@@ -80,7 +80,8 @@ class Backend(CSVBackend):
             must_be_certified,
             verify_cert_images,
             include_mined,
-            include_lab_grown
+            include_lab_grown,
+            show_prices
         ) = self.pref_values
 
         comment = cached_clean(comment)
@@ -129,17 +130,7 @@ class Backend(CSVBackend):
 
         cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
 
-        carat_price = clean(carat_price.replace(',', ''))
-        try:
-            carat_price = Decimal(carat_price)
-        except InvalidOperation:
-            carat_price = None
 
-        retail_price = clean(retail_price.replace(',', ''))
-        try:
-            retail_price = Decimal(retail_price)
-        except InvalidOperation:
-            retail_price = None
 
         try:
             depth_percent = Decimal(str(clean(depth_percent)))
@@ -220,38 +211,52 @@ class Backend(CSVBackend):
             data.update({'v360_link': v360_link})
         """
 
-        # Initialize price after all other data has been initialized
-        if retail_price:
-            price = retail_price
-            carat_price = retail_price / carat_weight
+        if not show_prices == 'none':
 
-        elif carat_price:
-            price_before_markup = carat_price * carat_weight
+            carat_price = clean(carat_price.replace(',', ''))
+            try:
+                carat_price = Decimal(carat_price)
+            except InvalidOperation:
+                carat_price = None
 
-            if minimum_price and price_before_markup < minimum_price:
-                raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
-            if maximum_price and price_before_markup > maximum_price:
-                raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
+            retail_price = clean(retail_price.replace(',', ''))
+            try:
+                retail_price = Decimal(retail_price)
+            except InvalidOperation:
+                retail_price = None
 
-            price = None
-            for markup in self.markup_list:
-                if prefs.get('markup') == 'carat_weight':
-                    if markup[0] <= carat_weight and markup[1] >= carat_weight:
-                        price = (price_before_markup * (1 + markup[2]/100))
-                        break
-                else:
-                    if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                        price = (price_before_markup * (1 + markup[2]/100))
-                        break
+            # Initialize price after all other data has been initialized
+            if retail_price:
+                price = retail_price
+                carat_price = retail_price / carat_weight
 
-            if not price:
-                if prefs.get('markup') == 'carat_weight':
-                    raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
-                else:
-                    raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+            elif carat_price:
+                price_before_markup = carat_price * carat_weight
 
-        else:
-            raise SkipDiamond('No carat_price specified')
+                if minimum_price and price_before_markup < minimum_price:
+                    raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
+                if maximum_price and price_before_markup > maximum_price:
+                    raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
+
+                price = None
+                for markup in self.markup_list:
+                    if prefs.get('markup') == 'carat_weight':
+                        if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                            price = (price_before_markup * (1 + markup[2]/100))
+                            break
+                    else:
+                        if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                            price = (price_before_markup * (1 + markup[2]/100))
+                            break
+
+                if not price:
+                    if prefs.get('markup') == 'carat_weight':
+                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
+                    else:
+                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+
+            else:
+                raise SkipDiamond('No carat_price specified')
 
         # Order must match structure of tsj_gemstone_diamond table
         ret = self.Row(

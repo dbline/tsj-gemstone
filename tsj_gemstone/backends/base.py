@@ -174,6 +174,7 @@ class BaseBackend(object):
             prefs.get('rapaport_verify_cert_images', False),
             prefs.get('include_mined', True),
             prefs.get('include_lab_grown', False),
+            prefs.get('show_prices', 'none')
         )
 
     def create_import_record(self):

@@ -259,6 +259,10 @@ class Backend(CSVBackend):
                 price = None
                 carat_price = None
                 raise SkipDiamond('No carat_price specified')
+        else:
+            carat_price = 0
+            price = 0
+
 
         # Order must match structure of tsj_gemstone_diamond table
         ret = self.Row(

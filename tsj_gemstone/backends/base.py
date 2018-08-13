@@ -174,6 +174,10 @@ class BaseBackend(object):
             prefs.get('rapaport_verify_cert_images', False),
             prefs.get('include_mined', True),
             prefs.get('include_lab_grown', False),
+
+        )
+
+        self.add_pref_values = (
             prefs.get('show_prices', 'none')
         )
 

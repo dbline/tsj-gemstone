@@ -84,6 +84,10 @@ class Backend(CSVBackend):
             show_prices
         ) = self.pref_values
 
+        (
+            show_prices
+        ) = self.add_pref_values
+
         comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
 

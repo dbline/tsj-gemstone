@@ -84,7 +84,7 @@ class Backend(CSVBackend):
         fancy_color,
         fancy_color_intensity,
         fancy_color_overtone,
-        unused_status,
+        status,
         unused_raplist,
         unused_rappercent,
         unused_shade,
@@ -110,6 +110,13 @@ class Backend(CSVBackend):
 
         #comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
+
+        status = cached_clean(status, upper=True)
+
+        if 'M' in status:
+            status = 'f'
+        else:
+            status = 't'
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
@@ -266,7 +273,7 @@ class Backend(CSVBackend):
         ret = self.Row(
             self.added_date,
             self.added_date,
-            't', # active
+            status, # active
             self.backend_module,
             '', # lot_num
             stock_number,

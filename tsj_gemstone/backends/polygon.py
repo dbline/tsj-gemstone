@@ -45,7 +45,7 @@ class Backend(CSVBackend):
 
     @property
     def enabled(self):
-        return POLYGON_ID_PATTERN.match(prefs.get('polygon_id'))
+        return POLYGON_ID_PATTERN.match(prefs.get('polygon_id', ''))
 
     def get_default_filename(self):
         polygon_id = prefs.get('polygon_id')

@@ -126,7 +126,9 @@ class Backend(CSVBackend):
             sarine_link,
             customer,
             store,
-            v360_link
+            v360_link,
+            light_performance,
+            gemprint_id
         ) = line
 
         (
@@ -278,6 +280,11 @@ class Backend(CSVBackend):
         else:
             data = {}
 
+        if light_performance:
+            data['light_performance'] = light_performance
+
+        if gemprint_id:
+            data['gemprint_id'] = gemprint_id
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(

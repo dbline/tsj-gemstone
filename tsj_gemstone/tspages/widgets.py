@@ -62,6 +62,7 @@ class GemstoneWidgetForm(PreferencesForm):
         ]
 
 class GemstoneWidget(TemplatedWidget):
+    category = 'merchandise'
     verbose_name = 'Gemstones'
 
     def get_template_names(self, context, extra_template_names=None):

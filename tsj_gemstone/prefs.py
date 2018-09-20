@@ -67,6 +67,7 @@ class GemstonePreferencesForm(PreferencesForm):
 
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
     group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
+    add_to_cart = forms.BooleanField(required=False, label='Add to Cart')
 
     sarine_template = forms.CharField(label='Sarine Template', help_text='ID for overriding default Sarine Template', required=False)
 
@@ -82,6 +83,7 @@ class GemstonePreferences(AppPreferences):
             'fields': (
                 'show_prices',
                 'group',
+                'add_to_cart',
                 'markup',
                 'rapaport_minimum_carat_weight',
                 'rapaport_maximum_carat_weight',

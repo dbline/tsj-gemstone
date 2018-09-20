@@ -43,10 +43,6 @@ class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/177-diamonds.csv')
     default_filename = os.path.join(settings.FTP_ROOT, 'dnrdiamonds/1177-diamonds.csv')
 
-    @property
-    def enabled(self):
-        return self.backend_module in prefs.get('polygon_id')
-
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
             line = line[:-blank_columns]

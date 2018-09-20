@@ -52,10 +52,6 @@ class Backend(CSVBackend):
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
 
-    @property
-    def enabled(self):
-        return self.backend_module in prefs.get('polygon_id')
-
     def get_default_filename(self):
         if self.partial_import:
             infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')

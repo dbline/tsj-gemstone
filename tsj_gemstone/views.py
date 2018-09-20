@@ -166,7 +166,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
                 'prices': prices,
                 'results': True,
                 'show_prices': show_prices(self.request.user, gemstone_prefs),
-                'add_to_cart': gemstone_prefs.get('add_to_cart', True)
+                'add_to_cart': gemstone_prefs.get('add_to_cart', True),
                 'sort': sort,
             })
 

@@ -166,6 +166,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
                 'prices': prices,
                 'results': True,
                 'show_prices': show_prices(self.request.user, gemstone_prefs),
+                'add_to_cart': gemstone_prefs.get('add_to_cart', True)
                 'sort': sort,
             })
 
@@ -261,14 +262,12 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
                     exclude(pk=self.object.pk).\
                     order_by('carat_weight', 'color', 'clarity')[:10]
 
-        add_to_cart = gemstone_prefs.get('add_to_cart', True)
-
         context.update({
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
             'sarine_template': gemstone_prefs.get('sarine_template'),
             'show_prices': show_prices(self.request.user, gemstone_prefs),
-            'add_to_cart': add_to_cart,
+            'add_to_cart': gemstone_prefs.get('add_to_cart', True),
             'similar': similar,
         })
         return context

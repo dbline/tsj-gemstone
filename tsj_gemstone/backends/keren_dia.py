@@ -43,6 +43,13 @@ class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/KerenDiam.csv')
     default_filename = os.path.join(settings.FTP_ROOT, 'kerendiamondsftp/KerenDiam.csv')
 
+    @property
+    def enabled(self):
+        try:
+            return self.backend_module in prefs.get('backend')
+        except TypeError:
+            return False
+
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
             line = line[:-blank_columns]

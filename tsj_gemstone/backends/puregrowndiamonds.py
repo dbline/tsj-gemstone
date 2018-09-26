@@ -1,5 +1,4 @@
 from decimal import Decimal, InvalidOperation
-import glob
 import logging
 import os
 import re
@@ -38,24 +37,8 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(CSVBackend):
-    infile_glob = os.path.join(settings.FTP_ROOT, 'puregrownftp/{id}*.csv')
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/puregrowndiamonds.csv')
-
-    def get_default_filename(self):
-        user_id = prefs.get('puregrowndiamonds')
-
-        if not user_id:
-            # TODO: We shouldn't be able to get here anymore, enabled checks the pref
-            logger.warning('Missing Pure Grown Diamonds ID, aborting import.')
-            return
-
-        files = sorted(glob.glob(self.infile_glob.format(id=user_id)))
-        if len(files):
-            fn = files[-1]
-        else:
-            raise ImportSourceError('No Pure Grown Diamonds file for ID {}, aborting import.'.format(user_id))
-
-        return fn
+    default_filename = os.path.join(settings.FTP_ROOT, 'puregrownftp/saslow.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

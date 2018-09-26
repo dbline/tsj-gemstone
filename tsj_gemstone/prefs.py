@@ -22,19 +22,28 @@ class GemstonePreferencesForm(PreferencesForm):
         ('rapnet10', 'Download Listing Service'),
         ('rapnetii', 'Instant Inventory'),
     )
+
+    show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
+    add_to_cart = forms.BooleanField(required=False, label='Add to Cart')
+
     markup = forms.ChoiceField(choices=MARKUP_CHOICES, required=True, help_text='Control how diamonds are marked up.')
+
     rapaport_username = forms.CharField(label='Username', help_text=_(u'Your Rapaport username.'), required=False)
     rapaport_password = forms.CharField(label='Password', help_text=_(u'Your Rapaport password.'), required=False, widget=forms.PasswordInput(render_value=True, attrs={'autocomplete':'new-password'}))
     rapaport_url = forms.URLField(label='DLS URL', required=False, help_text=_(u'A Download Listing Service URL which overrides all of the following criteria if specified'))
     rapaport_version = forms.ChoiceField(label='Subscription Type', choices=RAPNET_VERSIONS, required=False)
+
     rapaport_minimum_carat_weight = forms.DecimalField(label='Min Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The minimum carat weight to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
     rapaport_maximum_carat_weight = forms.DecimalField(label='Max Carat Weight', widget=forms.TextInput,
             initial='0', help_text="The maximum carat weight to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all carat weights to be accepted.")
+
     rapaport_minimum_price = forms.DecimalField(label='Min Price', widget=forms.TextInput,
             initial='0', help_text="The minimum price to import into the database. Any diamond below this will be ignored. Set this to 0 if you want all prices to be accepted.")
     rapaport_maximum_price = forms.DecimalField(label='Max Price', widget=forms.TextInput,
             initial='0', help_text="The maximum price to import into the database. Any diamond above this will be ignored. Set this to 0 if you want all prices to be accepted.")
+
     rapaport_must_be_certified = forms.BooleanField(label='Must Be Certified',
             required=False, initial=True, help_text="Every imported diamond must be certified. If the certifier doesn't exist in the database, an entry will be automatically created by the import tool. If the diamond being imported isn't certified, it will be discarded. If the certifier of the diamond being imported exists but is disabled, it will be discarded.")
     rapaport_verify_cert_images = forms.BooleanField(label='Verify Cert. Images',
@@ -43,6 +52,7 @@ class GemstonePreferencesForm(PreferencesForm):
     include_mined = forms.BooleanField(label='Include Mined Diamonds', required=False, initial=True)
     include_lab_grown = forms.BooleanField(label='Include Lab-Grown Diamonds', required=False, initial=False)
 
+    backend = forms.CharField(label='Backend', help_text="Used for local backends, can separate multiple with commas or spaces", required=False)
     idex_access_key = forms.CharField(label='IDEX Access Key', help_text="Your IDEX access key", required=False)
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
@@ -56,6 +66,7 @@ class GemstonePreferencesForm(PreferencesForm):
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     ofermizrahi = forms.BooleanField(required=False, label='Ofer Mizrahi Diamonds')
     premiergem = forms.BooleanField(required=False, label='Premier Gem')
+    puregrown = forms.BooleanField(required=False, label='Pure Grown Diamonds')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
     rditrading_advanced = forms.BooleanField(required=False, label='RDI Trading (Advanced)')
@@ -64,10 +75,6 @@ class GemstonePreferencesForm(PreferencesForm):
     mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
     vantyghem = forms.BooleanField(required=False, label='Vantyghem (Canadian Dollar)')
     waldman = forms.BooleanField(required=False, label='Waldman (Canadian Dollar)')
-
-    show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, help_text='Limit prices to a specific group')
-    add_to_cart = forms.BooleanField(required=False, label='Add to Cart')
 
     sarine_template = forms.CharField(label='Sarine Template', help_text='ID for overriding default Sarine Template', required=False)
 
@@ -93,6 +100,15 @@ class GemstonePreferences(AppPreferences):
                 'rapaport_verify_cert_images',
                 'include_mined',
                 'include_lab_grown',
+                'sarine_template',
+            ),
+        }),
+        (_('Built-in Feeds'), {
+            'fields': (
+                'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
+                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrown',
+                'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'mdl',
+                'vantyghem', 'waldman',
             ),
         }),
         (_('Rapaport'), {
@@ -113,6 +129,11 @@ class GemstonePreferences(AppPreferences):
                 'polygon_id',
             ),
         }),
+        (_('Additional Feeds'), {
+            'fields': (
+                'backend',
+            ),
+        }),
         (_('ASC'), {
             'fields': (
                 'asc',
@@ -123,19 +144,7 @@ class GemstonePreferences(AppPreferences):
                 'puregrowndiamonds',
             ),
         }),
-        (_('Sarine'), {
-            'fields': (
-                'sarine_template',
-            ),
-        }),
-        (_('Additional feeds'), {
-            'fields': (
-                'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
-                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'rdi',
-                'rditrading', 'rditrading_advanced', 'stuller', 'mdl',
-                'vantyghem', 'waldman',
-            ),
-        }),
+
     )
     form = GemstonePreferencesForm
     verbose_name = 'Gemstone'

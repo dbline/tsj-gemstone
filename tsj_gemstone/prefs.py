@@ -56,7 +56,6 @@ class GemstonePreferencesForm(PreferencesForm):
     idex_access_key = forms.CharField(label='IDEX Access Key', help_text="Your IDEX access key", required=False)
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
-    puregrowndiamonds = forms.CharField(label='Pure Grown Diamonds', help_text="Your Pure Grown Diamonds ID", required=False)
 
     brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
@@ -66,7 +65,7 @@ class GemstonePreferencesForm(PreferencesForm):
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     ofermizrahi = forms.BooleanField(required=False, label='Ofer Mizrahi Diamonds')
     premiergem = forms.BooleanField(required=False, label='Premier Gem')
-    puregrown = forms.BooleanField(required=False, label='Pure Grown Diamonds')
+    puregrowndiamonds = forms.BooleanField(required=False, label='Pure Grown Diamonds')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
     rditrading_advanced = forms.BooleanField(required=False, label='RDI Trading (Advanced)')
@@ -106,7 +105,7 @@ class GemstonePreferences(AppPreferences):
         (_('Built-in Feeds'), {
             'fields': (
                 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
-                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrown',
+                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrowndiamonds',
                 'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'mdl',
                 'vantyghem', 'waldman',
             ),
@@ -137,11 +136,6 @@ class GemstonePreferences(AppPreferences):
         (_('ASC'), {
             'fields': (
                 'asc',
-            ),
-        }),
-        (_('Pure Grown Diamonds'), {
-            'fields': (
-                'puregrowndiamonds',
             ),
         }),
 

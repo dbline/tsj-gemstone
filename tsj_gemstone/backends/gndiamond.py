@@ -237,12 +237,9 @@ class Backend(CSVBackend):
         cert_num = clean(cert_num)
         if not cert_num:
             cert_num = ''
-
-        show_cert = clean(show_cert)
-        if show_cert == 'Yes':
-            cert_image = 'http://gndiamond.s3.amazonaws.com/certificates/%s.jpg' % (stock_number)
-        else:
             cert_image = ''
+        else:
+            cert_image = 'http://gndiamond.s3.amazonaws.com/certificates/%s.jpg' % (stock_number)
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
@@ -272,7 +269,7 @@ class Backend(CSVBackend):
             else:
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
-        if sarine_link:
+        if sarine_link and 'diamondhunt' not in sarine_link:
             data = {'sarine_link': sarine_link}
             # https://api.sarine.com/viewer/v1/V1XWDF7VPUM/HX3CDW4NJW
         elif v360_link:
@@ -327,7 +324,7 @@ class Backend(CSVBackend):
             'f', # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date
-            json.dumps(data), # data - Sarine Link
+            json.dumps(data), # data
         )
 
         return ret

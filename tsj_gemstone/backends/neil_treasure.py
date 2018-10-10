@@ -249,6 +249,7 @@ class Backend(XLSBackend):
             cert_image = 'http://neildiamonds.dev.thinkspacehq.com/tsj_gemstone/certificates/%s' % (certificate_image)
         else:
             cert_image_local = ''
+            cert_image = ''
         #TODO Need to check for image on ftp and move it to tsj_gemstone/certificates also
 
 

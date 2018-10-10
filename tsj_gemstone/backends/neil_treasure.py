@@ -243,6 +243,14 @@ class Backend(XLSBackend):
         if not cert_num:
             cert_num = ''
 
+        certificate_image = clean(certificate_image)
+        if certificate_image:
+            cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
+        else
+            cert_image_local = ''
+        #TODO Need to check for image on ftp and move it to tsj_gemstone/certificates also
+
+
         """
         cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
         if not cert_image:
@@ -332,7 +340,7 @@ class Backend(XLSBackend):
             certifier,
             cert_num,
             '',  #cert_image,
-            '', # cert_image_local,
+            cert_image_local,
             depth_percent,
             table_percent,
             girdle,

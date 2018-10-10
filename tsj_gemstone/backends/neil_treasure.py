@@ -54,28 +54,6 @@ class Backend(XLSBackend):
         if blank_columns:
             line = line[:-blank_columns]
         (
-            stock_number,
-            cut_grade,
-            carat_weight,
-            cut,
-            color,
-            clarity,
-            measurements,
-            depth_percent,
-            table_percent,
-            girdle,
-            culet,
-            polish,
-            symmetry,
-            fluorescence,
-            comment,
-            certifier,
-            cert_num,
-            carat_price,
-            retail_price,
-        ) = line
-
-        (
             cut,
             carat_weight,
             color,

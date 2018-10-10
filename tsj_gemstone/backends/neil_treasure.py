@@ -112,7 +112,6 @@ class Backend(XLSBackend):
             verify_cert_images,
             include_mined,
             include_lab_grown,
-            show_prices
         ) = self.pref_values
 
         (

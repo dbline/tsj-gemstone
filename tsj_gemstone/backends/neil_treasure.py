@@ -243,7 +243,7 @@ class Backend(XLSBackend):
         if not cert_num:
             cert_num = ''
 
-        certificate_image = clean(certificate_image)
+
         if certificate_image:
             cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
         else:

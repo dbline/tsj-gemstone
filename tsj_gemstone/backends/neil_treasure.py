@@ -39,9 +39,9 @@ def split_measurements(measurements):
 
     return length, width, depth
 
-class Backend(CSVBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/diamonds.treasure.csv')
-    default_filename = os.path.join(settings.FTP_ROOT, 'neildiamonds/diamonds.treasure.csv')
+class Backend(XLSBackend):
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/diamonds-treasure.xlsx')
+    default_filename = os.path.join(settings.FTP_ROOT, 'neildiamonds/diamonds-treasure.xlsx')
 
     @property
     def enabled(self):
@@ -73,6 +73,56 @@ class Backend(CSVBackend):
             cert_num,
             carat_price,
             retail_price,
+        ) = line
+
+        (
+            cut,
+            carat_weight,
+            color,
+            clarity,
+            carat_price,
+            unused_lot_num,
+            stock_number,
+            certifier,
+            cert_num,
+            certificate_image,
+            unused_additional_image,
+            measurements,
+            depth_percent,
+            table_percent,
+            unused_crown_angle,
+            unused_crown_percent,
+            unused_pavilion_angle,
+            unused_pavilion_percent,
+            girdle_thinest,
+            girdle_thickest,
+            unused_girdle_percent,
+            culet_size,
+            culet_condition,
+            polish,
+            symmetry,
+            fluorescense,
+            unused_fluorescense_intensity,
+            unused_enhancement_types,
+            comment,
+            unused_availability,
+            unused_is_active,
+            unused_fancy_color_main_body,
+            unused_fancy_color_intensity,
+            unused_fancy_color_overtone,
+            unused_is_matched_pair,
+            unused_is_matches_pair_separatable,
+            unused_matching_stone_stock_num,
+            pavilion,
+            syndication,
+            cut_grade,
+            external_url,
+            stone_location_country,
+            stone_location_state_prov,
+            polygon_exclusive,
+            girdle_condition,
+            producing_lab,
+            brand,
         ) = line
 
         (
@@ -150,22 +200,37 @@ class Backend(CSVBackend):
             table_percent = 'NULL'
 
 
-        if not girdle or girdle == '':
+        if girdle_thinnest:
+            girdle_thinnest = cached_clean(girdle_thinnest, upper=True)
+            girdle = [girdle_thinnest]
+            if girdle_thickest:
+                girdle_thickest = cached_clean(girdle_thickest, upper=True)
+                girdle.append(girdle_thickest)
+            girdle = ' - '.join(girdle)
+        else:
             girdle = ''
 
-        culet = cached_clean(culet, upper=True)
+        if culet_size and culet_size != 'None':
+            culet_size = cached_clean(culet_size, upper=True)
+            culet = [culet_size]
+            if culet_condition and culet_condition != 'None':
+                culet_condition = cached_clean(culet_condition, upper=True)
+                culet.append(culet_condition)
+            culet = ' '.join(culet)
+        else:
+            culet = ''
+
         polish = self.grading_aliases.get(cached_clean(polish, upper=True))
         symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
 
         fluorescence = cached_clean(fluorescence, upper=True)
         fluorescence_id = None
-        fluorescence_color = None
         fluorescence_color_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
             if fluorescence.startswith(abbr.upper()):
                 fluorescence_id = id
-                fluorescence_color = fluorescence.replace(abbr.upper(), '')
-                continue
+                # fluorescence_color = fluorescence.replace(abbr.upper(), '')
+                break
         fluorescence = fluorescence_id
 
         if fluorescence_color:
@@ -173,7 +238,7 @@ class Backend(CSVBackend):
             for abbr, id in self.fluorescence_color_aliases.iteritems():
                 if fluorescence_color.startswith(abbr.upper()):
                     fluorescence_color_id = id
-                    continue
+                    break
             if not fluorescence_color_id: fluorescence_color_id = None
         fluorescence_color = fluorescence_color_id
 

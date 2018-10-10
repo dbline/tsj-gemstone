@@ -246,7 +246,7 @@ class Backend(XLSBackend):
 
         if certificate_image:
             cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
-            cert_image = 'http://neildiamonds.dev.thinkspacehq.com/tsj_gemstone/certificates/%s' % (certificate_image)
+            cert_image = 'http://neildiamonds.dev.thinkspacehq.com/media/tsj_gemstone/certificates/%s' % (certificate_image)
         else:
             cert_image_local = ''
             cert_image = ''

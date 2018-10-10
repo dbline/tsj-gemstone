@@ -72,7 +72,7 @@ class Backend(XLSBackend):
             unused_crown_percent,
             unused_pavilion_angle,
             unused_pavilion_percent,
-            girdle_thinest,
+            girdle_thinnest,
             girdle_thickest,
             unused_girdle_percent,
             culet_size,

@@ -246,7 +246,7 @@ class Backend(XLSBackend):
         certificate_image = clean(certificate_image)
         if certificate_image:
             cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
-        else
+        else:
             cert_image_local = ''
         #TODO Need to check for image on ftp and move it to tsj_gemstone/certificates also
 

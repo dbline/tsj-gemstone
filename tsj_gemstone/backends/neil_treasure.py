@@ -128,7 +128,7 @@ class Backend(XLSBackend):
         ) = self.add_pref_values
 
         comment = cached_clean(comment)
-        stock_number = might_b_float(clean(stock_number, upper=True))
+        stock_number = fix_float(clean(stock_number, upper=True))
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
@@ -248,7 +248,7 @@ class Backend(XLSBackend):
             fancy_color_overtone_id = None
         """
 
-        cert_num = might_b_float(clean(cert_num))
+        cert_num = fix_float(clean(cert_num))
         if not cert_num:
             cert_num = ''
 

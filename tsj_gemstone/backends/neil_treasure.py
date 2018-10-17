@@ -39,6 +39,15 @@ def split_measurements(measurements):
 
     return length, width, depth
 
+def fix_float(might_b_float):
+    try:
+        as_float = float(might_b_float)
+        might_b_float = str(int(as_float))
+    except ValueError:
+        pass
+
+    return might_b_float
+
 class Backend(XLSBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/diamonds-treasure.xlsx')
     default_filename = os.path.join(settings.FTP_ROOT, 'neildiamonds/diamonds-treasure.xlsx')
@@ -119,13 +128,7 @@ class Backend(XLSBackend):
         ) = self.add_pref_values
 
         comment = cached_clean(comment)
-        stock_number = clean(stock_number, upper=True)
-        try:
-            as_float = float(stock_number)
-            stock_number = str(int(as_float))
-        except ValueError:
-            pass
-
+        stock_number = might_b_float(clean(stock_number, upper=True))
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
@@ -245,7 +248,7 @@ class Backend(XLSBackend):
             fancy_color_overtone_id = None
         """
 
-        cert_num = clean(cert_num)
+        cert_num = might_b_float(clean(cert_num))
         if not cert_num:
             cert_num = ''
 

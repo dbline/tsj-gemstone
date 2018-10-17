@@ -120,6 +120,12 @@ class Backend(XLSBackend):
 
         comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
+        try:
+            as_float = float(stock_number)
+            stock_number = str(int(as_float))
+        except ValueError:
+            pass
+
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]

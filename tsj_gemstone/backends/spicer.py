@@ -355,7 +355,7 @@ class Backend(CSVBackend):
 
         try:
             price = Decimal(price)
-            carat_price = price / carat_weight
+            carat_price = None
         except InvalidOperation:
             carat_price = None
 

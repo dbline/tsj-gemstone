@@ -355,7 +355,7 @@ class Backend(CSVBackend):
 
         try:
             price = Decimal(price)
-            carat_price = None
+            carat_price = ''
         except InvalidOperation:
             carat_price = None
 
@@ -406,7 +406,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
-            moneyfmt(Decimal(carat_price), curr='', sep=''),
+            '', #moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
             cert_num,

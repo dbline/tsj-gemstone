@@ -26,4 +26,5 @@ __all__ = (
     'dnr_dia',
     'keren_dia',
     'neil_treasure',
+    'vandan',
 )

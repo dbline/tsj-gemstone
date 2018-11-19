@@ -4,14 +4,14 @@ import json
 from django.contrib.auth.models import User
 from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import RequestContext
 from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 
 from .prefs import prefs as gemstone_prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
@@ -278,3 +278,26 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
 class GemstonePrintView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
+
+#AJAX view that uses sessions to save, remove and return inventory selections across various item types and pages
+#TODO: Need to get a cron job in place that call's clear_expired() to clean the database eventually
+class ItemSelectView(View):
+    def get(self, request, *args, **kwargs):
+        if not request.session:
+            request.session = {}
+
+        session_key = 'selected_' + request.GET.get('type', '')
+        selected_items = request.session.get(session_key, [])
+
+        if kwargs['action'] == 'add':
+            # Avoid creating duplicates
+            if kwargs['id'] not in selected_items:
+                selected_items.append(kwargs['id'])
+        elif kwargs['action'] == 'remove':
+            # If we somehow have duplicated id's, remove all instances
+            selected_items = [y for y in selected_items if y != kwargs['id']]
+        elif kwargs['action'] == 'clear':
+            selected_items = []
+
+        request.session[session_key] = selected_items
+        return JsonResponse({session_key: selected_items})

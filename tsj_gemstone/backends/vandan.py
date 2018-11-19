@@ -182,12 +182,13 @@ class Backend(CSVBackend):
             if not fluorescence_color_id: fluorescence_color_id = None
         fluorescence_color = fluorescence_color_id
 
+        """
         if fancy_color:
             fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
             fancy_color_id = self.fancy_colors.get(fancy_color)
         else:
             fancy_color_id = None
-
+       
         if fancy_color_intensity:
             fancy_color_intensity = cached_clean(fancy_color_intensity.replace('-', ' ').lower())
             fancy_color_intensity_id = self.fancy_color_intensities.get(fancy_color_intensity)
@@ -199,6 +200,7 @@ class Backend(CSVBackend):
             fancy_color_overtone_id = self.fancy_color_overtones.get(fancy_color_overtone)
         else:
             fancy_color_overtone_id = None
+        """
 
         cert_num = clean(cert_num)
         if not cert_num:

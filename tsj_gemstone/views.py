@@ -16,6 +16,7 @@ from django.views.generic import DetailView, ListView, View
 from .prefs import prefs as gemstone_prefs
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
+from tsj_commerce_local.prefs import prefs as commerce_prefs
 from tsj_commerce_local.utils import show_prices
 from tsj_jewelrybox.forms import InquiryForm
 
@@ -263,11 +264,12 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
                     order_by('carat_weight', 'color', 'clarity')[:10]
 
         context.update({
+            'add_to_cart': gemstone_prefs.get('add_to_cart', True),
+            'commerce_prefs': commerce_prefs,
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
             'sarine_template': gemstone_prefs.get('sarine_template'),
             'show_prices': show_prices(self.request.user, gemstone_prefs),
-            'add_to_cart': gemstone_prefs.get('add_to_cart', True),
             'similar': similar,
         })
         return context

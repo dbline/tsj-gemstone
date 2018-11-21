@@ -4,6 +4,7 @@
 {% block object_tools %}{{ block.super }}
 <ul class="object-tools">
     {% block object-tools-items %}
+        <li><a href="/admin/tsj_gemstone/diamond/import-log/" class="btn">{% trans "View Import Logs" %}</a></li>
         <li><a href="{% url 'admin:start-gemstone-backends-import' %}" class="btn">{% trans "Start Import" %}</a></li>
     {% endblock %}
 </ul>

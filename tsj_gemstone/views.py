@@ -234,7 +234,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context = super(GemstoneDetailView, self).get_context_data(**kwargs)
 
         initial = {
-            'item_selection': self.object.stock_number,
+            'item_selection': self.object.pk,
             'type': 'gemstone',
         }
 

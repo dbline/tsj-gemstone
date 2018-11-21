@@ -1,5 +1,5 @@
 from decimal import Decimal, InvalidOperation
-import glob
+import json
 import logging
 import os
 import re
@@ -9,7 +9,7 @@ import tempfile
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
-from .base import LRU_CACHE_MAXSIZE, XLSBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -17,10 +17,10 @@ from ..utils import moneyfmt
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
+# TODO: Need to handle spaces between dimensions
+MEASUREMENT_RE = re.compile('[\sxX*-]')
 
 def clean(data, upper=False):
-    if data is None:
-        return ''
     data = ''.join(CLEAN_RE.findall(data)).strip().replace('\n', ' ').replace('\r', '')
     if upper:
         data = data.upper()
@@ -29,36 +29,65 @@ def clean(data, upper=False):
 
 cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 
-class Backend(XLSBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/waldman.xlsx')
-    infile_glob = os.path.join(settings.FTP_ROOT, 'waldmancanadaftp/*xlsx')
+def split_measurements(measurements):
+    try:
+        length, width, depth = [x for x in MEASUREMENT_RE.split(measurements) if x]
+    except ValueError:
+        length, width, depth = None, None, None
 
-    def get_default_filename(self):
-        fn = max(glob.iglob(self.infile_glob), key=os.path.getctime)
-        if not fn:
-            raise ImportSourceError('No waldman file, aborting import.')
+    return length, width, depth
 
-        return fn
+class Backend(CSVBackend):
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/waldman.csv')
+    default_filename = os.path.join(settings.FTP_ROOT, 'waldmancanadaftp/WDC.csv')
 
-    def write_diamond_row(self, line):
+    def write_diamond_row(self, line, blank_columns=None):
+        if blank_columns:
+            line = line[:-blank_columns]
         (
-            stock_number,
-            unused_origin,
             cut,
             carat_weight,
-            certifier,
             color,
             clarity,
+            measurements,
             cut_grade,
-            polish,
-            symmetry,
+            certifier,
+            carat_price,
+            unused_cash_price,
             depth_percent,
             table_percent,
-            length,
-            width,
-            depth,
-            carat_price,
-            unused_total_price,
+            girdle_min,
+            girdle_max,
+            unused_girdle_condition,
+            culet,
+            polish,
+            symmetry,
+            fluorescence,
+            fluorescence_color,
+            unused_crown_height,
+            unused_crown_angle,
+            unused_pavilion_depth,
+            unused_pavilion_angle,
+            laser_inscription,
+            unuser_cert_comment,
+            unuser_member_comment,
+            cert_num,
+            cert_image,
+            image,
+            stock_number,
+            unused_matching_stock_num,
+            unused_matching_is_pair_separable,
+            fancy_color,
+            fancy_color_intensity,
+            fancy_color_overtone,
+            status,
+            city,
+            state,
+            country,
+            unused_trade_show,
+            brand,
+            origin,
+            embed
         ) = line
 
         (
@@ -71,7 +100,7 @@ class Backend(XLSBackend):
             include_mined,
             include_lab_grown
         ) = self.pref_values
-        
+
         stock_number = clean(stock_number, upper=True)
 
         try:
@@ -132,8 +161,48 @@ class Backend(XLSBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
+        girdle = girdle_min or ''
+        if girdle_min != girdle_max and girdle_max:
+            if girdle_min:
+                girdle += ' - ' + girdle_max
+            else:
+                girdle = girdle_max
+
+        girdle = cached_clean(girdle, upper=True)
+        if not girdle or girdle == '-':
+            girdle = ''
+
+        culet = cached_clean(culet, upper=True)
         polish = self.grading_aliases.get(cached_clean(polish, upper=True))
         symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
+
+        fluorescence = cached_clean(fluorescence, upper=True)
+        fluorescence_id = None
+        fluorescence_color = None
+        fluorescence_color_id = None
+        for abbr, id in self.fluorescence_aliases.iteritems():
+            if fluorescence.startswith(abbr.upper()):
+                fluorescence_id = id
+                fluorescence_color = fluorescence.replace(abbr.upper(), '')
+                continue
+        fluorescence = fluorescence_id
+
+        if fluorescence_color:
+            fluorescence_color = cached_clean(fluorescence_color, upper=True)
+            for abbr, id in self.fluorescence_color_aliases.iteritems():
+                if fluorescence_color.startswith(abbr.upper()):
+                    fluorescence_color_id = id
+                    continue
+            if not fluorescence_color_id: fluorescence_color_id = None
+        fluorescence_color = fluorescence_color_id
+
+        measurements = clean(measurements)
+        length, width, depth = split_measurements(measurements)
+
+        if laser_inscription:
+            laser_inscribed = 't'
+        else:
+            laser_inscribed = 'f'
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
@@ -150,10 +219,12 @@ class Backend(XLSBackend):
         for markup in self.markup_list:
             if prefs.get('markup') == 'carat_weight':
                 if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                    carat_price = (carat_price * (1 + markup[2]/100))
                     price = (price_before_markup * (1 + markup[2]/100))
                     break
             else:
                 if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                    carat_price = (carat_price * (1 + markup[2]/100))
                     price = (price_before_markup * (1 + markup[2]/100))
                     break
 
@@ -180,17 +251,17 @@ class Backend(XLSBackend):
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
-            '', #cert_num,
-            '', #cert_image,
+            cert_num,
+            cert_image,
             '', #cert_image_local,
             depth_percent,
             table_percent,
-            '', #girdle,
-            '', #culet,
+            girdle,
+            culet,
             self.nvl(polish),
             self.nvl(symmetry),
-            'NULL', #self.nvl(fluorescence_id),
-            'NULL', #self.nvl(fluorescence_color_id),
+            self.nvl(fluorescence_id),
+            self.nvl(fluorescence_color_id),
             'NULL', # self.nvl(fancy_color_id),
             'NULL', # self.nvl(fancy_color_intensity_id),
             'NULL', # self.nvl(fancy_color_overtone_id),
@@ -202,7 +273,7 @@ class Backend(XLSBackend):
             '', #state,
             '', #country,
             'f', # manmade,
-            'f', # laser_inscribed,
+            laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

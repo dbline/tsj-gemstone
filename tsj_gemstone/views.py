@@ -19,6 +19,7 @@ from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.prefs import prefs as commerce_prefs
 from tsj_commerce_local.utils import show_prices
 from tsj_jewelrybox.forms import InquiryForm
+from thinkspace.apps.pages.settings import TSPAGES_PAGE_ARG
 
 from .filtersets import GemstoneFilterSet, FancyColorFilterSet
 from .models import Cut, Color, Clarity, Diamond, Grading, Fluorescence, FluorescenceColor, Certifier
@@ -202,6 +203,9 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             response['Cache-Control'] = "no-cache, no-store, must-revalidate"
             return response
         else:
+            if getattr(self.request, TSPAGES_PAGE_ARG, None).private and not self.request.user.is_authenticated():
+                return render(self.request, ['pages/tspages/private.html', 'tspages/private.html'], context)
+
             if context['results']:
                 return render(self.request, self.template_name, context)
             else:

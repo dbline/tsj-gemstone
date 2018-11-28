@@ -48,6 +48,13 @@ class GemstoneWidgetForm(PreferencesForm):
         required=False,
         help_text='Custom template file, include path and name')
 
+    fieldsections = (
+        ('Filters', ('style', 'hide_gemstones')),
+        ('Layout', ('icon_style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
+        ('Content', ('header')),
+        ('Advanced', ('class_attr', 'template_name')),
+    )
+
     def __init__(self, *args, **kwargs):
         super(GemstoneWidgetForm, self).__init__(*args, **kwargs)
 

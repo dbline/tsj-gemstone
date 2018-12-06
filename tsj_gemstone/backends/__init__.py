@@ -19,7 +19,6 @@ __all__ = (
     'rditrading_advanced',
     'stuller',
     'vantyghem',
-    'waldman',
     'sahar_atid',
     'star_solitaire',
     'spicer',

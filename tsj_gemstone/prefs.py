@@ -73,7 +73,6 @@ class GemstonePreferencesForm(PreferencesForm):
     stuller = forms.BooleanField(required=False)
     mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
     vantyghem = forms.BooleanField(required=False, label='Vantyghem (Canadian Dollar)')
-    waldman = forms.BooleanField(required=False, label='Waldman (Canadian Dollar)')
 
     sarine_template = forms.CharField(label='Sarine Template', help_text='ID for overriding default Sarine Template', required=False)
 
@@ -107,7 +106,7 @@ class GemstonePreferences(AppPreferences):
                 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
                 'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrowndiamonds',
                 'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'mdl',
-                'vantyghem', 'waldman',
+                'vantyghem',
             ),
         }),
         (_('Rapaport'), {

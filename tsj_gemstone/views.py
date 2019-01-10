@@ -4,8 +4,8 @@ import json
 from django.contrib.auth.models import User
 from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 from django.template import RequestContext
 from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect, requires_csrf_token
 from django.views.generic import DetailView, ListView, View
 
 from .prefs import prefs as gemstone_prefs
+from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.apps.pages.views import PagesTemplateResponseMixin
 from tsj_builder.prefs import prefs as builder_prefs
 from tsj_commerce_local.prefs import prefs as commerce_prefs
@@ -228,6 +229,14 @@ class LabGrownGemstoneListView(GemstoneListView):
 
 class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
     model = Diamond
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return redirect(reverse('gemstone-list'))
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_queryset(self):
         qs = super(GemstoneDetailView, self).get_queryset()

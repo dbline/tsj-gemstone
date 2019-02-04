@@ -209,7 +209,8 @@ class Backend(CSVBackend):
 
         # Initialize price after all other data has been initialized
         price_before_markup = carat_price * carat_weight
-        waldman_markup = price_before_markup * 0.17
+        markup = Decimal(0.17) # Full Markup
+        waldman_markup = price_before_markup * markup
         price_before_markup = price_before_markup + waldman_markup
 
         if minimum_price and price_before_markup < minimum_price:

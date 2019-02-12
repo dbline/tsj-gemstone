@@ -54,8 +54,8 @@ class Backend(CSVBackend):
 
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:
-            raise SkipDiamond('numeric value out of allowed range')
             self.logger.info('Skipping Diamond "%s" - numeric value out of range' % stock_number)
+            raise SkipDiamond('numeric value out of allowed range')
         return
 
     @property

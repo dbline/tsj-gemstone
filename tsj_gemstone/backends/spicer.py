@@ -52,6 +52,12 @@ class Backend(CSVBackend):
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
 
+    def digits_check(self, s, length=5):
+        if sum(c.isdigit() for c in str(s)) > length:
+            raise SkipDiamond('numeric value out of allowed range')
+            self.logger.info('Skipping Diamond "%s" - numeric value out of range' % stock_number)
+        return
+
     @property
     def enabled(self):
         try:
@@ -412,8 +418,8 @@ class Backend(CSVBackend):
             cert_num,
             '', # cert_image,
             '', # cert_image_local,
-            self.nvl(depth_percent),
-            self.nvl(table_percent),
+            self.nvl(self.digits_check(depth_percent)),
+            self.nvl(self.digits_check(table_percent)),
             '', # girdle,
             '', # culet,
             self.nvl(polish),
@@ -423,9 +429,9 @@ class Backend(CSVBackend):
             'NULL', # self.nvl(fancy_color_id),
             'NULL', # self.nvl(fancy_color_intensity_id),
             'NULL', # self.nvl(fancy_color_overtone_id),
-            self.nvl(length),
-            self.nvl(width),
-            self.nvl(depth),
+            self.nvl(self.digits_check(length)),
+            self.nvl(self.digits_check(width)),
+            self.nvl(self.digits_check(depth)),
             '', # comment,
             '', #city,
             '', #state,

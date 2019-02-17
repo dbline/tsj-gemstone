@@ -323,6 +323,8 @@ class Backend(CSVBackend):
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])
+        if carat_weight < minimum_carat_weight:
+            raise SkipDiamond('Carat weight is less than the minimum of %s.' % minimum_carat_weight)
 
         color = self.color_aliases.get(cached_clean(color, upper=True))
 

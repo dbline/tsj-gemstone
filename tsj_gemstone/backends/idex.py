@@ -15,6 +15,7 @@ from .base import LRU_CACHE_MAXSIZE, XMLBackend, XMLHandler, ImportSourceError, 
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
+from thinkspace.utils.http import url_exists
 
 logger = logging.getLogger(__name__)
 

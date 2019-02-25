@@ -83,6 +83,11 @@ class Backend(CSVBackend):
         rap_list_request = Request(url + '?' + data)
 
         rap_list = urlopen(rap_list_request)
+        with open('/tmp/rap.txt', 'wb') as f:
+            for l in rap_list:
+                f.write(l)
+
+        rap_list = open('/tmp/rap.txt')
 
         return rap_list
 
@@ -108,7 +113,7 @@ class Backend(CSVBackend):
             unused_fancy_color,
             unused_fancy_intensity,
             unused_fancy_overtone,
-            cut_grade,
+            cut_grade, #Cut in CSV
             polish,
             symmetry,
             fluorescence,

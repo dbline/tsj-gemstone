@@ -83,12 +83,14 @@ class Backend(CSVBackend):
         rap_list_request = Request(url + '?' + data)
 
         rap_list = urlopen(rap_list_request)
+
+        """ create a tmp file of the rap download for debuging testing purposes
         with open('/tmp/rap.txt', 'wb') as f:
             for l in rap_list:
                 f.write(l)
 
         rap_list = open('/tmp/rap.txt')
-
+        """
         return rap_list
 
     def _get_headers(self, reader):

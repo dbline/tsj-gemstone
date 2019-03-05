@@ -282,3 +282,10 @@ class Backend(CSVBackend):
         )
 
         return ret
+
+    @property
+    def enabled(self):
+        try:
+            return self.backend_module in prefs.get('backend')
+        except TypeError:
+            return False

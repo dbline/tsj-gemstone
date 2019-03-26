@@ -26,5 +26,5 @@ __all__ = (
     'stuller',
     'vantyghem',
     'vandan',
-    'waldman_fmdiamonds',
+    'waldman_full',
 )

@@ -22,37 +22,43 @@ ICON_CHOICES = (
 )
 class GemstoneWidgetForm(PreferencesForm):
     style = forms.ChoiceField(choices=STYLE_CHOICES,
-        required=False, help_text='Gemstone display style')
+            required=False, help_text='Gemstone display style')
     icon_style = forms.ChoiceField(choices=ICON_CHOICES,
-        required=False, help_text='Gemstone icon style')
-    header = forms.CharField(widget=CKEditorWidget(config_name='advanced'),
-        required=False,
-        help_text='Header content to put above the gemstones')
-    hide_gemstones=forms.MultipleChoiceField(label='Hide', required=False)
+            label='Display gemstones as...', 
+            required=False, 
+            help_text='Gemstone icon style')
+    header = forms.CharField(
+            widget=CKEditorWidget(config_name='advanced'),
+            label='Header content shown above gemstones', 
+            required=False)
+    hide_gemstones=forms.MultipleChoiceField(
+            label='Select gemstones to hide', 
+            required=False)
     show_view_all = forms.BooleanField(
-        label='Show View All Button',
-        required=False)
+            label='Show View All button',
+            help_text='Shown underneath the widget',
+            required=False)
     show_view_all_name = forms.CharField(
-        required=False,
-        label='Button Name',
-        help_text='View All Button Name')
+            required=False,
+            label='View All button name',
+            help_text='Example: View Selected Diamonds')
     show_view_all_link = forms.CharField(
-        required=False,
-        label='URL',
-        help_text='View All URL')
+            required=False,
+            label='View All button URL',
+            help_text='Example: /diamonds/')
     class_attr = forms.CharField(
-        required=False,
-        label='CSS Class',
-        help_text='Separate multiple classes by spaces')
+            required=False,
+            label='Custom widget css class(es)',
+            help_text='Separate multiple classes by spaces')
     template_name = forms.CharField(
-        required=False,
-        help_text='Custom template file, include path and name')
+            label='Custom widget template path',
+            required=False,
+            help_text='Custom template file, include path and name')
 
     fieldsections = (
-        ('Filters', ('style', 'hide_gemstones')),
-        ('Layout', ('icon_style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
-        ('Content', ('header')),
-        ('Advanced', ('class_attr', 'template_name')),
+        ('Adjust gemstone attributes', ('hide_gemstones', 'icon_style', 'style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
+        ('Content widget content', ('header')),
+        ('Advanced options', ('class_attr', 'template_name')),
     )
 
     def __init__(self, *args, **kwargs):

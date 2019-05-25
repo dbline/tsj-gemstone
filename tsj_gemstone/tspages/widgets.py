@@ -21,19 +21,16 @@ ICON_CHOICES = (
     ('images', 'Images'),
 )
 class GemstoneWidgetForm(PreferencesForm):
-    style = forms.ChoiceField(choices=STYLE_CHOICES,
-            required=False, help_text='Gemstone display style')
+    hide_gemstones=forms.MultipleChoiceField(
+            label='Select gemstones to hide', 
+            required=False,
+            help_text='Default view is all gemstones are selected')
     icon_style = forms.ChoiceField(choices=ICON_CHOICES,
             label='Display gemstones as...', 
             required=False, 
             help_text='Gemstone icon style')
-    header = forms.CharField(
-            widget=CKEditorWidget(config_name='advanced'),
-            label='Header content shown above gemstones', 
-            required=False)
-    hide_gemstones=forms.MultipleChoiceField(
-            label='Select gemstones to hide', 
-            required=False)
+    style = forms.ChoiceField(choices=STYLE_CHOICES,
+            required=False, help_text='Gemstone display style')
     show_view_all = forms.BooleanField(
             label='Show View All button',
             help_text='Shown underneath the widget',
@@ -46,6 +43,10 @@ class GemstoneWidgetForm(PreferencesForm):
             required=False,
             label='View All button URL',
             help_text='Example: /diamonds/')
+    header = forms.CharField(
+            widget=CKEditorWidget(config_name='advanced'),
+            label='Content shown below widget title', 
+            required=False)
     class_attr = forms.CharField(
             required=False,
             label='Custom widget css class(es)',
@@ -56,8 +57,8 @@ class GemstoneWidgetForm(PreferencesForm):
             help_text='Custom template file, include path and name')
 
     fieldsections = (
-        ('Adjust gemstone attributes', ('hide_gemstones', 'icon_style', 'style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
-        ('Content widget content', ('header')),
+        ('Format gemstones', ('hide_gemstones', 'icon_style', 'style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
+        ('Modify widget content', ('header',)),
         ('Advanced options', ('class_attr', 'template_name')),
     )
 

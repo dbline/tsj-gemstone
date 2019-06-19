@@ -287,8 +287,9 @@ class Backend(XLSBackend):
             except InvalidOperation:
                 carat_price = None
 
-            retail_price = clean(retail_price.replace(',', ''))
+
             try:
+                retail_price = clean(retail_price.replace(',', ''))
                 retail_price = Decimal(retail_price)
             except InvalidOperation:
                 retail_price = None

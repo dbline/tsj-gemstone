@@ -289,10 +289,10 @@ class Backend(XLSBackend):
 
             retail_price = None
             #retail_price = clean(retail_price.replace(',', ''))
-            try:
-                retail_price = Decimal(retail_price)
-            except InvalidOperation:
-                retail_price = None
+            #try:
+                #retail_price = Decimal(retail_price)
+            #except InvalidOperation:
+                #retail_price = None
 
             # Initialize price after all other data has been initialized
             if retail_price:

@@ -97,6 +97,9 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
             sources = arguments.get('sources')
             queryset = queryset.filter(source__in=sources)
 
+        if arguments.get('hide_manmade'):
+            queryset = queryset.exclude(manmade=True)
+
         if queryset.exists():
 
             # Minimum and Maximum Values

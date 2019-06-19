@@ -7,6 +7,7 @@ from tsj_gemstone import models as gemstone_models
 
 class GemstoneListArgumentForm(PreferencesForm):
     sources = forms.MultipleChoiceField(choices=[], required=False)
+    hide_manmade = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(GemstoneListArgumentForm, self).__init__(*args, **kwargs)

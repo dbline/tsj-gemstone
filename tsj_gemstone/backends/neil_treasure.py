@@ -297,8 +297,9 @@ class Backend(XLSBackend):
             if retail_price:
                 price = retail_price
                 carat_price = retail_price / carat_weight
-
-            elif carat_price:
+                """ 
+                #Skip Markups for NEIL DIAMONDS.  Only multiply carat weight by PPC
+                elif carat_price:
                 price_before_markup = carat_price * carat_weight
 
                 if minimum_price and price_before_markup < minimum_price:
@@ -322,6 +323,9 @@ class Backend(XLSBackend):
                         raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
                     else:
                         raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+                """
+            elif carat_price:
+                price = carat_price * carat_weight
 
             else:
                 price = None

@@ -282,7 +282,6 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         context.update({
             'add_to_cart': gemstone_prefs.get('add_to_cart', True),
             'commerce_prefs': commerce_prefs,
-            'data': json.loads(self.object.data),
             'has_ring_builder': has_ring_builder,
             'inquiry_form': inquiry_form,
             'sarine_template': gemstone_prefs.get('sarine_template'),

@@ -1,5 +1,4 @@
 import logging
-from optparse import make_option
 
 from django.core.management.base import LabelCommand
 
@@ -14,23 +13,6 @@ class Command(MultisiteCommand, LabelCommand):
     args = "[router]"
     label = 'router name'
     tsj_site_option_required = False
-    option_list = LabelCommand.option_list + (
-        make_option('--async',
-            action='store_true',
-            dest='async',
-            help='Run this command asynchronously as a Celery task',
-        ),
-        make_option('--nodebug',
-            action='store_true',
-            dest='nodebug',
-            help='Skip the "debug" test data and load real data instead',
-        ),
-        make_option('-d', '--dry-run',
-            action='store_true',
-            dest='dry_run',
-            help='Simulate an import and log what would occur',
-        )
-    )
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)

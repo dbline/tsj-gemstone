@@ -141,7 +141,7 @@ class Backend(CSVBackend):
                     diamond.active = True
                 else:
                     diamond.active = False
-                diamond.data = diamond_row.data
+                diamond.data = json.loads(diamond_row.data)
                 diamond.price = diamond_row.price
                 diamond.carat_price = diamond_row.carat_price
 

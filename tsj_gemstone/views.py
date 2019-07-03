@@ -6,7 +6,6 @@ from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.template import RequestContext
 from django.template.defaultfilters import floatformat
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
@@ -200,8 +199,8 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
         if self.request.is_ajax():
             response_dict = dict(
-                gemstones = render_to_string(gemstones_template, context, RequestContext(self.request)),
-                pagination = render_to_string(pagination_template, context, RequestContext(self.request)),
+                gemstones = render_to_string(gemstones_template, context, request=self.request),
+                pagination = render_to_string(pagination_template, context, request=self.request),
             )
             response = HttpResponse(json.dumps(response_dict), content_type='application/javascript')
             response['Cache-Control'] = "no-cache, no-store, must-revalidate"

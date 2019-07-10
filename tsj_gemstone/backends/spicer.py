@@ -179,6 +179,7 @@ class Backend(CSVBackend):
             lowest_price,
             inventory_type,
             unused_itPricingMethod,
+            unused_itNeverUpload,
             unused_itStoreId,
             style_number,
             unused_itStyle,

@@ -197,6 +197,9 @@ class Backend(JSONBackend):
 
         # Fluorescence and color are combined, e.g 'FAINT BLUE'
         fl = data.get('Fluorescence', '')
+        fluorescence_id = None
+        fluorescence_color = None
+        fluorescence_color_id = None
         if ' ' in fl:
             fl, flcolor = fl.split(' ')
             fluorescence = cached_clean(fl, upper=True)

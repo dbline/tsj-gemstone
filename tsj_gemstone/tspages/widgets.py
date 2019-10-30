@@ -78,7 +78,7 @@ class GemstoneWidgetForm(PreferencesForm):
 class GemstoneWidget(TemplatedWidget):
     category = 'merchandise'
     verbose_name = 'Gemstones'
-    description = '''Show your gemstones images or icons with links to your diamond page'''
+    description = '''Show your gemstones images or icons with links to your diamond page. You may also manage your <a href="/admin/tsj_gemstone/diamond/" target="_blank">gemstones</a>.'''
 
     def get_template_names(self, context, extra_template_names=None):
         template_names = super(GemstoneWidget, self).get_template_names(

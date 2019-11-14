@@ -203,7 +203,7 @@ class Backend(BaseBackend):
             include_mined,
             include_lab_grown
         ) = self.pref_values
-        
+
         stock_number = clean(str(data.get('DiamondID')), upper=True)
 
         try:
@@ -328,14 +328,17 @@ class Backend(BaseBackend):
         width = data.get('MeasWidth')
         depth = data.get('MeasDepth')
 
+        owner = data.get('SellerID')
+        lot_num = data.get('VendorStockNumber')
+
         ret = self.Row(
             self.added_date,
             self.added_date,
             't', # active
             self.backend_module,
-            '', # lot_num
+            lot_num,
             stock_number,
-            '', # owner
+            owner,
             cut,
             self.nvl(cut_grade),
             self.nvl(color),

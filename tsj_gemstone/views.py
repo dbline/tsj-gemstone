@@ -64,7 +64,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
     def get_queryset(self):
         querystring = self.request.GET
         qs = self.model.objects.filter(active=True)
-        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'polish', 'symmetry')
+        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'fluorescence_color', 'polish', 'symmetry')
         opts = self.model._meta
         qs = _get_queryset_ordering(qs, querystring, opts)
         return qs
@@ -242,7 +242,7 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
 
     def get_queryset(self):
         qs = super(GemstoneDetailView, self).get_queryset()
-        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'polish', 'symmetry')
+        qs = qs.select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'fluorescence_color', 'polish', 'symmetry')
         return qs
 
     def get_context_data(self, **kwargs):
@@ -276,7 +276,8 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
                     color=self.object.color,
                     clarity=self.object.clarity).\
                     exclude(pk=self.object.pk).\
-                    order_by('carat_weight', 'color', 'clarity')[:10]
+                    order_by('carat_weight', 'color', 'clarity').\
+                    select_related('clarity', 'color', 'cut', 'cut_grade', 'certifier', 'fluorescence', 'fluorescence_color', 'polish', 'symmetry')[:10]
 
         context.update({
             'add_to_cart': gemstone_prefs.get('add_to_cart', True),

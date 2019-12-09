@@ -86,7 +86,18 @@ class Backend(XMLBackend):
         # Response objects don't support seeking, which ZipFile expects
         response = urlopen(idex_request)
         zipbytes = io.BytesIO(response.read())
-        z = zipfile.ZipFile(zipbytes)
+
+        if zipbytes.read(5) == '<root':
+            zipbytes.seek(0)
+            raise ImportSourceError(zipbytes.read())
+        zipbytes.seek(0)
+
+        try:
+            z = zipfile.ZipFile(zipbytes)
+        except Exception:
+            import pdb
+            pdb.set_trace()
+            raise
         fp = z.open(z.infolist()[0])
 
         return fp

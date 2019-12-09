@@ -44,7 +44,10 @@ class Backend(CSVBackend):
     infile_glob = os.path.join(settings.FTP_ROOT, 'rdi-tradingftp/data/diamond_*csv')
 
     def get_default_filename(self):
-        fn = max(glob.iglob(self.infile_glob), key=os.path.getctime)
+        try:
+            fn = max(glob.iglob(self.infile_glob), key=os.path.getctime)
+        except ValueError:
+            fn = None
         if not fn:
             raise ImportSourceError('No rdi-trading file, aborting import.')
 

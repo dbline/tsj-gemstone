@@ -76,7 +76,10 @@ class Backend(XMLBackend):
             logger.warning('Missing ASC FTP username, aborting import.')
             return
 
-        fn = max(glob.iglob(self.infile_glob.format(username=username)), key=os.path.getctime)
+        try:
+            fn = max(glob.iglob(self.infile_glob.format(username=username)), key=os.path.getctime)
+        except ValueError:
+            fn = None
         if not fn:
             raise ImportSourceError('No ASC file for username {}, aborting import.'.format(username))
 

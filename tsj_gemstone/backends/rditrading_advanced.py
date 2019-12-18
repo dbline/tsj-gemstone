@@ -165,8 +165,6 @@ class Backend(CSVBackend):
 
         stock_number = clean(stock_number, upper=True)
 
-        print stock_number
-
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]
         except KeyError as e:

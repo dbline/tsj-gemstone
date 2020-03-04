@@ -15,7 +15,7 @@ from django.db import connection, transaction
 from django.utils.lru_cache import lru_cache
 from django.conf import settings
 
-from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError, ImportSourceError
 from .. import models
 from ..utils import moneyfmt
 from tsj_pointofsale.prefs import prefs as pos_prefs

@@ -11,7 +11,7 @@ from urlparse import urlparse
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
-from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError, ImportSourceError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt

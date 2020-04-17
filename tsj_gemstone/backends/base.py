@@ -202,6 +202,12 @@ class BaseBackend(object):
                     elif k == 'missing_values':
                         dk = 'missing'
                     data[dk] = getattr(self, k)
+
+            # If a backend succeeded but returned no data, report as '0 successes'
+            # instead of creating an empty report.
+            if status == 'processed' and not data:
+                data['successes'] = 0
+
             cursor.execute(
                 'SELECT update_gemstone_import(%s,%s,%s)',
                 (self.import_id, status, Json(data))

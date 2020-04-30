@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/em-trading.csv')
-    infile_glob = os.path.join(settings.FTP_ROOT, 'em-trading-ftp/data/Thinkspace_*csv')
+    infile_glob = os.path.join(settings.FTP_ROOT, 'em-trading-ftp/Thinkspace_*csv')
 
     def get_default_filename(self):
         try:

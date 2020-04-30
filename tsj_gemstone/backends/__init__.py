@@ -1,5 +1,6 @@
 __all__ = (
     'asc',
+    'atlantic_diamond',
     'brilliantediamond',
     'dnr_dia',
     'em_trading'

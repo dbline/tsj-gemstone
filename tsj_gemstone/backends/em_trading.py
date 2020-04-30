@@ -88,7 +88,7 @@ class Backend(CSVBackend):
             unused_pavilion_depth, #Pavilion
             unused_pavilion_angle, #pavilion Angle
             unused_treatment, #Treatment
-            unused_laser_inscription, #Laser Inscription
+            laser_inscription, #Laser Inscription
             comment, #Comments
             cert_num, #CertID
             cert_image, #Certificate Url
@@ -96,15 +96,15 @@ class Backend(CSVBackend):
             stock_number, #Parcel
             unused_matching_stock_number, #MatchedPairStockNumber
             unused_is_matched_pair_separable, #IsMatchedPairSeparable
-            unused_city, #City
-            unused_state, #State
-            unused_country, #Country
-            unused_fancy_color, #fancy color
-            unused_fancy_color_intensity, #fancy intensity
+            city, #City
+            state, #State
+            country, #Country
+            fancy_color, #fancy color
+            fancy_color_intensity, #fancy intensity
             unused_fancy_color_overtone, #fancy overtone
             unused_parcel_stone_count, #ParcelStoneCount
             unused_status, #Status
-            unused_allow_rap_link_feed, #AllowRapLinkFeed
+            allow_rap_link_feed, #AllowRapLinkFeed
         ) = line
 
         (
@@ -229,6 +229,12 @@ class Backend(CSVBackend):
         measurements = clean(measurements)
         length, width, depth = split_measurements(measurements)
 
+        data = {}
+        if laser_inscription:
+            data['laser_inscription'] = laser_inscription
+        if allow_rap_link_feed:
+            data['allow_rap_link_feed'] = allow_rap_link_feed
+
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 
@@ -285,20 +291,20 @@ class Backend(CSVBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
             self.nvl(fluorescence_color_id),
-            'NULL', # self.nvl(fancy_color_id),
-            'NULL', # self.nvl(fancy_color_intensity_id),
+            self.nvl(fancy_color_id),
+            self.nvl(fancy_color_intensity_id),
             'NULL', # self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
             comment,
-            '', #city,
-            '', #state,
-            '', #country,
+            city,
+            state,
+            country,
             'f', # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date
-            '{}', # data
+            data
         )
 
         return ret

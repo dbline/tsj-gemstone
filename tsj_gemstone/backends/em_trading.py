@@ -101,7 +101,7 @@ class Backend(CSVBackend):
             country, #Country
             fancy_color, #fancy color
             fancy_color_intensity, #fancy intensity
-            unused_fancy_color_overtone, #fancy overtone
+            fancy_color_overtone, #fancy overtone
             unused_parcel_stone_count, #ParcelStoneCount
             unused_status, #Status
             allow_rap_link_feed, #AllowRapLinkFeed
@@ -132,7 +132,27 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(color, upper=True))
+        # color = self.color_aliases.get(cached_clean(color, upper=True))
+
+        if fancy_color:
+            color = None
+            fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
+            fancy_color_id = self.fancy_colors.get(fancy_color)
+        else:
+            fancy_color_id = None
+            color = self.color_aliases.get(cached_clean(color, upper=True))
+
+        if fancy_color_intensity:
+            fancy_color_intensity = cached_clean(fancy_color_intensity.replace('-', ' ').lower())
+            fancy_color_intensity_id = self.fancy_color_intensities.get(fancy_color_intensity)
+        else:
+            fancy_color_intensity_id = None
+
+        if fancy_color_overtone:
+            fancy_color_overtone = cached_clean(fancy_color_overtone.replace('-', ' ').lower())
+            fancy_color_overtone_id = self.fancy_color_overtones.get(fancy_color_overtone)
+        else:
+            fancy_color_overtone_id = None
 
         certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
@@ -231,7 +251,11 @@ class Backend(CSVBackend):
 
         data = {}
         if laser_inscription:
+            laser_inscribed = 't'
             data['laser_inscription'] = laser_inscription
+        else:
+            laser_inscribed = 'f'
+
         if allow_rap_link_feed:
             data['allow_rap_link_feed'] = allow_rap_link_feed
 
@@ -293,7 +317,7 @@ class Backend(CSVBackend):
             self.nvl(fluorescence_color_id),
             self.nvl(fancy_color_id),
             self.nvl(fancy_color_intensity_id),
-            'NULL', # self.nvl(fancy_color_overtone_id),
+            self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
@@ -302,7 +326,7 @@ class Backend(CSVBackend):
             state,
             country,
             'f', # manmade,
-            'f', # laser_inscribed,
+            laser_inscribed,
             'NULL', # rap_date
             data
         )

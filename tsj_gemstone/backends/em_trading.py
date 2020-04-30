@@ -11,6 +11,7 @@ from urlparse import urlparse
 
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
+from thinkspace.utils.http import url_exists
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError, ImportSourceError
 from .. import models
@@ -239,13 +240,13 @@ class Backend(CSVBackend):
         if not cert_num:
             cert_num = ''
 
-        """
+
         cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
         if not cert_image:
             cert_image = ''
         elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
-        """
+
 
         measurements = clean(measurements)
         length, width, depth = split_measurements(measurements)

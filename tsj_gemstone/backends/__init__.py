@@ -2,6 +2,7 @@ __all__ = (
     'asc',
     'brilliantediamond',
     'dnr_dia',
+    'em_trading'
     'gndiamond',
     'hasenfeld',
     'idex',

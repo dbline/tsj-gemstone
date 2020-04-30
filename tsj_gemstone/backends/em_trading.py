@@ -252,12 +252,12 @@ class Backend(CSVBackend):
         data = {}
         if laser_inscription:
             laser_inscribed = 't'
-            data['laser_inscription'] = laser_inscription
+            data["laser_inscription"] = laser_inscription
         else:
             laser_inscribed = 'f'
 
         if allow_rap_link_feed:
-            data['allow_rap_link_feed'] = allow_rap_link_feed
+            data["allow_rap_link_feed"] = allow_rap_link_feed
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')

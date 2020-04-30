@@ -109,7 +109,7 @@ class Backend(CSVBackend):
             city,  # City
             state,  # State
             country,  # Country
-            unused_video_url, #VideoUrl
+            video_url, #VideoUrl
         ) = line
 
         (
@@ -263,6 +263,9 @@ class Backend(CSVBackend):
 
         if allow_rap_link_feed:
             data['allow_rap_link_feed'] = allow_rap_link_feed
+
+        if video_url:
+            data['v360_link'] = video_url
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')

@@ -3,7 +3,7 @@ __all__ = (
     'atlantic_diamond',
     'brilliantediamond',
     'dnr_dia',
-    'em_trading'
+    'em_trading',
     'gndiamond',
     'hasenfeld',
     'idex',

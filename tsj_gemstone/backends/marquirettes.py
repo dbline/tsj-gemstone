@@ -194,6 +194,22 @@ class Backend(XLSBackend):
         if not cert_num:
             cert_num = ''
 
+        if manmade == 'YES':
+            if not include_lab_grown:
+                raise SkipDiamond("Don't include lab-grown")
+            else:
+                manmade = 't'
+        else:
+            if not include_mined:
+                raise SkipDiamond("Don't include mined")
+            else:
+                manmade = 'f'
+
+        if laser_inscription == 'YES':
+            laser_inscribed = 't'
+        else:
+            laser_inscribed = 'f'
+
         """
         NOTE: No prices given
         if carat_price is None:

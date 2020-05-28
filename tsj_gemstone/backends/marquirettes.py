@@ -71,46 +71,21 @@ class Backend(XLSBackend):
             color,
             clarity,
             cut_grade,
-            unused_lot_num,
+            length,
+            width,
+            depth,
             certifier,
             cert_num,
-            certificate_image,
-            unused_additional_image,
-            measurements,
             depth_percent,
             table_percent,
-            unused_crown_angle,
-            unused_crown_percent,
-            unused_pavilion_angle,
-            unused_pavilion_percent,
-            girdle_thinnest,
-            girdle_thickest,
-            unused_girdle_percent,
-            culet_size,
-            culet_condition,
+            girdle,
+            culet,
             polish,
             symmetry,
-            fluorescence_color,
             fluorescence,
-            unused_enhancement_types,
-            comment,
-            unused_availability,
-            unused_is_active,
-            unused_fancy_color_main_body,
-            unused_fancy_color_intensity,
-            unused_fancy_color_overtone,
-            unused_is_matched_pair,
-            unused_is_matches_pair_separatable,
-            unused_matching_stone_stock_num,
-            pavilion,
-            syndication,
-            external_url,
-            stone_location_country,
-            stone_location_state_prov,
-            polygon_exclusive,
-            girdle_condition,
-            producing_lab,
-            brand,
+            fluorescence_color,
+            manmade,
+            laser_inscription,
         ) = line
 
         (
@@ -128,7 +103,6 @@ class Backend(XLSBackend):
             show_prices
         ) = self.add_pref_values
 
-        comment = cached_clean(comment)
         stock_number = fix_float(clean(stock_number, upper=True))
 
         try:
@@ -174,8 +148,6 @@ class Backend(XLSBackend):
 
         cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
 
-
-
         try:
             depth_percent = Decimal(str(clean(depth_percent)))
         except InvalidOperation:
@@ -186,24 +158,13 @@ class Backend(XLSBackend):
         except InvalidOperation:
             table_percent = 'NULL'
 
-
-        if girdle_thinnest:
-            girdle_thinnest = cached_clean(girdle_thinnest, upper=True)
-            girdle = [girdle_thinnest]
-            if girdle_thickest:
-                girdle_thickest = cached_clean(girdle_thickest, upper=True)
-                girdle.append(girdle_thickest)
-            girdle = ' - '.join(girdle)
+        if girdle:
+            girdle = cached_clean(girdle, upper=True)
         else:
             girdle = ''
 
-        if culet_size and culet_size != 'None':
-            culet_size = cached_clean(culet_size, upper=True)
-            culet = [culet_size]
-            if culet_condition and culet_condition != 'None':
-                culet_condition = cached_clean(culet_condition, upper=True)
-                culet.append(culet_condition)
-            culet = ' '.join(culet)
+        if culet:
+            culet = cached_clean(culet, upper=True)
         else:
             culet = ''
 
@@ -229,114 +190,9 @@ class Backend(XLSBackend):
             if not fluorescence_color_id: fluorescence_color_id = None
         fluorescence_color = fluorescence_color_id
 
-        """
-        if fancy_color:
-            fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
-            fancy_color_id = self.fancy_colors.get(fancy_color)
-        else:
-            fancy_color_id = None
-
-        if fancy_color_intensity:
-            fancy_color_intensity = cached_clean(fancy_color_intensity.replace('-', ' ').lower())
-            fancy_color_intensity_id = self.fancy_color_intensities.get(fancy_color_intensity)
-        else:
-            fancy_color_intensity_id = None
-
-        if fancy_color_overtone:
-            fancy_color_overtone = cached_clean(fancy_color_overtone.replace('-', ' ').lower())
-            fancy_color_overtone_id = self.fancy_color_overtones.get(fancy_color_overtone)
-        else:
-            fancy_color_overtone_id = None
-        """
-
         cert_num = fix_float(clean(cert_num))
         if not cert_num:
             cert_num = ''
-
-
-        if certificate_image:
-            cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
-            cert_image = '/media/tsj_gemstone/certificates/%s' % (certificate_image)
-        else:
-            cert_image_local = ''
-            cert_image = ''
-        #TODO Need to check for image on ftp and move it to tsj_gemstone/certificates also
-
-
-        """
-        cert_image = cert_image.replace('.net//', '.net/').replace('\\', '/').strip()
-        if not cert_image:
-            cert_image = ''
-        elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
-            cert_image = ''
-        """
-
-        measurements = clean(measurements)
-        length, width, depth = split_measurements(measurements)
-
-        """
-        data = {}
-        if v360_link:
-            data.update({'v360_link': v360_link})
-        """
-
-        if not show_prices == 'none':
-
-            carat_price = clean(carat_price.replace(',', ''))
-            try:
-                carat_price = Decimal(carat_price)
-            except InvalidOperation:
-                carat_price = None
-
-            retail_price = None
-            #retail_price = clean(retail_price.replace(',', ''))
-            #try:
-                #retail_price = Decimal(retail_price)
-            #except InvalidOperation:
-                #retail_price = None
-
-            # Initialize price after all other data has been initialized
-            if retail_price:
-                price = retail_price
-                carat_price = retail_price / carat_weight
-                """ 
-                #Skip Markups for NEIL DIAMONDS.  Only multiply carat weight by PPC
-                elif carat_price:
-                price_before_markup = carat_price * carat_weight
-
-                if minimum_price and price_before_markup < minimum_price:
-                    raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
-                if maximum_price and price_before_markup > maximum_price:
-                    raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
-
-                price = None
-                for markup in self.markup_list:
-                    if prefs.get('markup') == 'carat_weight':
-                        if markup[0] <= carat_weight and markup[1] >= carat_weight:
-                            price = (price_before_markup * (1 + markup[2]/100))
-                            break
-                    else:
-                        if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                            price = (price_before_markup * (1 + markup[2]/100))
-                            break
-
-                if not price:
-                    if prefs.get('markup') == 'carat_weight':
-                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
-                    else:
-                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
-                """
-            elif carat_price:
-                price = carat_price * carat_weight
-
-            else:
-                price = None
-                carat_price = None
-                raise SkipDiamond('No carat_price specified')
-        else:
-            carat_price = 0
-            price = 0
-
 
         # Order must match structure of tsj_gemstone_diamond table
         ret = self.Row(
@@ -356,8 +212,8 @@ class Backend(XLSBackend):
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
             cert_num,
-            cert_image,
-            cert_image_local,
+            '', # cert_image,
+            '', # cert_image_local,
             depth_percent,
             table_percent,
             girdle,
@@ -365,19 +221,19 @@ class Backend(XLSBackend):
             self.nvl(polish),
             self.nvl(symmetry),
             self.nvl(fluorescence_id),
-            'NULL', #self.nvl(fluorescence_color_id),
+            self.nvl(fluorescence_color_id),
             'NULL', #self.nvl(fancy_color_id),
             'NULL', #self.nvl(fancy_color_intensity_id),
             'NULL', #self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            comment,
-            '', #city,
-            '', #state,
-            '',
-            'f', # manmade,
-            'f', # laser_inscribed,
+            '', # comment,
+            '', # city,
+            '', # state,
+            '', # country,
+            manmade,
+            laser_inscribed,
             'NULL', # rap_date
             '{}', #json.dumps(data), # data
         )

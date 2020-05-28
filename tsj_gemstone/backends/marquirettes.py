@@ -194,6 +194,39 @@ class Backend(XLSBackend):
         if not cert_num:
             cert_num = ''
 
+        """
+        NOTE: No prices given
+        if carat_price is None:
+            raise SkipDiamond('No carat_price specified')
+        """
+        if carat_price == '':
+            carat_price = Decimal(0)
+
+        # Initialize price after all other data has been initialized
+        price_before_markup = carat_price * carat_weight
+
+        if minimum_price and price_before_markup < minimum_price:
+            raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
+        if maximum_price and price_before_markup > maximum_price:
+            raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
+
+        price = None
+        for markup in self.markup_list:
+            if prefs.get('markup') == 'carat_weight':
+                if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                    price = (price_before_markup * (1 + markup[2]/100))
+                    break
+            else:
+                if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                    price = (price_before_markup * (1 + markup[2]/100))
+                    break
+
+        if not price:
+            if prefs.get('markup') == 'carat_weight':
+                raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
+            else:
+                raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+
         # Order must match structure of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,

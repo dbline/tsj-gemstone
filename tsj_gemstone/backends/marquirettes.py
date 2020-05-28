@@ -202,6 +202,10 @@ class Backend(XLSBackend):
         if carat_price == '':
             carat_price = Decimal(0)
 
+        if price == '':
+            price = Decimal(0)
+
+        """
         # Initialize price after all other data has been initialized
         price_before_markup = carat_price * carat_weight
 
@@ -226,6 +230,7 @@ class Backend(XLSBackend):
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
             else:
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+        """
 
         # Order must match structure of tsj_gemstone_diamond table
         ret = self.Row(

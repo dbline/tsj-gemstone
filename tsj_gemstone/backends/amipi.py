@@ -39,6 +39,7 @@ class Backend(CSVBackend):
             stock_number,
             cut,
             carat_weight,
+            color,
             clarity,
             certifier,
             cut_grade,

@@ -1,4 +1,5 @@
 __all__ = (
+    'amipi',
     'asc',
     'atlantic_diamond',
     'brilliantediamond',

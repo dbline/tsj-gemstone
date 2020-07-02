@@ -57,10 +57,12 @@ class GemstonePreferencesForm(PreferencesForm):
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
 
+    amipi = forms.BooleanField(required=False, label='Amipi')
     brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
     hasenfeld = forms.BooleanField(required=False, label='Hasenfeld-Stein')
     leibish = forms.BooleanField(required=False, label='Leibish & Co.')
+    mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
     mgeller = forms.BooleanField(required=False, label='M. Geller Diamonds')
     mid = forms.BooleanField(required=False, label='MID House of Diamonds')
     ofermizrahi = forms.BooleanField(required=False, label='Ofer Mizrahi Diamonds')
@@ -71,7 +73,6 @@ class GemstonePreferencesForm(PreferencesForm):
     rditrading_advanced = forms.BooleanField(required=False, label='RDI Trading (Advanced)')
     sahar_atid = forms.BooleanField(required=False, label='Sahar Atid')
     stuller = forms.BooleanField(required=False)
-    mdl = forms.BooleanField(required=False, label='MDL (Canadian Dollar)')
     vantyghem = forms.BooleanField(required=False, label='Vantyghem (Canadian Dollar)')
 
     sarine_template = forms.CharField(label='Sarine Template', help_text='ID for overriding default Sarine Template', required=False)

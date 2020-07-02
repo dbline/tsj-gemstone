@@ -103,10 +103,9 @@ class GemstonePreferences(AppPreferences):
         }),
         (_('Built-in Feeds'), {
             'fields': (
-                'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
-                'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrowndiamonds',
-                'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'mdl',
-                'vantyghem',
+                'amipi', 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
+                'mdl', 'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrowndiamonds',
+                'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'vantyghem',
             ),
         }),
         (_('Rapaport'), {

@@ -57,6 +57,9 @@ class GemstonePreferencesForm(PreferencesForm):
     polygon_id = forms.CharField(label='Polygon ID', help_text="Your Polygon ID", required=False)
     asc = forms.CharField(label='ASC Account', help_text='FTP account for ASC', required=False)
 
+    vdb_api_key = forms.CharField(label='VDB API Key', help_text="Your VDB API key", required=False)
+    vdb_access_token = forms.CharField(label='VDB Access Token', help_text="Your VDB access token", required=False)
+
     amipi = forms.BooleanField(required=False, label='Amipi')
     brilliantediamond = forms.BooleanField(required=False, label='Brilliante Diamond')
     gndiamond = forms.BooleanField(required=False, label='GN Diamond')
@@ -127,17 +130,22 @@ class GemstonePreferences(AppPreferences):
                 'polygon_id',
             ),
         }),
-        (_('Additional Feeds'), {
-            'fields': (
-                'backend',
-            ),
-        }),
         (_('ASC'), {
             'fields': (
                 'asc',
             ),
         }),
-
+        (_('VDB'), {
+            'fields': (
+                'vdb_api_key',
+                'vdb_access_token',
+            ),
+        }),
+        (_('Additional Feeds'), {
+            'fields': (
+                'backend',
+            ),
+        }),
     )
     form = GemstonePreferencesForm
     verbose_name = 'Gemstone'

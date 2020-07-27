@@ -29,5 +29,6 @@ __all__ = (
     'stuller',
     'vantyghem',
     'vandan',
+    'vdb',
     'waldman_full',
 )

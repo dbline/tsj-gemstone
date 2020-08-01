@@ -200,7 +200,6 @@ class Backend(BaseBackend):
             else:
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
-        # TODO: Compare lab, lab_short, and lab_long values
         certifier = cached_clean(data.get('lab'), upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
         if must_be_certified:
@@ -258,9 +257,8 @@ class Backend(BaseBackend):
         symmetry = self.grading_aliases.get(cached_clean(data.get('symmetry'), upper=True))
 
         fluorescence_id = None
-        # TODO: Fluorescence
         fluorescence_color_id = None
-        fl = data.get('fluor_intensity', '')
+        fl = data.get('fluor_intensity_long', '')
         if fl:
             fluorescence = cached_clean(fl, upper=True)
             for abbr, id in self.fluorescence_aliases.iteritems():
@@ -272,8 +270,13 @@ class Backend(BaseBackend):
         width = data.get('meas_width')
         depth = data.get('meas_depth')
 
-        # TODO: Is owner_info ever populated?
-        owner = data.get('owner_info')
+        city = data.get('city')
+        state = data.get('state')
+        country = data.get('country')
+
+        # We've only seen null owner info
+        #owner = data.get('owner_info')
+
         lot_num = data.get('id')
 
         ret = self.Row(
@@ -310,9 +313,9 @@ class Backend(BaseBackend):
             self.nvl(width),
             self.nvl(depth),
             '', # comment,
-            '', # city,
-            '', # state,
-            '', # country,
+            self.nvl(city),
+            self.nvl(state),
+            self.nvl(country),
             'f', # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date

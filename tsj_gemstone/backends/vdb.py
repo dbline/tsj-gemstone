@@ -270,6 +270,11 @@ class Backend(BaseBackend):
         width = data.get('meas_width')
         depth = data.get('meas_depth')
 
+        if data.get('laser_inscription'):
+            laser_inscribed = 't'
+        else:
+            laser_inscribed = 'f'
+
         city = data.get('city')
         state = data.get('state')
         country = data.get('country')
@@ -286,7 +291,7 @@ class Backend(BaseBackend):
             self.backend_module,
             lot_num,
             stock_number,
-            owner,
+            '', # owner
             cut,
             self.nvl(cut_grade),
             self.nvl(color),
@@ -317,7 +322,7 @@ class Backend(BaseBackend):
             self.nvl(state),
             self.nvl(country),
             'f', # manmade,
-            'f', # laser_inscribed,
+            laser_inscribed,
             'NULL', # rap_date
             '{}', # data
         )

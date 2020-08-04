@@ -57,6 +57,11 @@ class Backend(CSVBackend):
             return
 
         files = sorted(glob.glob(self.infile_glob.format(id=polygon_id)))
+
+        # Also check for .CSV in addition to .csv.
+        if not len(files):
+            files = sorted(glob.glob(self.infile_glob.replace('.csv', '.CSV').format(id=polygon_id)))
+
         if len(files):
             fn = files[-1]
         else:

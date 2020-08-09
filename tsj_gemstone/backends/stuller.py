@@ -12,7 +12,7 @@ import requests
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
-from .base import LRU_CACHE_MAXSIZE, JSONBackend, SkipDiamond, KeyValueError
+from .base import LRU_CACHE_MAXSIZE, JSONBackend, ImportSourceError, SkipDiamond, KeyValueError
 from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
@@ -70,8 +70,7 @@ class Backend(JSONBackend):
         response = session.get(url)
 
         if response.status_code != 200:
-            logger.error('Stuller HTTP error {}'.format(response.status_code))
-            return
+            raise ImportSourceError('Stuller HTTP error {}'.format(response.status_code))
 
         data = response.json()
         if 'Diamonds' not in data:

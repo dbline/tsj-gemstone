@@ -77,6 +77,7 @@ class Backend(CSVBackend):
         unused_pavilion_depth,
         unused_pavilion_angle,
         unused_laser_inscription,
+        laser_inscription,
         comment,
         cert_num,
         cert_image,
@@ -244,6 +245,12 @@ class Backend(CSVBackend):
         if v360_link:
             data.update({'v360_link': v360_link})
 
+        if laser_inscription:
+            laser_inscribed = 't'
+            #data['laser_inscription'] = laser_inscription
+        else:
+            laser_inscribed = 'f'
+
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 
@@ -311,7 +318,7 @@ class Backend(CSVBackend):
             state, #state,
             country,
             'f', # manmade,
-            'f', # laser_inscribed,
+            laser_inscribed,
             'NULL', # rap_date
             json.dumps(data), # data
         )

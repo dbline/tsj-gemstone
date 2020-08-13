@@ -145,11 +145,15 @@ class Backend(CSVBackend):
 
         try:
             depth_percent = Decimal(str(clean(depth_percent)))
+            if depth_percent > 100:
+                raise InvalidOperation
         except InvalidOperation:
             depth_percent = 'NULL'
 
         try:
             table_percent = Decimal(str(cached_clean(table_percent)))
+            if table_percent > 100:
+                raise InvalidOperation
         except InvalidOperation:
             table_percent = 'NULL'
 

@@ -35,6 +35,8 @@ cached_clean = lru_cache(maxsize=LRU_CACHE_MAXSIZE)(clean)
 def split_measurements(measurements):
     try:
         length, width, depth = measurements.split('|')
+        if length > 100 or width > 100 or depth > 100:
+            raise ValueError
     except ValueError:
         length, width, depth = None, None, None
 

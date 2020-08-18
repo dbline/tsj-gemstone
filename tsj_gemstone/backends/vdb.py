@@ -258,7 +258,7 @@ class Backend(BaseBackend):
 
         fluorescence_id = None
         fluorescence_color_id = None
-        fl = data.get('fluor_intensity_long', '')
+        fl = data.get('fluor_intensity', '')
         if fl:
             fluorescence = cached_clean(fl, upper=True)
             for abbr, id in self.fluorescence_aliases.iteritems():

@@ -126,7 +126,7 @@ class Backend(CSVBackend):
 
         if color:
             try:
-                color = color_aliases[cached_clean(color, upper=True)]
+                color = self.color_aliases[cached_clean(color, upper=True)]
             except KeyError as e:
                 raise KeyValueError('color', e.args[0])
         else:

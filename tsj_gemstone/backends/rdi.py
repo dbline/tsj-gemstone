@@ -128,7 +128,6 @@ class Backend(CSVBackend):
             try:
                 color = self.color_aliases[cached_clean(color, upper=True)]
             except KeyError as e:
-                print ('color_aliases', e.args[0])
                 raise KeyValueError('color_aliases', e.args[0])
         else:
             raise SkipDiamond('No valid color found')

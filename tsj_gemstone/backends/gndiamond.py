@@ -153,7 +153,13 @@ class Backend(CSVBackend):
             fancy_color_id = self.fancy_colors.get(fancy_color)
         else:
             fancy_color_id = None
-            color = self.color_aliases.get(cached_clean(color, upper=True))
+            if color:
+                try:
+                    color = self.color_aliases[cached_clean(color, upper=True)]
+                except KeyError as e:
+                    raise KeyValueError('color_aliases', e.args[0])
+            else:
+                raise SkipDiamond('No valid color found')
 
         try:
             cut = self.cut_aliases[cached_clean(cut, upper=True)]

@@ -150,7 +150,10 @@ class Backend(CSVBackend):
         if fancy_color:
             color = None
             fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
-            fancy_color_id = self.fancy_colors.get(fancy_color)
+            try:
+                fancy_color_id = self.fancy_colors[fancy_color]
+            except KeyError as e:
+                raise KeyValueError('fancy_color', e.args[0])
         else:
             fancy_color_id = None
             if color:

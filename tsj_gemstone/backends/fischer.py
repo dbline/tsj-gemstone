@@ -76,42 +76,23 @@ class Backend(CSVBackend):
             stock_number,
             certifier,
             cert_num,
-            #cert_image,
-            #unused_second_image,
             measurements,
             depth_percent,
             table_percent,
-            #crown_angle,
-            #crown_percent,
-            #pavilion_angle,
-            #pavilion_percent,
             girdle_thinnest,
             girdle_thickest,
-            #girdle_percent, # Ignored for now
             culet_size,
-            #culet_condition,
             polish,
             symmetry,
             fluorescence_color,
-            fluorescence, #intensity!
-            #enhancements, # Ignored
-            #comment,
-            #availability, # Guaranteed Available, Not Specified, On Memo
+            fluorescence,
             active, # Y/N
-            #fc_main_body, # Ignored
-            #fc_intensity, # Ignored
-            #fc_overtone, # Ignored
-            #pair, # True/False
-            #pair_separable, # True/False
-            #pair_stock_number,
             cut_grade,
             availability, #new to this backend
-            pavilion,
-            #syndication,
-            #external_url # Ignored
+            pavilion
         ) = line
 
-        if active != 'Y':
+        if active != 'Y' or availability != 'G':
             raise SkipDiamond('Diamond is not active')
 
         (
@@ -125,7 +106,7 @@ class Backend(CSVBackend):
             include_lab_grown
         ) = self.pref_values
 
-        comment = cached_clean(comment)
+        #  comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
 
         try:
@@ -206,10 +187,6 @@ class Backend(CSVBackend):
         if culet_size and culet_size != 'None':
             culet_size = cached_clean(culet_size, upper=True)
             culet = [culet_size]
-            if culet_condition and culet_condition != 'None':
-                culet_condition = cached_clean(culet_condition, upper=True)
-                culet.append(culet_condition)
-            culet = ' '.join(culet)
         else:
             culet = ''
 
@@ -242,12 +219,13 @@ class Backend(CSVBackend):
         if not cert_num:
             cert_num = ''
 
+        """
         cert_image = cert_image.strip()
         if not cert_image:
             cert_image = ''
         elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
-
+        
         lot_num = clean(lot_num)
         if lot_num == 'v360':
             v360_link = 'https://v360.in/viewer4.0/vision360.html?d=' + stock_number + '&surl=https://s4.v360.in/images/company/244/'
@@ -255,7 +233,8 @@ class Backend(CSVBackend):
             v360_image = 'https://v360.in/V360Images.aspx?cid=LondonGold&d=' + stock_number
             data = {'v360_link': v360_link, 'v360_image': v360_image}
         else:
-            data = {}
+        """
+        data = {}
 
         if price_before_markup is None:
             raise SkipDiamond('No price specified')
@@ -288,9 +267,9 @@ class Backend(CSVBackend):
             self.added_date,
             't', # active
             self.backend_module,
-            '', # lot_num
+            '',  # lot_num
             stock_number,
-            owner,
+            '',  # owner,
             cut,
             self.nvl(cut_grade),
             self.nvl(color),
@@ -300,7 +279,7 @@ class Backend(CSVBackend):
             moneyfmt(Decimal(price), curr='', sep=''),
             self.nvl(certifier),
             cert_num,
-            cert_image,
+            '',  #cert_image,
             '', # cert_image_local
             depth_percent,
             table_percent,
@@ -316,7 +295,7 @@ class Backend(CSVBackend):
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            comment,
+            '',  #comment,
             '', # city,
             '', # state,
             '', # country,

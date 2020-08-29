@@ -5,6 +5,7 @@ __all__ = (
     'brilliantediamond',
     'dnr_dia',
     'em_trading',
+    'fischer',
     'gndiamond',
     'hasenfeld',
     'idex',

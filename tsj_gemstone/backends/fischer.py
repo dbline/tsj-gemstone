@@ -59,7 +59,6 @@ class Backend(CSVBackend):
         files = sorted(glob.glob(self.infile_glob))
         if len(files):
             fn = files[-1]
-            self.logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
         else:
             raise ImportSourceError('No data file for Fischer Diamonds found, aborting import.')
         return fn

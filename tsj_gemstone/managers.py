@@ -94,4 +94,4 @@ class NameDictManager(models.Manager):
     def as_dict(self):
         cursor = connection.cursor()
         cursor.execute('SELECT id, name, aliases FROM %s;' % self.model._meta.db_table)
-        return lower_list_to_dict(cursor.fetchall())
+        return list_to_dict(cursor.fetchall())

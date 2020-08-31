@@ -149,7 +149,12 @@ class Backend(CSVBackend):
         # Color
         if fancy_color:
             color = None
-            fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())
+            # on all other self.alias lookups we use a dict of all upper() values
+            # on self.fancy_colors lookup the dict is the native values - what ever was entered in the fields on the model (upper and lower)
+            # when we use .lower() on the next line, we are saying the values entered in the FancyColor model must be
+            # lowercase or we will never match
+            # WHY are we doing this?  You went to a lot of trouble to make it happen this way so there must be a good reason
+            fancy_color = cached_clean(fancy_color.replace('-', ' ').upper())
             try:
                 fancy_color_id = self.fancy_colors[fancy_color]
             except KeyError as e:

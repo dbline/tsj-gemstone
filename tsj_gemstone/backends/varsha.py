@@ -49,8 +49,8 @@ def split_measurements(measurements):
 ### = things that are unique to each individual backend
 
 class Backend(CSVBackend):
-    infile_glob = os.path.join(settings.FTP_ROOT, 'fischerdiamonds/*.csv')  ###
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/fischersample.csv')  ###
+    infile_glob = os.path.join(settings.FTP_ROOT, 'varshaftp/*.csv')  ###
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/varshasample.csv')  ###
 
     @property
     def enabled(self):  ### unique only if backend has its own preference
@@ -76,29 +76,53 @@ class Backend(CSVBackend):
             carat_weight,
             color,
             clarity,
-            price_before_markup,
-            stock_number,
-            certifier,
-            cert_num,
             measurements,
+            cut_grade,
+            certifier,
+            price_before_markup,
+            unused_rapnet_discount,
             depth_percent,
             table_percent,
             girdle_thinnest,
             girdle_thickest,
+            unused_girdle_percent,
+            unused_girdle_condition,
             culet_size,
+            unused_culet_condition,
             polish,
             symmetry,
-            fluorescence_color,
             fluorescence,
-            active,  # Y/N
-            cut_grade,
-            availability,  # new to this backend
-            pavilion
+            fluorescence_color,
+            unused_crown_height,
+            unused_crown_angle,
+            pavilion,
+            unused_pavillion_angle,
+            unused_treatment,
+            laser_inscription,
+            comment,
+            cert_num,
+            cert_image,
+            cert_image_local,
+            stock_number,
+            unused_matched_pair,
+            unused_is_pair_separable,
+            city,
+            state,
+            country,
+            fancy_color,  #USE!
+            fancy_color_intensity,
+            fancy_color_overtone,
+            unused_parcel_stone_count,
+            unused_status,
+            unused_allow_raplink_feed,
+            unused_rapnet_link
+
         ) = line
 
+        """
         if active != 'Y' or availability != 'G':
             raise SkipDiamond('Diamond is not active')
-
+        """
         (
             minimum_carat_weight,
             maximum_carat_weight,
@@ -110,7 +134,7 @@ class Backend(CSVBackend):
             include_lab_grown
         ) = self.pref_values
 
-        #  comment = cached_clean(comment)
+        comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
 
         try:
@@ -124,9 +148,34 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(color, upper=True))
-        if not color:
-            raise SkipDiamond('No color was specified.')
+        if fancy_color:
+            color = None
+            fancy_color = cached_clean(fancy_color.replace('-', ' ').upper())
+            try:
+                fancy_color_id = self.fancy_colors[fancy_color]
+            except KeyError as e:
+                raise KeyValueError('fancy_color', e.args[0])
+        else:
+            fancy_color_id = None
+            if color:
+                try:
+                    color = self.color_aliases[cached_clean(color, upper=True)]
+                except KeyError as e:
+                    raise KeyValueError('color_aliases', e.args[0])
+            else:
+                raise SkipDiamond('No valid color found')
+
+        if fancy_color_intensity:
+            fancy_color_intensity = cached_clean(fancy_color_intensity.replace('-', ' ').lower())
+            fancy_color_intensity_id = self.fancy_color_intensities.get(fancy_color_intensity)
+        else:
+            fancy_color_intensity_id = None
+
+        if fancy_color_overtone:
+            fancy_color_overtone = cached_clean(fancy_color_overtone.replace('-', ' ').lower())
+            fancy_color_overtone_id = self.fancy_color_overtones.get(fancy_color_overtone)
+        else:
+            fancy_color_overtone_id = None
 
         certifier = cached_clean(certifier, upper=True)
         # If the diamond must be certified and it isn't, raise an exception to prevent it from being imported
@@ -223,13 +272,18 @@ class Backend(CSVBackend):
         if not cert_num:
             cert_num = ''
 
-        """
+
         cert_image = cert_image.strip()
         if not cert_image:
             cert_image = ''
         elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
 
+        cert_image_local = cert_image_local.strip()
+        if not cert_image_local:
+            cert_image_local = ''
+
+        """
         lot_num = clean(lot_num)
         if lot_num == 'v360':
             v360_link = 'https://v360.in/viewer4.0/vision360.html?d=' + stock_number + '&surl=https://s4.v360.in/images/company/244/'
@@ -239,6 +293,12 @@ class Backend(CSVBackend):
         else:
         """
         data = {}
+
+        if laser_inscription:
+            data['laser_inscription'] = laser_inscription
+            laser_inscription = 't'
+        else:
+            laser_inscription = 'f'
 
         if price_before_markup is None:
             raise SkipDiamond('No price specified')
@@ -285,8 +345,8 @@ class Backend(CSVBackend):
             moneyfmt(Decimal(price), curr='', sep=''),
             self.nvl(certifier),
             cert_num,
-            '',  # cert_image,
-            '',  # cert_image_local
+            cert_image,
+            cert_image_local
             depth_percent,
             table_percent,
             girdle,
@@ -295,18 +355,18 @@ class Backend(CSVBackend):
             self.nvl(symmetry),
             self.nvl(fluorescence),
             self.nvl(fluorescence_color),
-            'NULL',  # self.nvl(fancy_color_id),
-            'NULL',  # self.nvl(fancy_color_intensity_id),
-            'NULL',  # self.nvl(fancy_color_overtone_id),
+            self.nvl(fancy_color_id),
+            self.nvl(fancy_color_intensity_id),
+            self.nvl(fancy_color_overtone_id),
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            '',  # comment,
-            '',  # city,
-            '',  # state,
-            '',  # country,
+            comment,  # comment,
+            city,  # city,
+            state,  # state,
+            country,  # country,
             'f',  # manmade,
-            'f',  # laser_inscribed,
+            laser_inscription,
             'NULL',  # rap_date
             json.dumps(data),  # data
         )

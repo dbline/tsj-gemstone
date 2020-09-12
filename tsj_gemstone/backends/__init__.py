@@ -30,6 +30,7 @@ __all__ = (
     'stuller',
     'vantyghem',
     'vandan',
+    'varsha',
     'vdb',
     'waldman_full',
 )

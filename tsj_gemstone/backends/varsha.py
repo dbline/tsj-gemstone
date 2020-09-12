@@ -346,7 +346,7 @@ class Backend(CSVBackend):
             self.nvl(certifier),
             cert_num,
             cert_image,
-            cert_image_local
+            cert_image_local,
             depth_percent,
             table_percent,
             girdle,

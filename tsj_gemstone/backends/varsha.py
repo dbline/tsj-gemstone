@@ -368,7 +368,7 @@ class Backend(CSVBackend):
             'f',  # manmade,
             laser_inscription,
             'NULL',  # rap_date
-            json.dumps(data),  # data
+            '{}', # json.dumps(data),  # data
         )
 
         return ret

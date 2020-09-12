@@ -115,7 +115,8 @@ class Backend(CSVBackend):
             unused_parcel_stone_count,
             unused_status,
             unused_allow_raplink_feed,
-            unused_rapnet_link
+            unused_rapnet_link,
+            unused_extra
 
         ) = line
 

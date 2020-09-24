@@ -58,8 +58,7 @@ class Backend(JSONBackend):
         session = requests.Session()
         session.auth = (settings.STULLER_USER, settings.STULLER_PASSWORD)
         session.headers.update({'Content-Type': 'application/json', 'Accept': 'application/json'})
-        url = 'https://www.stuller.com/api/v2/gem'
-
+        url = 'https://api.stuller.com/api/v2/gem'
         next_page = None
         prev_page_hash = None
         serial_numbers = set()

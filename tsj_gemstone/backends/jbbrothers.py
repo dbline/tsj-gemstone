@@ -83,7 +83,7 @@ class Backend(CSVBackend):
             symmetry,
             polish,
             certifier,
-            unused_Milky,
+            unused_Milky,  # TODO ADD to COMMENTS
             culet_size,  # Culate?? All seem to be "PO"
             unused_GirdleDiscription,
             unused_ExCr,
@@ -96,13 +96,13 @@ class Backend(CSVBackend):
             fluorescence_color,
             unused_GirdleCondition,
             unused_Type2A,
-            unused_EC,
+            unused_EC,  # TODO ADD to comments
             unused_HeartAndArrow,
             unused_TOI,
             unused_Knot,
             unused_Graining,
             unused_TableIncusion,
-            unused_Natural, #  negative of ManMade ???
+            unused_Natural, #  NOT the negative of ManMade ???
             measurements,
             unused_DiameterMinimum,
             unused_DiameterMaximum,

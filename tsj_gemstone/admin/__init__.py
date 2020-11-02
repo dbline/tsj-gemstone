@@ -127,7 +127,7 @@ class DiamondAdmin(ModelAdmin):
     save_on_top = True
     list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'get_color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner', 'active')
     list_display_links = ('stock_number',)
-    list_filter = ('cut', 'color', 'fancy_color', 'clarity', 'certifier', 'active', SourceFilter)
+    list_filter = ('cut', 'color', 'fancy_color', 'clarity', 'certifier', 'active', SourceFilter, 'manmade')
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
 
     def get_color(self, obj):

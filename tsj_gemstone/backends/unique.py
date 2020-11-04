@@ -76,7 +76,7 @@ class Backend(XLSBackend):
             cert_num,
             unused_discount,
             carat_price,
-            measurement,
+            measurements,
             video_link,
             rapport_link,
             table_percent,

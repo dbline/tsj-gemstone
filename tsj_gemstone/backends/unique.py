@@ -103,7 +103,7 @@ class Backend(XLSBackend):
             show_prices
         ) = self.add_pref_values
 
-        comment = cached_clean(comment)
+        #  comment = cached_clean(comment)
         stock_number = fix_float(clean(stock_number, upper=True))
 
         try:

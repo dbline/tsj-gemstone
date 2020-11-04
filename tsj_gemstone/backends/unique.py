@@ -347,7 +347,7 @@ class Backend(XLSBackend):
             self.nvl(length),
             self.nvl(width),
             self.nvl(depth),
-            comment,
+            '',  #comment,
             '', #city,
             '', #state,
             '',

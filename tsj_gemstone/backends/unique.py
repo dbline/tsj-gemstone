@@ -162,6 +162,7 @@ class Backend(XLSBackend):
             table_percent = 'NULL'
 
 
+        """
         if girdle_thinnest:
             girdle_thinnest = cached_clean(girdle_thinnest, upper=True)
             girdle = [girdle_thinnest]
@@ -171,7 +172,9 @@ class Backend(XLSBackend):
             girdle = ' - '.join(girdle)
         else:
             girdle = ''
+        """
 
+        """
         if culet_size and culet_size != 'None':
             culet_size = cached_clean(culet_size, upper=True)
             culet = [culet_size]
@@ -181,6 +184,7 @@ class Backend(XLSBackend):
             culet = ' '.join(culet)
         else:
             culet = ''
+        """
 
         polish = self.grading_aliases.get(cached_clean(polish, upper=True))
         symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
@@ -195,6 +199,7 @@ class Backend(XLSBackend):
                 break
         fluorescence = fluorescence_id
 
+        """
         if fluorescence_color:
             fluorescence_color = cached_clean(fluorescence_color, upper=True)
             for abbr, id in self.fluorescence_color_aliases.iteritems():
@@ -203,6 +208,7 @@ class Backend(XLSBackend):
                     break
             if not fluorescence_color_id: fluorescence_color_id = None
         fluorescence_color = fluorescence_color_id
+        """
 
         """
         if fancy_color:
@@ -229,6 +235,7 @@ class Backend(XLSBackend):
             cert_num = ''
 
 
+        """
         if certificate_image:
             cert_image_local = 'tsj_gemstone/certificates/%s' % (certificate_image)
             cert_image = '/media/tsj_gemstone/certificates/%s' % (certificate_image)
@@ -236,6 +243,7 @@ class Backend(XLSBackend):
             cert_image_local = ''
             cert_image = ''
         #TODO Need to check for image on ftp and move it to tsj_gemstone/certificates also
+        """
 
 
         """

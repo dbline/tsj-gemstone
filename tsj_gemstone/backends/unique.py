@@ -49,8 +49,8 @@ def fix_float(might_b_float):
     return might_b_float
 
 class Backend(XLSBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/unique.xlsx')
-    default_filename = os.path.join(settings.FTP_ROOT, 'unique-diamonds-ftp/unique.xlsx')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/ms-excellent.xlsx')
+    default_filename = os.path.join(settings.FTP_ROOT, 'ms-excellent-ftp/ms-excellent.xlsx')
 
     @property
     def enabled(self):

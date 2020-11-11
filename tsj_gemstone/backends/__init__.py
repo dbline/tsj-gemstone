@@ -9,7 +9,7 @@ __all__ = (
     'gndiamond',
     'hasenfeld',
     'idex',
-    'jbbrothers'
+    'jbbrothers',
     'keren_dia',
     'leibish',
     'mdl',
@@ -29,7 +29,7 @@ __all__ = (
     'spicer',
     'star_solitaire',
     'stuller',
-    'unique'
+    'unique',
     'vantyghem',
     'vandan',
     'varsha',

@@ -125,7 +125,7 @@ class Backend(CSVBackend):
             comments, # ReportComments
             unused_RapportPrice,  # RAP PPC - not the price!
             unused_StoneInfoLink,  # possible certlink?
-            price_before_markup,
+            ct_price_before_markup,
             unused_TermsOff,
             unused_Style  # all blanks
         ) = line
@@ -196,13 +196,14 @@ class Backend(CSVBackend):
             raise KeyValueError('clarity', e.args[0])
 
         cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
-        price_before_markup = clean(price_before_markup.replace(',', ''))
-        if price_before_markup:
-            price_before_markup = Decimal(price_before_markup)
-            carat_price = price_before_markup / carat_weight
+
+        ct_price_before_markup = clean(ct_price_before_markup.replace(',', ''))
+        if ct_price_before_markup:
+            ct_price_before_markup = Decimal(ct_price_before_markup)
+            price_before_markup = ct_price_before_markup * carat_weight
         else:
             price_before_markup = None
-            carat_price = None
+            ct_price_before_markup = None
 
         try:
             depth_percent = Decimal(str(clean(depth_percent)))
@@ -315,7 +316,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
-            moneyfmt(Decimal(carat_price), curr='', sep=''),
+            moneyfmt(Decimal(ct_price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             self.nvl(certifier),
             cert_num,

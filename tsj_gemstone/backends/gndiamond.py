@@ -253,7 +253,7 @@ class Backend(CSVBackend):
             cert_num = ''
             cert_image = ''
         else:
-            cert_image = 'http://gndiamond.s3.amazonaws.com/certificates/%s.jpg' % (stock_number)
+            cert_image = 'https://diamondcerts.s3-us-west-2.amazonaws.com/certificates/%s.jpg' % (stock_number)
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')

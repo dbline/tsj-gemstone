@@ -13,6 +13,7 @@ import mimetypes
 from thinkspace.apps.pages.urlresolvers import reverse
 from thinkspace.lib.db.models import View
 from ts_company.prefs import prefs as company_prefs
+from tsj_commerce_local.prefs import prefs as commerce_prefs
 from tsj_gemstone.managers import DictManager, NameDictManager
 from tsj_gemstone.utils import moneyfmt
 
@@ -259,12 +260,14 @@ class DiamondBase(TimeStampedModel):
     data = JSONField(default={})
 
     def formatted_price(self):
-        return moneyfmt(self.price, dp='', places=0)
+        curr = commerce_prefs.get('currency_symbol', '$')
+        return moneyfmt(self.price, curr=curr, dp='', places=0)
     formatted_price.short_description = 'Price'
     formatted_price.admin_order_field = 'price'
 
     def formatted_carat_price(self, dp='', places=0):
-        return moneyfmt(self.carat_price, dp='', places=0)
+        curr = commerce_prefs.get('currency_symbol', '$')
+        return moneyfmt(self.carat_price, curr=curr, dp='', places=0)
     formatted_carat_price.short_description = 'Price / Ct.'
     formatted_carat_price.admin_order_field = 'carat_price'
 

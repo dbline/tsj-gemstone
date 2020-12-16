@@ -160,11 +160,8 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
 
             filterset = self.filterset(initial, queryset=queryset)
 
-            count = filterset.count()
-
             context.update({
                 'carat_weights': carat_weights,
-                'count': count,
                 'filterset': filterset,
                 'has_ring_builder': builder_prefs.get('ring'),
                 'initial_cuts': self.request.GET.getlist('cut'),
@@ -182,6 +179,7 @@ class GemstoneListView(PagesTemplateResponseMixin, ListView):
                 paginator_page = paginator.page(paginator.num_pages)
 
             context.update(dict(
+                object_list = paginator_page.object_list,
                 paginator = paginator,
                 page = paginator_page,
             ))

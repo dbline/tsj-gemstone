@@ -215,6 +215,10 @@ class DiamondAdmin(ModelAdmin):
 
         return urls
 
+    def get_queryset(self, request):
+        return super(DiamondAdmin, self).get_queryset(request).select_related(
+            'certifier', 'clarity', 'color', 'cut', 'fancy_color')
+
     def save_form(self, request, form, change):
         obj = form.save(commit=False)
 

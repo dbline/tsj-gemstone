@@ -125,7 +125,7 @@ class SourceFilter(SimpleListFilter):
 class DiamondAdmin(ModelAdmin):
     admin_order = 2
     save_on_top = True
-    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'get_color', 'clarity', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner', 'active')
+    list_display = ('stock_number', 'carat_weight', 'cut', 'cut_grade', 'get_color', 'clarity', 'formatted_cost', 'formatted_carat_price', 'formatted_price', 'certifier', 'source', 'owner', 'active')
     list_display_links = ('stock_number',)
     list_filter = ('cut', 'color', 'fancy_color', 'clarity', 'certifier', 'active', SourceFilter, 'manmade')
     search_fields = ['lot_num', 'stock_number', 'owner', 'carat_weight', 'carat_price', 'price', 'cert_num']
@@ -145,7 +145,7 @@ class DiamondAdmin(ModelAdmin):
             }),
             ('Data', {
                 'fields': (
-                    ('carat_weight', 'carat_price', 'price'),
+                    ('carat_weight', 'cost', 'carat_price', 'price'),
                     ('cut', 'color', 'clarity'),
                     ('cut_grade'),
                     ('fancy_color', 'fancy_color_intensity', 'fancy_color_overtone'),
@@ -372,4 +372,5 @@ site.register(models.FancyColorIntensity, FancyColorIntensityAdmin)
 site.register(models.FancyColorOvertone, FancyColorOvertoneAdmin)
 site.register(models.Certifier, CertifierAdmin)
 site.register(models.DiamondMarkup, DiamondMarkupAdmin)
+site.register(models.LabGrownDiamondMarkup, DiamondMarkupAdmin)
 site.register(models.Diamond, DiamondAdmin)

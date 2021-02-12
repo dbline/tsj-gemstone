@@ -237,6 +237,7 @@ class Backend(XMLBackend):
             self.nvl(color),
             clarity,
             carat_weight,
+            moneyfmt(Decimal(price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             self.nvl(certifier),

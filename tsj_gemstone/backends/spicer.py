@@ -415,6 +415,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
+            '', # cost,
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,

@@ -207,11 +207,40 @@ class DiamondMarkup(models.Model):
             else:
                 return u'%s - %s: %s' % (self.minimum_price, self.maximum_price, self.percent)
         else:
-            return 'DiamondMarkup'
+            return ''
 
     class Meta:
         verbose_name = 'Diamond Markup'
         verbose_name_plural = 'Diamond Markups'
+        ordering = ['percent']
+
+class LabGrownDiamondMarkup(models.Model):
+    minimum_carat_weight = models.DecimalField('Min Carat Weight',
+            max_digits=5, decimal_places=2, blank=True, null=True,
+            help_text="The minimum carat weight for this markup to be applied.")
+    maximum_carat_weight = models.DecimalField('Max Carat Weight',
+            max_digits=5, decimal_places=2, blank=True, null=True,
+            help_text="The maximum carat weight for this markup to be applied.")
+    minimum_price = models.DecimalField('Min Price',
+            max_digits=10, decimal_places=2, blank=True, null=True,
+            help_text="The minimum price for this markup to be applied.")
+    maximum_price = models.DecimalField('Max Price',
+            max_digits=10, decimal_places=2, blank=True, null=True,
+            help_text="The maximum price for this markup to be applied.")
+    percent = models.DecimalField(max_digits=5, decimal_places=2, help_text='Markup percent (35.00 for 35%)')
+
+    def __unicode__(self):
+        if self:
+            if self.minimum_carat_weight:
+                return u'%s - %s: %s' % (self.minimum_carat_weight, self.maximum_carat_weight, self.percent)
+            else:
+                return u'%s - %s: %s' % (self.minimum_price, self.maximum_price, self.percent)
+        else:
+            return ''
+
+    class Meta:
+        verbose_name = 'Lab Grown Markup'
+        verbose_name_plural = 'Lab Grown Markups'
         ordering = ['percent']
 
 class DiamondBase(TimeStampedModel):
@@ -228,6 +257,7 @@ class DiamondBase(TimeStampedModel):
     clarity = models.ForeignKey(Clarity, verbose_name='Clarity', null=True, blank=True, related_name='%(class)s_clarity_set')
     carat_weight = models.DecimalField('Weight', max_digits=5, decimal_places=2, db_index=True)
     carat_price = models.DecimalField('Price / Ct.', max_digits=10, decimal_places=2)
+    cost = models.DecimalField('Cost', max_digits=10, decimal_places=2, null=True, blank=True)
     price = models.DecimalField('Price', max_digits=10, decimal_places=2)
     certifier = models.ForeignKey(Certifier, verbose_name='Lab', null=True, blank=True, related_name='%(class)s_certifier_set')
     cert_num = models.CharField('Lab Report #', max_length=255, blank=True)
@@ -251,13 +281,19 @@ class DiamondBase(TimeStampedModel):
     city = models.CharField('City', max_length=255, blank=True)
     state = models.CharField('State', max_length=255, blank=True)
     country = models.CharField('Country', max_length=255, blank=True)
-    manmade = models.NullBooleanField(default=False, verbose_name='Man-made')
+    manmade = models.NullBooleanField(default=False, verbose_name='Lab Grown')
     laser_inscribed = models.NullBooleanField(default=False, verbose_name='Laser Inscribed')
 
     # TODO: Abstract Rapaport information to a different model
     rap_date = models.DateTimeField('Date Added', blank=True, null=True)
 
     data = JSONField(default={})
+
+    def formatted_cost(self):
+        curr = commerce_prefs.get('currency_symbol', '$')
+        return moneyfmt(self.cost, curr=curr, dp='', places=0)
+    formatted_cost.short_description = 'Cost'
+    formatted_cost.admin_order_field = 'cost'
 
     def formatted_price(self):
         curr = commerce_prefs.get('currency_symbol', '$')

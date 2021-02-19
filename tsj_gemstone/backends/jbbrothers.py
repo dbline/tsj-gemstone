@@ -266,7 +266,7 @@ class Backend(CSVBackend):
             cert_image = ''
         elif verify_cert_images and cert_image != '' and not url_exists(cert_image):
             cert_image = ''
-        
+
         lot_num = clean(lot_num)
         if lot_num == 'v360':
             v360_link = 'https://v360.in/viewer4.0/vision360.html?d=' + stock_number + '&surl=https://s4.v360.in/images/company/244/'
@@ -316,6 +316,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
+            moneyfmt(Decimal(price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(ct_price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             self.nvl(certifier),

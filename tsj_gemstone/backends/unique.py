@@ -263,6 +263,8 @@ class Backend(XLSBackend):
             data.update({'v360_link': v360_link})
         """
 
+        price_before_markup = None
+
         if not show_prices == 'none':
 
             carat_price = clean(carat_price.replace(',', ''))
@@ -282,33 +284,6 @@ class Backend(XLSBackend):
             if retail_price:
                 price = retail_price
                 carat_price = retail_price / carat_weight
-                """ 
-                #Skip Markups for NEIL DIAMONDS.  Only multiply carat weight by PPC
-                elif carat_price:
-                price_before_markup = carat_price * carat_weight
-
-                if minimum_price and price_before_markup < minimum_price:
-                    raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
-                if maximum_price and price_before_markup > maximum_price:
-                    raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
-
-                price = None
-                for markup in self.markup_list:
-                    if prefs.get('markup') == 'carat_weight':
-                        if markup[0] <= carat_weight and markup[1] >= carat_weight:
-                            price = (price_before_markup * (1 + markup[2]/100))
-                            break
-                    else:
-                        if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                            price = (price_before_markup * (1 + markup[2]/100))
-                            break
-
-                if not price:
-                    if prefs.get('markup') == 'carat_weight':
-                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
-                    else:
-                        raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
-                """
             elif carat_price:
                 price = carat_price * carat_weight
 

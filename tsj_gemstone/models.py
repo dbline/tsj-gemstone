@@ -291,7 +291,11 @@ class DiamondBase(TimeStampedModel):
 
     def formatted_cost(self):
         curr = commerce_prefs.get('currency_symbol', '$')
-        return moneyfmt(self.cost, curr=curr, dp='', places=0)
+        # Cost can be None.
+        try:
+            return moneyfmt(self.cost, curr=curr, dp='', places=0)
+        except AttributeError:
+            return None
     formatted_cost.short_description = 'Cost'
     formatted_cost.admin_order_field = 'cost'
 

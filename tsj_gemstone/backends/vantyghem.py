@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/vantyghem.csv')
-    default_filename = os.path.join(settings.FTP_ROOT, 'vantyghem-ftp/1186-diamonds.csv')
+    default_filename = os.path.join(settings.FTP_ROOT, 'vantyghem-ftp/diamonds.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:

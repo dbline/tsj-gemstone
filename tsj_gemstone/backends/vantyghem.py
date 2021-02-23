@@ -91,6 +91,7 @@ class Backend(CSVBackend):
             unused_state,
             unused_country,
             unused_video_url,
+            unused_treatments
         ) = line
 
         (

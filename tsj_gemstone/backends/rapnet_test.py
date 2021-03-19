@@ -143,6 +143,7 @@ class Backend(BaseBackend):
 
         # Accumulate paginated diamond data into ret
         while True:
+            loop_try = 0
             new_ids = 0
             page_data = []
 
@@ -158,7 +159,10 @@ class Backend(BaseBackend):
 
             if not page_data:
                 print ("break on no 'page_data'")
-                break
+                if loop_try == 4:
+                    break
+                print ("trying again: ", loop_try)
+                loop_try +=1
 
             for row in page_data:
                 if row['DiamondID'] not in ids:
@@ -176,8 +180,8 @@ class Backend(BaseBackend):
 
             # Spread requests out a bit.  We're not sure what sort of rate
             # limiting the new API will bring with it.
-            time.sleep(random.random()*.5)
-            print("completed sleep cycle - current data length: ", len(data))
+            time.sleep(random.random()*.05)
+            print("completed sleep cycle - current data length: ", len(data), "page number: ", params['PageNumber'])
 
         return data
 

@@ -176,7 +176,7 @@ class Backend(BaseBackend):
 
             # Spread requests out a bit.  We're not sure what sort of rate
             # limiting the new API will bring with it.
-            time.sleep(random.random()*2.5)
+            time.sleep(random.random()*.5)
             print("completed sleep cycle - current data length: ", len(data))
 
         return data

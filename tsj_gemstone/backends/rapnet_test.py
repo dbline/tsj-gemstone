@@ -94,7 +94,7 @@ class Backend(BaseBackend):
     #        'FancyColorCollection': [],
     #        'ColorFrom': '',
             'PageNumber': '1', # Int?
-            'PageSize': '150', # What's the max?
+            'PageSize': '350', # What's the max?
     #        'ColorTo': '',
     #        'SearchType': 'WHITE', # FANCY and "WHITE or FANCY" are also valid
     #        'FancyColorIntensityFrom': '',
@@ -181,7 +181,7 @@ class Backend(BaseBackend):
             # Spread requests out a bit.  We're not sure what sort of rate
             # limiting the new API will bring with it.
             time.sleep(random.random()*.05)
-            print("completed sleep cycle - current data length: ", len(data), "page number: ", params['PageNumber'])
+            print("completed sleep cycles - current data length: ", len(data), "page number: ", params['PageNumber'])
 
         return data
 

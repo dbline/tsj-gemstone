@@ -59,6 +59,7 @@ class BaseBackend(object):
         'color_id',
         'clarity_id',
         'carat_weight',
+        'cost',
         'carat_price',
         'price',
         'certifier_id',
@@ -164,6 +165,12 @@ class BaseBackend(object):
             self.markup_list = models.DiamondMarkup.objects.values_list('minimum_carat_weight', 'maximum_carat_weight', 'percent')
         else:
             self.markup_list = models.DiamondMarkup.objects.values_list('minimum_price', 'maximum_price', 'percent')
+
+        if prefs.get('markup') == 'carat_weight':
+            self.lab_markup_list = models.LabGrownDiamondMarkup.objects.values_list('minimum_carat_weight', 'maximum_carat_weight', 'percent')
+        else:
+            self.lab_markup_list = models.LabGrownDiamondMarkup.objects.values_list('minimum_price', 'maximum_price', 'percent')
+
 
         self.pref_values = (
             Decimal(prefs.get('rapaport_minimum_carat_weight', '0.2')),

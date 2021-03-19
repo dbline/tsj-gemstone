@@ -41,7 +41,7 @@ def split_measurements(measurements):
 
 class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/vantyghem.csv')
-    default_filename = os.path.join(settings.FTP_ROOT, 'vantyghem-ftp/1186-diamonds.csv')
+    default_filename = os.path.join(settings.FTP_ROOT, 'vantyghem-ftp/diamonds.csv')
 
     def write_diamond_row(self, line, blank_columns=None):
         if blank_columns:
@@ -91,6 +91,7 @@ class Backend(CSVBackend):
             unused_state,
             unused_country,
             unused_video_url,
+            unused_treatments
         ) = line
 
         (
@@ -261,6 +262,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
+            moneyfmt(Decimal(price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,

@@ -256,15 +256,26 @@ class Backend(CSVBackend):
             raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
 
         price = None
-        for markup in self.markup_list:
-            if prefs.get('markup') == 'carat_weight':
-                if markup[0] <= carat_weight and markup[1] >= carat_weight:
-                    price = (price_before_markup * (1 + markup[2]/100))
-                    break
-            else:
-                if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                    price = (price_before_markup * (1 + markup[2]/100))
-                    break
+        if manmade == 'f' or not self.lab_markup_list:
+            for markup in self.markup_list:
+                if prefs.get('markup') == 'carat_weight':
+                    if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+                else:
+                    if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+        else:
+            for markup in self.lab_markup_list:
+                if prefs.get('markup') == 'carat_weight':
+                    if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+                else:
+                    if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
 
         if not price:
             if prefs.get('markup') == 'carat_weight':
@@ -286,6 +297,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
+            moneyfmt(Decimal(price_before_markup), curr='', sep=''),
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,

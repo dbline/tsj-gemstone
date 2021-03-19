@@ -169,7 +169,7 @@ class Backend(BaseBackend):
             # If there aren't any new serial numbers, we're probably in an infinite loop
             if not new_ids:
                 logger.warning('RapNet infinite loop (diamond count {})'.format(len(ids)))
-                print ("break on no 'new_ids'")
+                print ("Break on no 'new_ids'")
                 break
 
             params['PageNumber'] = int(params['PageNumber']) + 1

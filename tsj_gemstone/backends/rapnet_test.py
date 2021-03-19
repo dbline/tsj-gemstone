@@ -94,7 +94,7 @@ class Backend(BaseBackend):
     #        'FancyColorCollection': [],
     #        'ColorFrom': '',
             'PageNumber': '1', # Int?
-            'PageSize': '50', # What's the max?
+            'PageSize': '150', # What's the max?
     #        'ColorTo': '',
     #        'SearchType': 'WHITE', # FANCY and "WHITE or FANCY" are also valid
     #        'FancyColorIntensityFrom': '',

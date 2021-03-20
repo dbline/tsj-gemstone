@@ -163,6 +163,7 @@ class Backend(BaseBackend):
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1
+                params['PageNumber'] = int(params['PageNumber']) + 1
                 continue
 
             for row in page_data:

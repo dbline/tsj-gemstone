@@ -94,7 +94,7 @@ class Backend(BaseBackend):
     #        'FancyColorCollection': [],
     #        'ColorFrom': '',
             'PageNumber': '1', # Int?
-            'PageSize': '50', # What's the max?
+            'PageSize': '150', # What's the max?
     #        'ColorTo': '',
     #        'SearchType': 'WHITE', # FANCY and "WHITE or FANCY" are also valid
     #        'FancyColorIntensityFrom': '',
@@ -142,8 +142,8 @@ class Backend(BaseBackend):
         ids = set()
 
         # Accumulate paginated diamond data into ret
+        loop_try = 0
         while True:
-            loop_try = 0
             new_ids = 0
             page_data = []
 
@@ -163,6 +163,7 @@ class Backend(BaseBackend):
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1
+                continue
 
             for row in page_data:
                 if row['DiamondID'] not in ids:

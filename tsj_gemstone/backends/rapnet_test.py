@@ -158,8 +158,9 @@ class Backend(BaseBackend):
                 page_data.append(dict(((e.tag, e.text) for e in list(obj.iterchildren()))))
 
             if not page_data:
-                print ("break on no 'page_data'")
+                print ("break on no 'page_data' - page number: ", params['PageNumber'])
                 if loop_try == 4:
+                    print ("4 empty pages in a row - breaking out of data download ")
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1

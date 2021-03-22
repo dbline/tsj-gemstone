@@ -153,8 +153,8 @@ class Backend(BaseBackend):
                 DiamondsFound=0,
                 _soapheaders=headers,
             )
-            print factory.FeedParameters(**params)
-            print headers
+            #  print factory.FeedParameters(**params)
+            #  print headers
             doc = response['GetDiamondsResult']['_value_1']
             for obj in doc.xpath('//Table1'):
                 page_data.append(dict(((e.tag, e.text) for e in list(obj.iterchildren()))))
@@ -166,7 +166,7 @@ class Backend(BaseBackend):
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1
-                params['PageNumber'] = int(params['PageNumber']) + 1
+                #  params['PageNumber'] = int(params['PageNumber']) + 1
                 continue
 
             for row in page_data:

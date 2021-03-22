@@ -3,7 +3,7 @@
     "fields": {
         "order": 10,
         "desc": "Round Brilliant Cut",
-        "aliases": "B\nBR\nROUND",
+        "aliases": "B\r\nBR\r\nROUND\r\nRB",
         "name": "Round",
         "abbr": "RD"
     },
@@ -47,7 +47,7 @@
     "fields": {
         "order": 70,
         "desc": "",
-        "aliases": "E\r\nEMERALD\r\nEMERALD CUT\r\nSQEM\r\nSQ. EMERALD",
+        "aliases": "E\r\nEMERALD\r\nEMERALD CUT\r\nSQEM\r\nSQ. EMERALD\r\nEC",
         "name": "Emerald",
         "abbr": "EM"
     },
@@ -102,7 +102,7 @@
     "fields": {
         "order": 40,
         "desc": "",
-        "aliases": "ASSCHER\r\nASCHERS",
+        "aliases": "ASSCHER\r\nASCHERS\r\nASH",
         "name": "Asscher",
         "abbr": "AS"
     },

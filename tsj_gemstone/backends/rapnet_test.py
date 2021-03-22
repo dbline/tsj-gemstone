@@ -72,6 +72,7 @@ class Backend(BaseBackend):
         client = zeep.Client(wsdl=RAPNET_WSDL)
         try:
             response = client.service.Login(username, password)
+            print response
         except zeep.exceptions.Fault as e:
             # Try to extract a human friendly string from the exception. For example, an auth error:
             # System.Web.Services.Protocols.SoapException: Server was unable to process request. ---> System.Security.SecurityException: You are not authenticated for RapNet InventoryLink web service.

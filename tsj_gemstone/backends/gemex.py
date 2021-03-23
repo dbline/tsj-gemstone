@@ -57,7 +57,7 @@ class Backend(CSVBackend):
         except ValueError:
             fn = None
         if not fn:
-            raise ImportSourceError('No em_trading file, aborting import.')
+            raise ImportSourceError('No Gemex file, aborting import.')
 
         return fn
 
@@ -273,8 +273,8 @@ class Backend(CSVBackend):
             cert_num,
             '', #cert_image,
             '', # cert_image_local,
-            '', #depth_percent,
-            '', #table_percent,
+            'NULL', #depth_percent,
+            'NULL', #table_percent,
             '', #girdle,
             '', #culet,
             self.nvl(polish),

@@ -113,9 +113,11 @@ class Backend(CSVBackend):
         elif maximum_carat_weight and carat_weight > maximum_carat_weight:
             raise SkipDiamond('Carat weight is greater than the maximum of %s.' % maximum_carat_weight)
 
-        """
-        # color = self.color_aliases.get(cached_clean(color, upper=True))
 
+
+        color = self.color_aliases.get(cached_clean(color, upper=True))
+
+        """
         if fancy_color:
             color = None
             fancy_color = cached_clean(fancy_color.replace('-', ' ').lower())

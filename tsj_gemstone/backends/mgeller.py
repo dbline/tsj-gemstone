@@ -240,7 +240,7 @@ class Backend(CSVBackend):
         measurements = clean(measurements)
         length, width, depth = split_measurements(measurements)
 
-        if manmade == '1':
+        if manmade in ['1','Y','y']:
             if not include_lab_grown:
                 raise SkipDiamond("Don't include lab-grown")
             else:

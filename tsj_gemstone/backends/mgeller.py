@@ -1,4 +1,5 @@
 from decimal import Decimal, InvalidOperation
+import json
 import logging
 import os
 import re
@@ -9,6 +10,7 @@ from urlparse import urlparse
 
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
+from django.utils.encoding import iri_to_uri
 
 from .base import LRU_CACHE_MAXSIZE, CSVBackend, SkipDiamond, KeyValueError
 from .. import models
@@ -84,8 +86,18 @@ class Backend(CSVBackend):
             unused_terms,
             unused_rapnet_only,
             unused_index_only,
-            cert_image,
+            unused_availability,
             manmade,
+            unused_quick_ship,
+            unused_canadian,
+            image,
+            video,
+            cert_image,
+            coc_grown,
+            coc_cut,
+            coc_cert,
+            unused_fixed_net_price
+
         ) = line
 
         (
@@ -283,6 +295,25 @@ class Backend(CSVBackend):
             else:
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
 
+        data = {}
+
+        if coc_grown:
+            data = {'coc_grown': coc_grown}
+
+        if coc_cut:
+            data['coc_cut'] = coc_cut
+
+        if coc_cert:
+            data['coc_cert'] = coc_cert
+
+        if image:
+            image = iri_to_uri(image)
+            data['photo'] = image
+
+        if video:
+            video = iri_to_uri(video)
+            data['video'] = video
+
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,
@@ -325,7 +356,7 @@ class Backend(CSVBackend):
             manmade, # manmade
             laser_inscribed, # laser_inscribed
             'NULL', # rap_date
-            '{}', # data
+            json.dumps(data),  #'{}' data
         )
 
         return ret

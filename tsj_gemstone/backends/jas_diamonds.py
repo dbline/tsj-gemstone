@@ -298,7 +298,7 @@ class Backend(CSVBackend):
         data = {}
 
         if laser_inscription:
-            data['laser_inscription']= laser_inscription
+            data['laser_inscription'] = laser_inscription
 
         if image:
             image = iri_to_uri(image)

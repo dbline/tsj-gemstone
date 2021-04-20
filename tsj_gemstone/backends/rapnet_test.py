@@ -164,6 +164,7 @@ class Backend(BaseBackend):
                 if loop_try == 4:
                     print ("4 empty pages in a row - breaking out of data download ")
                     print doc
+                    print response
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1

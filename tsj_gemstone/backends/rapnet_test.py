@@ -163,6 +163,7 @@ class Backend(BaseBackend):
                 print ("break on no 'page_data' - page number: ", params['PageNumber'])
                 if loop_try == 4:
                     print ("4 empty pages in a row - breaking out of data download ")
+                    print doc
                     break
                 print ("trying again: ", loop_try)
                 loop_try +=1

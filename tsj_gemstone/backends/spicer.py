@@ -122,7 +122,7 @@ class Backend(CSVBackend):
             diamond_row = self.write_diamond_row(*args, **kwargs)
         except SkipDiamond as e:
             self.import_skip[str(e)] += 1
-            #self.logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
+            self.logger.info('Skipping Diamond "%s" - SkipDiamond' % repr(e))
         except KeyValueError as e:
             self.missing_values[e.key][e.value] += 1
         except KeyError as e:
@@ -415,7 +415,7 @@ class Backend(CSVBackend):
             self.nvl(color),
             clarity,
             carat_weight,
-            '', # cost,
+            'NULL', # cost,
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,

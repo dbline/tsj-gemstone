@@ -12,6 +12,8 @@ from lxml import etree
 import requests
 import zeep
 
+from zeep.wsdl.utils import etree_to_string
+
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
@@ -95,7 +97,7 @@ class Backend(BaseBackend):
     #        'FancyColorCollection': [],
     #        'ColorFrom': '',
             'PageNumber': '1', # Int?
-            'PageSize': '25', #  50 is the max!
+            'PageSize': '50', #  50 is the max!
     #        'ColorTo': '',
     #        'SearchType': 'WHITE', # FANCY and "WHITE or FANCY" are also valid
     #        'FancyColorIntensityFrom': '',
@@ -122,7 +124,7 @@ class Backend(BaseBackend):
     #        'MeasWidthTo': '',
     #        'MeasDepthFrom': '',
     #        'MeasDepthTo': '',
-            'SortDirection': 'ASC', # Or DESC
+            'SortDirection': 'ASC', # ASC or DESC
             'SortBy': 'SIZE', # PRICE SHAPE SIZE COLOR CLARITY CUT LAB
         }
 
@@ -143,7 +145,7 @@ class Backend(BaseBackend):
         ids = set()
 
         # Accumulate paginated diamond data into ret
-        loop_try = 0
+        loop_try = blank_pages = 0 
         while True:
             new_ids = 0
             page_data = []
@@ -161,21 +163,31 @@ class Backend(BaseBackend):
 
             if not page_data:
                 print ("break on no 'page_data' - page number: ", params['PageNumber'])
-                if loop_try == 4:
-                    print ("4 empty pages in a row - breaking out of data download ")
-                    print doc
-                    print response
+                if loop_try == 2 and blank_pages > 60:
                     break
+                if loop_try == 2 and blank_pages <= 60:
+                    print ("2 empty pages in a row - breaking out of data download ")
+                    print (etree_to_string(doc).decode('utf-8'))
+                    blank_pages += 1
+                    loop_try =  0
+                    params['PageNumber'] = int(params['PageNumber']) + 1
+                    continue
                 print ("trying again: ", loop_try)
-                loop_try +=1
+                loop_try +=1 
                 #  params['PageNumber'] = int(params['PageNumber']) + 1
                 continue
-
+            else:
+                blank_pages = 0
+            
+            #print response
+            #print (etree_to_string(doc).decode('utf-8'))
             for row in page_data:
                 if row['DiamondID'] not in ids:
                     ids.add(row['DiamondID'])
                     new_ids += 1
                     data.append(row)
+                else:
+                     print "duplicate id"
 
             # If there aren't any new serial numbers, we're probably in an infinite loop
             if not new_ids:

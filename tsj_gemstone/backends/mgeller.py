@@ -96,7 +96,7 @@ class Backend(CSVBackend):
             coc_grown,
             coc_cut,
             coc_cert,
-            unused_fixed_net_price
+            fixed_net_price
 
         ) = line
 
@@ -157,10 +157,16 @@ class Backend(CSVBackend):
 
         cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
         carat_price = clean(carat_price.replace(',', ''))
+        fixed_net_price = clean(fixed_net_price.replace(',', ''))
         try:
             carat_price = Decimal(carat_price)
         except InvalidOperation:
             carat_price = None
+
+        try:
+            fixed_net_price = Decimal(fixed_net_price)
+        except InvalidOperation:
+            fixed_net_price = None
 
         try:
             depth_percent = Decimal(str(clean(depth_percent)))
@@ -260,7 +266,7 @@ class Backend(CSVBackend):
             raise SkipDiamond('No carat_price specified')
 
         # Initialize price after all other data has been initialized
-        price_before_markup = carat_price * carat_weight
+        price_before_markup = fixed_net_price or carat_price * carat_weight
 
         if minimum_price and price_before_markup < minimum_price:
             raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)
@@ -305,6 +311,9 @@ class Backend(CSVBackend):
 
         if coc_cert:
             data['coc_cert'] = coc_cert
+
+        if fixed_net_price:
+            data['fixed_net_price'] = fixed_net_price
 
         if image:
             image = iri_to_uri(image)

@@ -12,6 +12,8 @@ from lxml import etree
 import requests
 import zeep
 
+#from zeep.wsdl.utils import etree_to_string
+
 from django.conf import settings
 from django.utils.lru_cache import lru_cache
 
@@ -94,7 +96,7 @@ class Backend(BaseBackend):
     #        'FancyColorCollection': [],
     #        'ColorFrom': '',
             'PageNumber': '1', # Int?
-            'PageSize': '50', # What's the max?
+            'PageSize': '50', #  50 is the max!
     #        'ColorTo': '',
     #        'SearchType': 'WHITE', # FANCY and "WHITE or FANCY" are also valid
     #        'FancyColorIntensityFrom': '',
@@ -121,7 +123,7 @@ class Backend(BaseBackend):
     #        'MeasWidthTo': '',
     #        'MeasDepthFrom': '',
     #        'MeasDepthTo': '',
-            'SortDirection': 'ASC', # Or DESC
+            'SortDirection': 'ASC', # ASC Or DESC
             'SortBy': 'SIZE', # PRICE SHAPE SIZE COLOR CLARITY CUT LAB
         }
 
@@ -142,6 +144,7 @@ class Backend(BaseBackend):
         ids = set()
 
         # Accumulate paginated diamond data into ret
+        loop_try = blank_pages = 0
         while True:
             new_ids = 0
             page_data = []
@@ -151,30 +154,51 @@ class Backend(BaseBackend):
                 DiamondsFound=0,
                 _soapheaders=headers,
             )
-
+            #  print factory.FeedParameters(**params)
+            #  print headers
             doc = response['GetDiamondsResult']['_value_1']
             for obj in doc.xpath('//Table1'):
                 page_data.append(dict(((e.tag, e.text) for e in list(obj.iterchildren()))))
 
             if not page_data:
-                break
+                #print ("break on no 'page_data' - page number: ", params['PageNumber'])
+                if loop_try == 2 and blank_pages > 60:
+                    break
+                if loop_try == 2 and blank_pages <= 60:
+                    #print ("2 empty pages in a row - breaking out of data download ")
+                    #print (etree_to_string(doc).decode('utf-8'))
+                    blank_pages += 1
+                    loop_try =  0
+                    params['PageNumber'] = int(params['PageNumber']) + 1
+                    continue
+                #print ("trying again: ", loop_try)
+                loop_try +=1
+                continue
+            else:
+                blank_pages = 0
 
+            #print response
+            #print (etree_to_string(doc).decode('utf-8'))
             for row in page_data:
                 if row['DiamondID'] not in ids:
                     ids.add(row['DiamondID'])
                     new_ids += 1
                     data.append(row)
+                #else:
+                #     print "duplicate id"
 
             # If there aren't any new serial numbers, we're probably in an infinite loop
             if not new_ids:
                 logger.warning('RapNet infinite loop (diamond count {})'.format(len(ids)))
+                #print ("Break on no 'new_ids'")
                 break
 
             params['PageNumber'] = int(params['PageNumber']) + 1
 
             # Spread requests out a bit.  We're not sure what sort of rate
             # limiting the new API will bring with it.
-            time.sleep(random.random()*2.5)
+            time.sleep(random.random()*.05)
+            #print("completed sleep cycle - current data length: ", len(data), "page number: ", params['PageNumber'])
 
         return data
 

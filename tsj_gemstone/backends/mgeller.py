@@ -313,7 +313,7 @@ class Backend(CSVBackend):
             data['coc_cert'] = coc_cert
 
         if fixed_net_price:
-            data['fixed_net_price'] = fixed_net_price
+            data['fixed_net_price'] = str(fixed_net_price)
 
         if image:
             image = iri_to_uri(image)

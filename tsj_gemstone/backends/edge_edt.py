@@ -139,18 +139,26 @@ class Backend(JSONBackend):
 
         fp.close()
 
-    def _read_rows(self, reader, writer, headers, blank_columns=None):
+    def _run(self, reader, writer, headers, blank_columns=None):
+        reader = self.get_reader()
+
+        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
+        writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
+
         existing_sns = set(models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
 
         if not self.partial_import:
             # Only mark active discontinued if we're running everything.
             models.Diamond.objects.filter(source=self.backend_module).update(active=False)
 
-        try:
-            for line in reader:
-                self.try_write_row(writer, line, existing_sns=existing_sns)
-        except csv.Error as e:  ## ? whats this?
-            raise ImportSourceError(str(e))
+        for line in reader:
+            self.try_write_row(writer, line, existing_sns=existing_sns)
+
+        if self.row_buffer:
+            writer.writerows(self.row_buffer)
+
+        return tmp_file
+
 
     def try_write_row(self, writer, *args, **kwargs):
         existing_sns = kwargs.pop('existing_sns')

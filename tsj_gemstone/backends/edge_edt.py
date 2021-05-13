@@ -139,7 +139,7 @@ class Backend(JSONBackend):
                 self.logger.exception("Error on copy_from for %s" % self.backend_module)
 
         fp.close()
-
+    """
     def _run(self):
         reader = self.get_reader()
 
@@ -159,7 +159,7 @@ class Backend(JSONBackend):
             writer.writerows(self.row_buffer)
 
         return tmp_file
-
+    """
 
     def try_write_row(self, writer, *args, **kwargs):
         existing_sns = kwargs.pop('existing_sns')

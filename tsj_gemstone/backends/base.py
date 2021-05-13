@@ -375,8 +375,15 @@ class JSONBackend(BaseBackend):
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
 
+        existing_sns = set(
+            models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
+
+        if not self.partial_import:
+            # Only mark active discontinued if we're running everything.
+            models.Diamond.objects.filter(source=self.backend_module).update(active=False)
+
         for obj in data:
-            self.try_write_row(writer, obj)
+            self.try_write_row(writer, obj, existing_sns=existing_sns)
 
         if self.row_buffer:
             writer.writerows(self.row_buffer)

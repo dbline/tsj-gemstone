@@ -345,7 +345,7 @@ class Backend(JSONBackend):
             '', #state,
             '', #country,
             'f', # manmade,
-            self.nvl(laser_inscribed)
+            self.nvl(laser_inscribed),
             'NULL', # rap_date
             json.dumps(data),
         )

@@ -219,7 +219,7 @@ class Backend(JSONBackend):
             include_lab_grown
         ) = self.pref_values
 
-        stock_number = clean(item['Itemkey'], upper=True)
+        stock_number = clean(item['ItemKey'], upper=True)
         lot_num = clean(item['stone_0_StoneSeq'], upper=True)
 
         if item['ItemStatus'] == 'I':

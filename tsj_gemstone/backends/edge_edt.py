@@ -323,7 +323,7 @@ class Backend(JSONBackend):
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
-            self.nvl(item['stone_0_StoneCert'],)  ## cert_num removal
+            self.nvl(item['stone_0_StoneCert']),  ## cert_num removal
             '', # cert_image,
             '', # cert_image_local,
             self.nvl(self.digits_check(depth_percent)),

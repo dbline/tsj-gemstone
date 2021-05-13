@@ -69,7 +69,7 @@ class Backend(JSONBackend):
     def get_reader(self, **kwargs):
         if not hasattr(self, '_reader'):
 
-            inventory_filenanme '2021-03-22-13-27-19-FullItemList.json'
+            inventory_filenanme = '2021-03-22-13-27-19-FullItemList.json'
             #inventory_filename = kwargs.get('inventory_filename')
             if not inventory_filename:
                 raise Exception('No file found')

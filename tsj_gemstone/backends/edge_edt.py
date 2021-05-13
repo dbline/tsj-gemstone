@@ -186,7 +186,7 @@ class Backend(JSONBackend):
                 self.import_successes += 1
                 self.logger.info('Adding New Diamond "%s"' % diamond_row.stock_number)
 
-    def write_diamond_row(self, line):
+    def write_diamond_row(self, item):
 
         (
             minimum_carat_weight,
@@ -199,8 +199,8 @@ class Backend(JSONBackend):
             include_lab_grown
         ) = self.pref_values
 
-        stock_number = clean(line['Itemkey'], upper=True)
-        lot_num = clean(line['stone_0_StoneSeq'], upper=True)
+        stock_number = clean(item['Itemkey'], upper=True)
+        lot_num = clean(item['stone_0_StoneSeq'], upper=True)
 
         if item['ItemStatus'] == 'I':
             status = 't'
@@ -218,16 +218,16 @@ class Backend(JSONBackend):
 
 
         try:
-            carat_weight = Decimal(str(cached_clean(line['stone_0_StoneTWT'])))
+            carat_weight = Decimal(str(cached_clean(item['stone_0_StoneTWT'])))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])
         if carat_weight < minimum_carat_weight:
             raise SkipDiamond('Carat weight is less than the minimum of %s.' % minimum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(item['stone_0_StoneHue', upper=True))
+        color = self.color_aliases.get(cached_clean(item['stone_0_StoneHue'], upper=True))
 
-        certifier = cached_clean(line['stone_0_StoneLab'], upper=True)
+        certifier = cached_clean(item['stone_0_StoneLab'], upper=True)
 
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
@@ -255,7 +255,7 @@ class Backend(JSONBackend):
             raise KeyValueError('clarity', e.args[0])
 
         try:
-            cut_grade = self.grading_aliases.get(cached_clean(line['stone_0_StoneMake':], upper=True))
+            cut_grade = self.grading_aliases.get(cached_clean(item['stone_0_StoneMake':], upper=True))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
             raise KeyValueError('cut', e.args[0])
@@ -269,10 +269,10 @@ class Backend(JSONBackend):
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 
-        polish = self.grading_aliases.get(cached_clean(line['stone_0_StonePolish'], upper=True))
-        symmetry = self.grading_aliases.get(cached_clean(line['stone_0_StoneMajorSymmetry'], upper=True))
+        polish = self.grading_aliases.get(cached_clean(item['stone_0_StonePolish'], upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(item['stone_0_StoneMajorSymmetry'], upper=True))
 
-        fluorescence = cached_clean(line['stone_0_StoneFluor'], upper=True)
+        fluorescence = cached_clean(item['stone_0_StoneFluor'], upper=True)
         fluorescence_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
             if fluorescence.startswith(abbr.upper()):
@@ -284,7 +284,7 @@ class Backend(JSONBackend):
 
 
         depth_percent = None
-        table_percent = line['stone_0_StoneTablePct']
+        table_percent = item['stone_0_StoneTablePct']
 
         data = {}
 
@@ -295,15 +295,15 @@ class Backend(JSONBackend):
             laser_inscribed = 'f'
 
         if item['ItemDetail_1']:
-            data.update({'v360_link': line['ItemDetail_1']})
+            data.update({'v360_link': item['ItemDetail_1']})
 
-        if self.nvl(line['ItemDesc']):
-            if self.nvl(line['ItemNotes']):
-                data.update({'alt_description': line['ItemDesc'] + line['ItemNotes']})
+        if self.nvl(item['ItemDesc']):
+            if self.nvl(item['ItemNotes']):
+                data.update({'alt_description': item['ItemDesc'] + item['ItemNotes']})
             else:
-                data.update({'alt_description': line['ItemDesc']})
+                data.update({'alt_description': item['ItemDesc']})
 
-        # manmade = line['stone_0_StoneNacre']   Not sure how this field is passed.
+        # manmade = item['stone_0_StoneNacre']   Not sure how this field is passed.
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(

@@ -139,7 +139,7 @@ class Backend(JSONBackend):
 
         fp.close()
 
-    def _run(self, reader, writer, headers, blank_columns=None):
+    def _run(self):
         reader = self.get_reader()
 
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)

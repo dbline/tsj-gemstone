@@ -45,6 +45,7 @@ def split_measurements(measurements):
 
 class Backend(JSONBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/edt_sample_file.json')
+    DEFAULT_SOURCE = 'tsj-pointofsale-edge-edt'
 
     def __init__(self, *args, **kwargs):
         super(Backend, self).__init__(*args, **kwargs)
@@ -67,7 +68,9 @@ class Backend(JSONBackend):
 
     def get_reader(self, **kwargs):
         if not hasattr(self, '_reader'):
-            inventory_filename = kwargs.get('inventory_filename')
+
+            inventory_filenanme '2021-03-22-13-27-19-FullItemList.json'
+            #inventory_filename = kwargs.get('inventory_filename')
             if not inventory_filename:
                 raise Exception('No file found')
 
@@ -103,15 +106,23 @@ class Backend(JSONBackend):
 
     def get_default_filename(self):
         if self.partial_import:
-            infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY.CSV')
+            infile_glob = os.path.join(settings.FTP_ROOT, 'toodies/*-INVENTORY.CSV')
         else:
             infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY-FULL.CSV')
 
         files = sorted(glob.glob(infile_glob))
         if len(files):
             fn = files[-1]
-            self.logger.info('Importing Spicer Greene EDGE file "%s"' % fn)
+            self.logger.info('Importing {schema} EDGE-EDT Diamonds from file "%s"' % fn)
             return fn
+
+    def file_patterns(self, directory):
+
+        if self.partial_import:
+            patterns = ['*-ItemList.json']
+        else:
+            patterns = ['*-FullItemList.json']
+        return map(lambda p: os.path.join(directory, p), patterns)
 
     def save(self, fp):
         # fp should be a tempfile.NamedTemporaryFile.  We currently assume

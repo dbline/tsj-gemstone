@@ -2,6 +2,7 @@ from decimal import Decimal, InvalidOperation
 import glob
 import json
 import logging
+import tempfile
 import os
 import re
 from string import ascii_letters, digits, whitespace, punctuation

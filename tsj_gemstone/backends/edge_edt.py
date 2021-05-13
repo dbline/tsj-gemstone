@@ -275,7 +275,7 @@ class Backend(JSONBackend):
             raise KeyValueError('clarity', e.args[0])
 
         try:
-            cut_grade = self.grading_aliases.get(cached_clean(item['stone_0_StoneMake':], upper=True))
+            cut_grade = self.grading_aliases.get(cached_clean(item['stone_0_StoneMake'], upper=True))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
             raise KeyValueError('cut', e.args[0])

@@ -282,7 +282,7 @@ class Backend(JSONBackend):
 
         try:
             price = Decimal(item['ItemCurrentPrice'])
-            carat_price = price / carat_weight
+            carat_price = price / Decimal(carat_weight)
         except InvalidOperation:
             carat_price = None
 

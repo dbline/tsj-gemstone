@@ -218,7 +218,7 @@ class Backend(JSONBackend):
 
 
         try:
-            carat_weight = Decimal(str(cached_clean(line['stone_0_StoneTWT')))
+            carat_weight = Decimal(str(cached_clean(line['stone_0_StoneTWT'])))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])

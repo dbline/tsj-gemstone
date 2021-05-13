@@ -1,5 +1,4 @@
 from decimal import Decimal, InvalidOperation
-import csv
 import glob
 import json
 import logging
@@ -45,7 +44,7 @@ def split_measurements(measurements):
     return length, width, depth
 
 class Backend(JSONBackend):
-    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/spicer.csv')
+    debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/edt_sample_file.json')
 
     def __init__(self, *args, **kwargs):
         super(Backend, self).__init__(*args, **kwargs)
@@ -57,6 +56,43 @@ class Backend(JSONBackend):
             self.logger.info('Skipping Diamond "%s" - numeric value out of range' % stock_number)
             raise SkipDiamond('numeric value out of allowed range')
         return
+
+    def file_patterns(self, directory):
+
+        if self.partial_import:
+            patterns = ['*-ItemList.json']
+        else:
+            patterns = ['*-FullItemList.json']
+        return map(lambda p:os.path.join(directory, p), patterns)
+
+    def get_reader(self, **kwargs):
+        if not hasattr(self, '_reader'):
+            inventory_filename = kwargs.get('inventory_filename')
+            if not inventory_filename:
+                raise Exception('No file found')
+
+            if not hasattr(self, '_rawdata'):
+                self.logger.info('Opening %s' % inventory_filename)
+                self._rawdata = json.load(open(inventory_filename))
+
+            if 'Items' not in self._rawdata:
+                raise Exception('File is does not contain EDT items.')
+
+            def edt_item_iter(data):
+                for item in data['Items']:
+                    if 'PairValue' not in item:
+                         continue
+                    if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != 195:
+                        continue
+                    i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
+                    if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:
+                        for index, stone in enumerate(item['PairValue']['Stones']):
+                            values = dict(map(lambda s:('stone_%d_%s' % (index, s[0]), s[1]), stone.get('PairValue', {}).items()))
+                            i.update(values)
+                    yield i
+
+            self._reader = edt_item_iter(self._rawdata)
+        return self._reader
 
     @property
     def enabled(self):
@@ -101,18 +137,8 @@ class Backend(JSONBackend):
 
         try:
             for line in reader:
-                # Sometimes the feed has blank lines
-                if not line:
-                    continue
-
-                # Rather than fail on malformed CSVs, pad rows which have fewer
-                # columns than the header row
-                col_diff = (len(headers) - blank_columns) - len(line)
-                if col_diff > 0:
-                    line.extend([''] * col_diff)
-
-                self.try_write_row(writer, line, blank_columns=blank_columns, existing_sns=existing_sns)
-        except csv.Error as e:
+                self.try_write_row(writer, line, existing_sns=existing_sns)
+        except csv.Error as e:  ## ? whats this?
             raise ImportSourceError(str(e))
 
     def try_write_row(self, writer, *args, **kwargs):
@@ -160,135 +186,7 @@ class Backend(JSONBackend):
                 self.import_successes += 1
                 self.logger.info('Adding New Diamond "%s"' % diamond_row.stock_number)
 
-    def write_diamond_row(self, line, blank_columns=None):
-        if blank_columns:
-            line = line[:-blank_columns]
-        (
-            stock_number,
-            vendor,
-            lot_num,
-            price,
-            current,
-            image,
-            status,
-            description,
-            category_id,
-            category_name,
-            category_type,
-            category_description,
-            lowest_price,
-            inventory_type,
-            unused_itPricingMethod,
-            unused_itNeverUpload,
-            unused_itStoreId,
-            style_number,
-            unused_itStyle,
-            memo,
-            unused_itLocation,
-            unused_itSpecialOrderKey,
-            unused_itDateStatusChanged,
-            unused_itDateEntered,
-            unused_itDateCreated,
-            unused_itVendorInvoiceNo,
-            unused_itVendBarCode,
-            unused_itCost,
-            unused_itBonusPct,
-            unused_itYnAutoPrice,
-            unused_itSpecialPrice,
-            unused_itSpecialPriceDateStart,
-            unused_itSpecialPriceDateEnd,
-            cut,
-            carat_weight,
-            color,
-            clarity,
-            cut_grade,
-            polish,
-            symmetry,
-            certifier,
-            cert_num,
-            collection,
-            placement,
-            length,
-            width,
-            depth,
-            fluorescence,
-            v360_link,
-            unused_itMfg,
-            metal_type,
-            metal_color,
-            unused_itMetalFinish,
-            unused_itMetalWeight,
-            unused_itSize,
-            unused_itLength,
-            unused_itSaleKey,
-            unused_itOrigSaleKey,
-            unused_itSaleDate,
-            unused_itOrigSaleDate,
-            unused_itSalePrice,
-            unused_itSaleTax,
-            unused_itSaleCustKey,
-            unused_itOldSaleKey,
-            unused_itPrintTag,
-            unused_itPrintSignage,
-            unused_itSignage,
-            unused_itNewItKey,
-            unused_itOldKey,
-            unused_itOldBarcode,
-            unused_itWhenInventory,
-            unused_itWhenPrevInventory,
-            unused_itWhoInventory,
-            unused_itWhoPrevInventory,
-            unused_itNotes,
-            unused_itOwner,
-            unused_itApprWho,
-            unused_itApprValue,
-            unused_itApprShort,
-            unused_itApprLong,
-            unused_itUOM,
-            unused_itInstanceOf,
-            unused_itInstanceUnits,
-            unused_itInstanceQty,
-            unused_itUpdateDateTime,
-            unused_itWasPartOf,
-            unused_itNowPartOf,
-            unused_itAlwaysUpload,
-            unused_itMemoExpires,
-            unused_itCreatedBy,
-            unused_itCostReplacement,
-            unused_itCostReplacementDate,
-            unused_itCostMetalOrig,
-            unused_itCostMetalOrigIndex,
-            unused_itCostDepreciated,
-            unused_itNowPartOfJobType,
-            unused_itLeadTime,
-            unused_itPayableDate,
-            unused_itOrderNotes,
-            unused_itSerialNumber,
-            unused_itExcludeFromRewards,
-            unused_itRewardsBonus,
-            unused_itRewardsBonusStartDate,
-            unused_itRewardsBonusEndDate,
-            unused_itRfidTag,
-            unused_itWho,
-            unused_itWhoRevised,
-            unused_itETA,
-            unused_itETARevised,
-            unused_catGender,
-            unused_catMediaName,
-            unused_catCommAdj,
-            unused_catPricingMethod,
-            unused_catUOM,
-            unused_catInactive,
-            unused_catDepartment,
-            unused_catIncludedInRewards,
-            unused_catLeadTime,
-            title,
-            meta_title,
-            meta_keywords,
-            meta_description,
-            desc,
-            category,
-        ) = line
+    def write_diamond_row(self, line):
 
         (
             minimum_carat_weight,
@@ -301,35 +199,35 @@ class Backend(JSONBackend):
             include_lab_grown
         ) = self.pref_values
 
-        stock_number = clean(stock_number, upper=True)
-        lot_num = clean(lot_num, upper=True)
+        stock_number = clean(line['Itemkey'], upper=True)
+        lot_num = clean(line['stone_0_StoneSeq'], upper=True)
 
-        if status == 'I':
+        if item['ItemStatus'] == 'I':
             status = 't'
         else:
             status = 'f'
 
-        if category_id != '190':
-            raise SkipDiamond('Not a diamond')
+        #if item['ItemCatId'] != '195':
+        #   raise SkipDiamond('Not a diamond')
 
         try:
-            cut = self.cut_aliases[cached_clean(cut, upper=True)]
+            cut = self.cut_aliases[cached_clean(item['stone_0_StoneShape'], upper=True)]
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Cut Aliases' % stock_number)
             raise KeyValueError('cut_aliases', e.args[0],)
 
 
         try:
-            carat_weight = Decimal(str(cached_clean(carat_weight)))
+            carat_weight = Decimal(str(cached_clean(line['stone_0_StoneTWT')))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Carat Weight' % stock_number)
             raise KeyValueError('carat_weight', e.args[0])
         if carat_weight < minimum_carat_weight:
             raise SkipDiamond('Carat weight is less than the minimum of %s.' % minimum_carat_weight)
 
-        color = self.color_aliases.get(cached_clean(color, upper=True))
+        color = self.color_aliases.get(cached_clean(item['stone_0_StoneHue', upper=True))
 
-        certifier = cached_clean(certifier, upper=True)
+        certifier = cached_clean(line['stone_0_StoneLab'], upper=True)
 
         try:
             certifier_id, certifier_disabled = self.certifier_aliases[certifier]
@@ -347,7 +245,7 @@ class Backend(JSONBackend):
         else:
             certifier = certifier_id
 
-        clarity = cached_clean(clarity, upper=True)
+        clarity = cached_clean(item['stone_0_StoneClarity'], upper=True)
         if not clarity:
             raise SkipDiamond('No clarity specified')
         try:
@@ -357,24 +255,24 @@ class Backend(JSONBackend):
             raise KeyValueError('clarity', e.args[0])
 
         try:
-            cut_grade = self.grading_aliases.get(cached_clean(cut_grade, upper=True))
+            cut_grade = self.grading_aliases.get(cached_clean(line['stone_0_StoneMake':], upper=True))
         except KeyError as e:
             self.logger.info('Skipping Diamond "%s" - Cut Grade Aliases' % stock_number)
             raise KeyValueError('cut', e.args[0])
 
         try:
-            price = Decimal(price)
-            carat_price = 0
+            price = Decimal(item['ItemCurrentPrice'])
+            carat_price = price / carat_weight
         except InvalidOperation:
             carat_price = None
 
         if carat_price is None:
             raise SkipDiamond('No carat_price specified')
 
-        polish = self.grading_aliases.get(cached_clean(polish, upper=True))
-        symmetry = self.grading_aliases.get(cached_clean(symmetry, upper=True))
+        polish = self.grading_aliases.get(cached_clean(line['stone_0_StonePolish'], upper=True))
+        symmetry = self.grading_aliases.get(cached_clean(line['stone_0_StoneMajorSymmetry'], upper=True))
 
-        fluorescence = cached_clean(fluorescence, upper=True)
+        fluorescence = cached_clean(line['stone_0_StoneFluor'], upper=True)
         fluorescence_id = None
         for abbr, id in self.fluorescence_aliases.iteritems():
             if fluorescence.startswith(abbr.upper()):
@@ -384,22 +282,28 @@ class Backend(JSONBackend):
         fluorescence = fluorescence_id
         fluorescence_color_id = None
 
-        cert_num = clean(cert_num)
-        if not cert_num:
-            cert_num = ''
 
         depth_percent = None
-        table_percent = None
+        table_percent = line['stone_0_StoneTablePct']
 
         data = {}
-        if v360_link:
-            data.update({'v360_link': v360_link})
 
-        if self.nvl(description):
-            if self.nvl(memo):
-                data.update({'alt_description': description + memo})
+        if item['stone_0_StoneLaserInscription']:
+            laser_inscribed = 't'
+            data.update({'stone_0_StoneLaserInscription': item['stone_0_StoneLaserInscription']})
+        else:
+            laser_inscribed = 'f'
+
+        if item['ItemDetail_1']:
+            data.update({'v360_link': line['ItemDetail_1']})
+
+        if self.nvl(line['ItemDesc']):
+            if self.nvl(line['ItemNotes']):
+                data.update({'alt_description': line['ItemDesc'] + line['ItemNotes']})
             else:
-                data.update({'alt_description': description})
+                data.update({'alt_description': line['ItemDesc']})
+
+        # manmade = line['stone_0_StoneNacre']   Not sure how this field is passed.
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
@@ -415,11 +319,11 @@ class Backend(JSONBackend):
             self.nvl(color),
             clarity,
             carat_weight,
-            '', # cost,
+            'NULL', # cost,
             moneyfmt(Decimal(carat_price), curr='', sep=''),
             moneyfmt(Decimal(price), curr='', sep=''),
             certifier,
-            cert_num,
+            self.nvl(item['stone_0_StoneCert'],)  ## cert_num removal
             '', # cert_image,
             '', # cert_image_local,
             self.nvl(self.digits_check(depth_percent)),
@@ -433,15 +337,15 @@ class Backend(JSONBackend):
             'NULL', # self.nvl(fancy_color_id),
             'NULL', # self.nvl(fancy_color_intensity_id),
             'NULL', # self.nvl(fancy_color_overtone_id),
-            self.nvl(self.digits_check(length)),
-            self.nvl(self.digits_check(width)),
-            self.nvl(self.digits_check(depth)),
+            self.nvl(self.digits_check(item['stone_0_StoneLengthMax'])),
+            self.nvl(self.digits_check(item['stone_0_StoneWidthMax'])),
+            self.nvl(self.digits_check(item['stone_0_StoneDepthMax'])),
             '', # comment,
             '', #city,
             '', #state,
             '', #country,
             'f', # manmade,
-            'f', # laser_inscribed,
+            self.nvl(laser_inscribed)
             'NULL', # rap_date
             json.dumps(data),
         )

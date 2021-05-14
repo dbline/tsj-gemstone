@@ -4,7 +4,7 @@ __all__ = (
     'atlantic_diamond',
     'brilliantediamond',
     'dnr_dia',
-    'edge_edt'
+    'edge_edt',
     'em_trading',
     'fischer',
     'gemex',

@@ -86,7 +86,7 @@ class Backend(JSONBackend):
                 for item in data['Items']:
                     if 'PairValue' not in item:
                          continue
-                    if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != 195:
+                    if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != self.gemstone_category:
                         continue
                     i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
                     if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:
@@ -139,27 +139,7 @@ class Backend(JSONBackend):
                 self.logger.exception("Error on copy_from for %s" % self.backend_module)
 
         fp.close()
-    """
-    def _run(self):
-        reader = self.get_reader()
 
-        tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
-        writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')
-
-        existing_sns = set(models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
-
-        if not self.partial_import:
-            # Only mark active discontinued if we're running everything.
-            models.Diamond.objects.filter(source=self.backend_module).update(active=False)
-
-        for line in reader:
-            self.try_write_row(writer, line, existing_sns=existing_sns)
-
-        if self.row_buffer:
-            writer.writerows(self.row_buffer)
-
-        return tmp_file
-    """
 
     def try_write_row(self, writer, *args, **kwargs):
         existing_sns = kwargs.pop('existing_sns')

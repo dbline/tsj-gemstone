@@ -75,8 +75,10 @@ class Backend(JSONBackend):
             #inventory_filename = '2021-03-22-13-27-19-FullItemList.json'
             inventory_filename = kwargs.get('inventory_filename')
             if not inventory_filename:
-                raise Exception('No file found')
-
+                fn = self.get_default_filename()
+                if not fn or not os.path.exists(fn):
+                    raise Exception('No file found')
+                inventory_filename = fn
             if not hasattr(self, '_rawdata'):
                 self.logger.info('Opening %s' % inventory_filename)
                 self._rawdata = json.load(open(inventory_filename))

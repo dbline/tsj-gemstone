@@ -14,6 +14,7 @@ from django.conf import settings
 from django.db import connection, transaction
 from django.utils.lru_cache import lru_cache
 from django.conf import settings
+from operator import add
 
 from .base import LRU_CACHE_MAXSIZE, JSONBackend, SkipDiamond, KeyValueError, ImportSourceError
 from .. import models
@@ -52,6 +53,7 @@ class Backend(JSONBackend):
         super(Backend, self).__init__(*args, **kwargs)
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
+        self.ftp_name = prefs.get('ftp_username', '')
 
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:
@@ -70,8 +72,8 @@ class Backend(JSONBackend):
     def get_reader(self, **kwargs):
         if not hasattr(self, '_reader'):
 
-            inventory_filename = '2021-03-22-13-27-19-FullItemList.json'
-            #inventory_filename = kwargs.get('inventory_filename')
+            #inventory_filename = '2021-03-22-13-27-19-FullItemList.json'
+            inventory_filename = kwargs.get('inventory_filename')
             if not inventory_filename:
                 raise Exception('No file found')
 
@@ -105,17 +107,27 @@ class Backend(JSONBackend):
         except TypeError:
             return False
 
-    def get_default_filename(self):
-        if self.partial_import:
-            infile_glob = os.path.join(settings.FTP_ROOT, 'toodies/*-INVENTORY.CSV')
-        else:
-            infile_glob = os.path.join(settings.FTP_ROOT, 'spicerftp/*-INVENTORY-FULL.CSV')
+    @classmethod
+    def latest_file_from_patterns(cls, patterns):
+        # FIXME: list all files only once (currently listing through everything twice).
+        file_list = reduce(add, map(lambda p: list(glob.iglob(p)), patterns), list())
+        if not file_list:
+            return None
+        return max(file_list, key=os.path.getmtime)
 
-        files = sorted(glob.glob(infile_glob))
-        if len(files):
-            fn = files[-1]
+    def get_default_filename(self):
+        if not self.ftp_name:
+            raise Exception('ftp name not set')
+        _maybe_dir = filter(os.path.isdir, glob.glob(os.path.join(settings.FTP_ROOT, self.ftp_name, '*', 'Inbox')))
+        if not len(_maybe_dir):
+            raise IOError('Required Inbox directory not found.')
+        infile_glob = self.file_patterns(_maybe_dir[0])
+
+        fn= self.latest_file_from_patterns(infile_glob)
+        if fn:
             self.logger.info('Importing {schema} EDGE-EDT Diamonds from file "%s"' % fn)
             return fn
+
 
     def file_patterns(self, directory):
 

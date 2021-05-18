@@ -54,7 +54,7 @@ class Backend(JSONBackend):
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
         self.ftp_name = pos_prefs.get('ftp_username', '')
-        self.gemstone_category = '195'
+        self.gemstone_category = 195
 
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:

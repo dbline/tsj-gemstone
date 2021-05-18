@@ -92,6 +92,7 @@ class Backend(JSONBackend):
                     if 'PairValue' not in item:
                          continue
                     if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != self.gemstone_category:
+                        print (item['PairValue']['ItemCatId'])
                         continue
                     i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
                     if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:

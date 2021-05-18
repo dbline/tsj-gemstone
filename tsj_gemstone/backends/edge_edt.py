@@ -311,8 +311,8 @@ class Backend(JSONBackend):
         else:
             laser_inscribed = 'f'
 
-        if item['ItemDetail_1']:
-            data.update({'v360_link': item['ItemDetail_1']})
+        if item['ItemMetaMetaTitle']:
+            data.update({'video_url': item['ItemMetaMetaTitle']})
 
         if self.nvl(item['ItemDesc']):
             if self.nvl(item['ItemNotes']):

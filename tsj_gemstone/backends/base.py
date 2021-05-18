@@ -370,7 +370,7 @@ class XLSBackend(CSVBackend):
 
 class JSONBackend(BaseBackend):
     def _run(self):
-        data = self.get_reader()
+        data = self.get_reader(inventory_filename = self.filename)
 
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')

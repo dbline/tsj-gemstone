@@ -95,13 +95,6 @@ class Backend(CSVBackend):
             culet,
             cert_image,
 
-
-
-            unused_crown_percent,
-            unused_crown_angle,
-            unused_pavilion_percent,
-            unused_pavilion_angle,
-
         ) = line
 
         (

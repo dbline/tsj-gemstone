@@ -13,6 +13,7 @@ __all__ = (
     'jas_diamonds',
     'jbbrothers',
     'keren_dia',
+    'labs_diamond',
     'leibish',
     'mdl',
     'mgeller',

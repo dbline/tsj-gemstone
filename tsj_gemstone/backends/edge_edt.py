@@ -217,7 +217,8 @@ class Backend(JSONBackend):
         ) = self.pref_values
 
         stock_number = clean(item['ItemKey'], upper=True)
-        lot_num = clean(item['stone_0_StoneSeq'], upper=True)
+        if item['stone_0_StoneSeq']:
+            lot_num = clean(item['stone_0_StoneSeq'], upper=True)
 
         if item['ItemStatus'] == 'I':
             status = 't'
@@ -303,6 +304,16 @@ class Backend(JSONBackend):
         depth_percent = None
         table_percent = item['stone_0_StoneTablePct']
 
+
+        if item['stone_0_StoneLengthMax']:
+            length = item['stone_0_StoneLengthMax']
+
+        if item['stone_0_StoneWidthMax']:
+            width = item['stone_0_StoneWidthMax']
+
+        if item['stone_0_StoneDepthMax']:
+            depth = item['stone_0_StoneDepthMax']
+
         data = {}
 
         if item['stone_0_StoneLaserInscription']:
@@ -354,9 +365,9 @@ class Backend(JSONBackend):
             'NULL', # self.nvl(fancy_color_id),
             'NULL', # self.nvl(fancy_color_intensity_id),
             'NULL', # self.nvl(fancy_color_overtone_id),
-            self.nvl(self.digits_check(item['stone_0_StoneLengthMax'])),
-            self.nvl(self.digits_check(item['stone_0_StoneWidthMax'])),
-            self.nvl(self.digits_check(item['stone_0_StoneDepthMax'])),
+            self.nvl(length),
+            self.nvl(width),
+            self.nvl(depth),
             '', # comment,
             '', #city,
             '', #state,

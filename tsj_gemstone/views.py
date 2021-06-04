@@ -238,7 +238,8 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
             try:
                 return redirect(reverse('gemstone-list'))
             except NoReverseMatch:
-                raise Http404
+                # Redirect to / if there's a problem.
+                return redirect('/')
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 

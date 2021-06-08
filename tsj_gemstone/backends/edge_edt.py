@@ -54,7 +54,7 @@ class Backend(JSONBackend):
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
         self.ftp_name = pos_prefs.get('ftp_username', '')
-        self.gemstone_category = 195
+        self.gemstone_category = pos_prefs.get('gemstone_category', 190)
 
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:
@@ -92,9 +92,9 @@ class Backend(JSONBackend):
                     if 'PairValue' not in item:
                          continue
                     if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != self.gemstone_category:
-                        print (item['PairValue']['ItemCatId'])
+                        #print (item['PairValue']['ItemCatId'], self.gemstone_category)
                         continue
-                    print("*", item['PairValue']['ItemCatId'])
+                    #print("*", item['PairValue']['ItemCatId'])
                     i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
                     if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:
                         for index, stone in enumerate(item['PairValue']['Stones']):

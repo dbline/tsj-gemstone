@@ -99,7 +99,7 @@ class Backend(JSONBackend):
                     if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] not in self.gemstone_category:
                         #print (item['PairValue']['ItemCatId'], self.gemstone_category)
                         continue
-                    print("*", item['PairValue']['ItemCatId'], self.gemstone_category)
+                    #print("*", item['PairValue']['ItemCatId'], self.gemstone_category)
                     i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
                     if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:
                         for index, stone in enumerate(item['PairValue']['Stones']):

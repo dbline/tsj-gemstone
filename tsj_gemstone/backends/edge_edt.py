@@ -56,7 +56,7 @@ class Backend(JSONBackend):
         self.ftp_name = pos_prefs.get('ftp_username', '')
         self.gemstone_category = pos_prefs.get('gemstone_category', '').split(',')
         try:
-            self.gemstone_category = [int(i) for i in gemstone_category]
+            self.gemstone_category = [int(i) for i in self.gemstone_category]
         except ValueError:
             self.gemstone_category = [190,195]
             pass

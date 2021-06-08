@@ -54,7 +54,12 @@ class Backend(JSONBackend):
         self.logger = logging.getLogger(__name__)
         self.partial_import = pos_prefs.get('partial_import', True)
         self.ftp_name = pos_prefs.get('ftp_username', '')
-        self.gemstone_category = pos_prefs.get('gemstone_category', 190)
+        self.gemstone_category = pos_prefs.get('gemstone_category', '').split(',')
+        try:
+            self.gemstone_category = [int(i) for i in gemstone_category]
+        except ValueError:
+            self.gemstone_category = [190,195]
+            pass
 
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:
@@ -91,10 +96,10 @@ class Backend(JSONBackend):
                 for item in data['Items']:
                     if 'PairValue' not in item:
                          continue
-                    if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] != self.gemstone_category:
+                    if 'ItemCatId' in item['PairValue'] and item['PairValue']['ItemCatId'] not in self.gemstone_category:
                         #print (item['PairValue']['ItemCatId'], self.gemstone_category)
                         continue
-                    #print("*", item['PairValue']['ItemCatId'])
+                    print("*", item['PairValue']['ItemCatId'], self.gemstone_category)
                     i = dict((k,v) for k,v in filter(lambda x:not isinstance(x[1], (list, dict)), item['PairValue'].items()))
                     if 'Stones' in item['PairValue'] and item['PairValue']['Stones']:
                         for index, stone in enumerate(item['PairValue']['Stones']):
@@ -320,7 +325,10 @@ class Backend(JSONBackend):
             else:
                 data.update({'alt_description': item['ItemDesc']})
 
-        # manmade = item['stone_0_StoneNacre']   Not sure how this field is passed.
+        if item['stone_0_StoneIdentification'] and item['stone_0_StoneIdentification']  in ['Laboratory-Grown', 'Synthetic']:
+            manmade = 't'
+        else:
+            manmade = 'f'
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
@@ -361,7 +369,7 @@ class Backend(JSONBackend):
             '', #city,
             '', #state,
             '', #country,
-            'f', # manmade,
+            manmade,
             self.nvl(laser_inscribed),
             'NULL', # rap_date
             json.dumps(data),

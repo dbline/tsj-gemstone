@@ -89,7 +89,8 @@ class Backend(CSVBackend):
             unused_milky,
             unused_eye_clean,
             unused_brand,
-            video_url
+            video_url,
+            unused_certificate_url
         ) = line
 
         (

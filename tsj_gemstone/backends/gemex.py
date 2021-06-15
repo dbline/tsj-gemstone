@@ -240,6 +240,7 @@ class Backend(CSVBackend):
 
         # Initialize price after all other data has been initialized
         price_before_markup = carat_price   #this vendor supplys a TOTAL stone price, NOT ppc.
+        carat_price = price_before_markup / carat_weight  #work back to a ppc price for the table
         #price_before_markup = carat_price * carat_weight
 
         if minimum_price and price_before_markup < minimum_price:

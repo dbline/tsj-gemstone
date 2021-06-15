@@ -239,7 +239,8 @@ class Backend(CSVBackend):
             raise SkipDiamond('No carat_price specified')
 
         # Initialize price after all other data has been initialized
-        price_before_markup = carat_price * carat_weight
+        price_before_markup = carat_price   #this vendor supplys a TOTAL stone price, NOT ppc.
+        #price_before_markup = carat_price * carat_weight
 
         if minimum_price and price_before_markup < minimum_price:
             raise SkipDiamond('Price before markup is less than the minimum of %s.' % minimum_price)

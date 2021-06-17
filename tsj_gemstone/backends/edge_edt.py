@@ -222,7 +222,9 @@ class Backend(JSONBackend):
         ) = self.pref_values
 
         stock_number = clean(item['ItemKey'], upper=True)
-        lot_num = clean(item['stone_0_StoneSeq'], upper=True)
+
+        if item['stone_0_StoneSeq']:
+            lot_num = clean(item['stone_0_StoneSeq'], upper=True)
 
         if item['ItemStatus'] == 'I':
             status = 't'

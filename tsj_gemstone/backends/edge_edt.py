@@ -223,7 +223,7 @@ class Backend(JSONBackend):
 
         stock_number = clean(item['ItemKey'], upper=True)
 
-        if item['stone_0_StoneSeq']:
+        if 'stone_0_StoneSeq' in item and item['stone_0_StoneSeq']:
             lot_num = clean(item['stone_0_StoneSeq'], upper=True)
 
         if item['ItemStatus'] == 'I':

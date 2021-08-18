@@ -55,6 +55,10 @@ class GemstoneWidgetForm(PreferencesForm):
             label='Custom widget template path',
             required=False,
             help_text='Custom template file, include path and name')
+    disable_images_lazy = forms.BooleanField(
+            label='Disable lazy loading',
+            required=False,
+            help_text='When checked lazy loading attribute is not added to images used on the widget')
 
     fieldsections = (
         ('Format gemstones', ('hide_gemstones', 'icon_style', 'style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),

@@ -63,7 +63,7 @@ class GemstoneWidgetForm(PreferencesForm):
     fieldsections = (
         ('Format gemstones', ('hide_gemstones', 'icon_style', 'style', 'show_view_all', 'show_view_all_name', 'show_view_all_link')),
         ('Modify widget content', ('header',)),
-        ('Advanced options', ('class_attr', 'template_name')),
+        ('Advanced options', ('class_attr', 'template_name','disable_images_lazy')),
     )
 
     def __init__(self, *args, **kwargs):

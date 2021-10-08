@@ -26,6 +26,7 @@ __all__ = (
     'puregrowndiamonds',
     'rapnet',
     'rapnet10',
+    'rapnet_json',
     'rdi',
     'rditrading',
     'rditrading_advanced',

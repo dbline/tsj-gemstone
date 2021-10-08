@@ -21,6 +21,7 @@ class GemstonePreferencesForm(PreferencesForm):
         ('', 'Select a subscription type'),
         ('rapnet10', 'Download Listing Service'),
         ('rapnetii', 'Instant Inventory'),
+        ('rapnetii_json', 'Instant Inventory - JSON API'),
     )
 
     show_prices = forms.ChoiceField(label='Show Prices to', choices=PRICE_CHOICES, help_text=_(u'Control how gemstone prices are shown on your website.'))

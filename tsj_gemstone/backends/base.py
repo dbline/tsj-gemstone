@@ -369,8 +369,11 @@ class XLSBackend(CSVBackend):
             self.try_write_row(writer, line)
 
 class JSONBackend(BaseBackend):
+    def get_json(self):
+        raise NotImplementedError
+
     def _run(self):
-        data = self.get_reader(inventory_filename = self.filename)
+        data = self.get_json()
 
         tmp_file = tempfile.NamedTemporaryFile(mode='w', prefix='gemstone_diamond_%s.' % self.backend_module)
         writer = csv.writer(tmp_file, quoting=csv.QUOTE_NONE, escapechar='\\', lineterminator='\n', delimiter='\t')

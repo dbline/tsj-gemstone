@@ -75,16 +75,12 @@ class Backend(JSONBackend):
             patterns = ['*-FullItemList.json']
         return map(lambda p:os.path.join(directory, p), patterns)
 
-    def get_reader(self, **kwargs):
+    def get_json(self):
         if not hasattr(self, '_reader'):
 
-            #inventory_filename = '2021-03-22-13-27-19-FullItemList.json'
-            inventory_filename = kwargs.get('inventory_filename')
-            if not inventory_filename:
-                fn = self.get_default_filename()
-                if not fn or not os.path.exists(fn):
-                    raise Exception('No file found')
-                inventory_filename = fn
+            inventory_filename = self.get_default_filename()
+            if not inventory_filename or not os.path.exists(inventory_filename):
+                raise Exception('No file found')
             if not hasattr(self, '_rawdata'):
                 self.logger.info('Opening %s' % inventory_filename)
                 self._rawdata = json.load(open(inventory_filename))

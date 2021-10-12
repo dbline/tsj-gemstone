@@ -381,7 +381,7 @@ class JSONBackend(BaseBackend):
         existing_sns = set(
             models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
 
-        if not self.partial_import:
+        if not getattr(self, "partial_import", False):
             # Only mark active discontinued if we're running everything.
             models.Diamond.objects.filter(source=self.backend_module).update(active=False)
 

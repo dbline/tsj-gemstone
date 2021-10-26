@@ -128,7 +128,8 @@ class Backend(CSVBackend):
             store,
             v360_link,
             light_performance,
-            gemprint_id
+            gemprint_id,
+            manmade  # only blank or 'LGD' is passed currently
         ) = line
 
         (
@@ -297,6 +298,8 @@ class Backend(CSVBackend):
         if gemprint_id:
             data['gemprint_id'] = gemprint_id
 
+        manmade  = 't' if manmade == 'LGD' else 'f'
+
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,
@@ -336,7 +339,7 @@ class Backend(CSVBackend):
             '', # city,
             '', # state,
             '', # country,
-            'f', # manmade,
+            manmade, # 'f',
             'f', # laser_inscribed,
             'NULL', # rap_date
             json.dumps(data), # data

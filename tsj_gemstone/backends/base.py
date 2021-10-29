@@ -381,12 +381,17 @@ class JSONBackend(BaseBackend):
         existing_sns = set(
             models.Diamond.objects.filter(source=self.backend_module).values_list('stock_number', flat=True))
 
-        if not self.partial_import:
+        if not getattr(self, "partial_import", False):
             # Only mark active discontinued if we're running everything.
             models.Diamond.objects.filter(source=self.backend_module).update(active=False)
-
-        for obj in data:
-            self.try_write_row(writer, obj, existing_sns=existing_sns)
+        
+        # terrible hack to identify the differences between EDT and Stuller JSON backends
+        if hasattr(self, "partial_import"):
+            for obj in data:
+                self.try_write_row(writer, obj, existing_sns=existing_sns)    
+        else:
+            for obj in data:
+                self.try_write_row(writer, obj)
 
         if self.row_buffer:
             writer.writerows(self.row_buffer)

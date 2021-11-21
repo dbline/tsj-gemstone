@@ -2,6 +2,7 @@ from decimal import *
 import json
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import NoReverseMatch
 from django.db.models import Min, Max
 from django.db.models.fields import FieldDoesNotExist
 from django.http import Http404, HttpResponse, JsonResponse
@@ -234,7 +235,10 @@ class GemstoneDetailView(PagesTemplateResponseMixin, DetailView):
         try:
             self.object = self.get_object()
         except Http404:
-            return redirect(reverse('gemstone-list'))
+            try:
+                return redirect(reverse('gemstone-list'))
+            except NoReverseMatch:
+                raise Http404
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 

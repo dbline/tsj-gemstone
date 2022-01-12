@@ -2,6 +2,7 @@ __all__ = (
     'amipi',
     'asc',
     'atlantic_diamond',
+    'belgium',
     'brilliantediamond',
     'dnr_dia',
     'edge_edt',

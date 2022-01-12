@@ -327,7 +327,7 @@ class Backend(CSVBackend):
             self.nvl(self.digits_check(width)),
             self.nvl(self.digits_check(depth)),
             comment,
-            city,
+            '', # city
             state,
             country,
             'f',  # manmade,

@@ -128,7 +128,7 @@ class Backend(CSVBackend):
             unused_shade, #  Shade
             unused_milky, #  Milky
             unused_eye_clean, #  Eye clean
-            unused_black_inclusion, #  Black Inclusion
+            unused_black_inclusion #  Black Inclusion
 
         ) = line
 

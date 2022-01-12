@@ -45,6 +45,14 @@ class Backend(CSVBackend):
     debug_filename = os.path.join(os.path.dirname(__file__), '../tests/data/gemex.csv')
     infile_glob = os.path.join(settings.FTP_ROOT, 'gemex-ftp/Diamonds_*csv')
 
+    def get_fp(self):
+        """
+        Advance line to skip summary header in CSV file.
+        """
+        fp = super(Backend, self).get_fp()
+        fp.next()
+        return fp
+
     def digits_check(self, s, length=5):
         if sum(c.isdigit() for c in str(s)) > length:
             self.logger.info('Skipping Diamond "%s" - numeric value out of range' % stock_number)

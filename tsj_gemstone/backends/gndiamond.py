@@ -146,6 +146,7 @@ class Backend(CSVBackend):
         comment = cached_clean(comment)
         stock_number = clean(stock_number, upper=True)
         owner = 'GN'
+        manmade  = 't' if manmade == 'LGD' else 'f'
 
         # Color
         if fancy_color:
@@ -250,9 +251,9 @@ class Backend(CSVBackend):
         length, width, depth = split_measurements(measurements)
 
         cert_num = clean(cert_num)
-        if not cert_num:
-            cert_num = ''
-            cert_image = ''
+        if manmade and cert_num:
+            cert_num = str(cert_num)
+            cert_image = 'https://erp.barakdiamonds.com/ID/Output/Certificates/%s.pdf' % (cert_num)
         else:
             cert_image = 'https://diamondcerts.s3-us-west-2.amazonaws.com/certificates/%s.jpg' % (stock_number)
 
@@ -298,8 +299,7 @@ class Backend(CSVBackend):
         if gemprint_id:
             data['gemprint_id'] = gemprint_id
 
-        manmade  = 't' if manmade == 'LGD' else 'f'
-
+        
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,

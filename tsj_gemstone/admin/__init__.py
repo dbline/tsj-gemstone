@@ -269,10 +269,10 @@ def import_log_list(request, template_name='admin/tsj_gemstone/import_log_list.h
         })
 
     paginator = Paginator(rows_dict, 100)
-    page_num = request.GET.get('p', 0)
+    page_num = int(request.GET.get('p', 0))
 
     try:
-        page_obj = paginator.page(int(page_num) + 1)
+        page_obj = paginator.page(page_num + 1)
     except InvalidPage as e:
         raise Http404('Invalid page (%(page_num)s): %(message)s' % {
             'page_num': page_num,

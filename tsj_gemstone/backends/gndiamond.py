@@ -251,7 +251,7 @@ class Backend(CSVBackend):
         length, width, depth = split_measurements(measurements)
 
         cert_num = clean(cert_num)
-        if manmade and cert_num:
+        if manmade == 't' and cert_num:
             cert_num = str(cert_num)
             cert_image = 'https://erp.barakdiamonds.com/ID/Output/Certificates/%s.pdf' % (cert_num)
         else:

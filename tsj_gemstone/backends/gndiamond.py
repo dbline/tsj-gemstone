@@ -147,6 +147,11 @@ class Backend(CSVBackend):
         stock_number = clean(stock_number, upper=True)
         owner = 'GN'
         manmade  = 't' if manmade == 'LGD' else 'f'
+        
+        if manmade == 't' and not include_mined:
+                raise SkipDiamond("Don't include mined")
+        if manmade == 'f' and not include_lab_grown:
+                raise SkipDiamond("Don't include lab-grown")
 
         # Color
         if fancy_color:

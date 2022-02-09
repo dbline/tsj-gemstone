@@ -2,7 +2,8 @@ from django import forms
 from django.db.models import Q
 from django.utils.text import slugify
 
-from ckeditor.widgets import CKEditorWidget
+from ts_admin.widgets import CkEditorWidget
+
 
 from thinkspace.apps.pages.library import WidgetLibrary
 from thinkspace.apps.pages.widgets import TemplatedWidget
@@ -44,7 +45,7 @@ class GemstoneWidgetForm(PreferencesForm):
             label='View All button URL',
             help_text='Example: /diamonds/')
     header = forms.CharField(
-            widget=CKEditorWidget(config_name='advanced'),
+            widget=CkEditorWidget(config_name='advanced'), 
             label='Content shown below widget title', 
             required=False)
     class_attr = forms.CharField(

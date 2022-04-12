@@ -5,6 +5,7 @@ import json
 import os
 import re
 from string import ascii_letters, digits, whitespace, punctuation
+from unicodedata import decimal
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
 from urlparse import urlparse
@@ -84,9 +85,9 @@ class Backend(CSVBackend):
             polish, #  Polish
             symmetry, #  Symmetry
             fluorescence, #  Fluorescence Intensity
-            u_rap_price, # Rapaport Price
-            u_rap_discount, #  % Off RAP
-            u_carat_price, #  Asking Price Per Carat  (could use the ppc from the file)
+            rap_price, # Rapaport Price
+            rap_discount, #  % Off RAP
+            ppc, #  Asking Price Per Carat  (could use the ppc from the file)
             carat_price,  # TOTAL COST of this stone  (we are using this passed TOTAL cost)
             cert_num, #  Certificate Number
             length,
@@ -94,22 +95,22 @@ class Backend(CSVBackend):
             depth,
             depth_percent, #  Depth
             table_percent, #  Table
-            u_crown_height,
-            u_crown_angle,
-            u_pavilion_angle,
-            u_pavilion_depth,
-            u_girdle_percent,
+            crown_height,
+            crown_angle,
+            pavilion_angle,
+            pavilion_depth,
+            girdle_percent,
             girdle,
             culet,
-            u_lw_ratio,
+            lw_ratio,
             comments, # Description / Comments
             inscription, # Inscription #
             cert_image,
-            u_diamond_image,  # This points to a .jpg file normally
+            image,  # This points to a .jpg file normally
             video, # This points to a video like .mp4
-            u_video_with_data,
-            u_growth_process, #  This is the lab-grown process used to create the diamond
-            u_color_shade #  not sure what this represents (Blue, White seem to be only choices)
+            video_with_data,
+            growth_process, #  This is the lab-grown process used to create the diamond
+            color_shade #  not sure what this represents (Blue, White seem to be only choices)
             
         ) = line
 
@@ -312,7 +313,47 @@ class Backend(CSVBackend):
         else:
             laser_inscribed = 'f'
             
+        if rap_discount:
+            rap_discount = iri_to_uri(rap_discount)
+            data['photo'] = rap_discount
 
+        if rap_price:
+            rap_price = iri_to_uri(rap_price)
+            data['rap_price'] = rap_price
+            
+        if ppc:
+            ppc = decimal(ppc)
+            data['ppc'] = ppc
+            
+        if lw_ratio:
+            data['lw_ratio'] = lw_ratio
+            
+        if crown_angle:
+            data['crown_angle'] = crown_angle
+            
+        if crown_height:
+            data['crown_height'] = crown_height
+            
+        if pavilion_angle:
+            data['pavilion_angle'] = pavilion_angle
+            
+        if pavilion_depth:
+            data['pavilion_depth'] = pavilion_depth
+            
+        if girdle_percent:
+            data['girdle_percent'] = girdle_percent
+            
+        if video_with_data:
+            data['video_with_data'] = video_with_data
+            
+        if growth_process:
+            data['growth_process'] = growth_process
+            
+        if color_shade:
+            data['color_shade'] = color_shade
+            
+            
+            
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,

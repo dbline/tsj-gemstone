@@ -184,7 +184,7 @@ class Backend(CSVBackend):
             raise KeyValueError('certifier_aliases', e.args[0])
 
         if certifier_disabled:
-            raise SkipDiamond('Certifier disabled')
+            raise SkipDiamond('Certifier {0} disabled'.format(certifier))
 
         if certifier and not certifier_id:
             new_certifier = models.Certifier.objects.create(name=certifier, abbr=certifier)
@@ -303,9 +303,7 @@ class Backend(CSVBackend):
             video = iri_to_uri(video)
             data['video'] = video
             
-        if video_url:
-            video_url = iri_to_uri(video_url)
-            data['video_url'] = video
+        
             
         if inscription:
             data['inscription'] = inscription
@@ -344,6 +342,7 @@ class Backend(CSVBackend):
             data['girdle_percent'] = girdle_percent
             
         if video_with_data:
+            video_with_data = iri_to_uri(video_with_data)
             data['video_with_data'] = video_with_data
             
         if growth_process:

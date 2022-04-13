@@ -303,8 +303,6 @@ class Backend(CSVBackend):
             video = iri_to_uri(video)
             data['video'] = video
             
-        
-            
         if inscription:
             data['inscription'] = inscription
             laser_inscribed = 't'
@@ -320,7 +318,6 @@ class Backend(CSVBackend):
             data['rap_price'] = rap_price
             
         if ppc:
-            ppc = decimal(ppc)
             data['ppc'] = ppc
             
         if lw_ratio:

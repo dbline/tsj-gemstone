@@ -1,6 +1,7 @@
 from decimal import Decimal, InvalidOperation
 import logging
 import os
+import json
 import re
 import six
 from string import ascii_letters, digits, whitespace, punctuation
@@ -55,7 +56,10 @@ class Backend(CSVBackend):
         #    logger.warning('Missing MID API URL, aborting import.')
         #    return
 
-        url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3Nvbaiejv0DoWuFg%3d%3d"
+        # url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3Nvbaiejv0DoWuFg%3d%3d"
+        # retired 05/05/2022
+        
+        url = "https://api.midonline.com/api/QueryApi/GetInventory?q=qqR9BP3NvbZseb%2bTPR%2bMKw%3d%3d"
 
         # TODO: Catch HTTP errors
         response = requests.get(url)
@@ -99,6 +103,15 @@ class Backend(CSVBackend):
             unused_is_matched_pair,
             unused_matching_stock_number,
             unused_is_matched_pair_separable,
+            v360_b2c_link,
+            unused_v360_mugshot,
+            unused_still_image_url,
+            unused_mp4_video_url,
+            unused_plot_url,
+            unused_diagram_url,
+            unused_verification_url,
+            unused_stone_details_url
+            
         ) = line
 
         (
@@ -247,6 +260,13 @@ class Backend(CSVBackend):
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
             else:
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with pre-markup price of %s." % price_before_markup)
+        
+        data = {}
+        if v360_b2c_link:
+            data.update({'v360_link': v360_b2c_link})    
+        
+        
+        
 
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
@@ -290,7 +310,7 @@ class Backend(CSVBackend):
             'f', # manmade,
             'f', # laser_inscribed,
             'NULL', # rap_date
-            '{}', # data
+            json.dumps(data), # data
         )
 
         return ret

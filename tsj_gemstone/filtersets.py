@@ -42,9 +42,9 @@ class RangeChoiceFilter(django_filters.RangeFilter):
             if start.id > stop.id:
                 start = value.stop
                 stop = value.start
-            lookup = '%s__range' % self.name
+            lookup = '%s__abbr__range' % self.name
             null = '%s__isnull' % self.name
-            q = (Q(**{lookup: (start, stop)}) | Q(**{null: True}))
+            q = (Q(**{lookup: (start.abbr, stop.abbr)}) | Q(**{null: True}))
             return qs.filter(q)
         return qs
 

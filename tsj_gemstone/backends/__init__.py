@@ -26,6 +26,7 @@ __all__ = (
     'polygon',
     'pologem',
     'puregrowndiamonds',
+    'purestone',
     'rapnet',
     'rapnet10',
     'rapnet_json',

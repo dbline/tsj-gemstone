@@ -72,6 +72,7 @@ class GemstonePreferencesForm(PreferencesForm):
     ofermizrahi = forms.BooleanField(required=False, label='Ofer Mizrahi Diamonds')
     premiergem = forms.BooleanField(required=False, label='Premier Gem')
     puregrowndiamonds = forms.BooleanField(required=False, label='Pure Grown Diamonds')
+    purestone = forms.BooleanField(required=False, label='Pure Stones')
     rdi = forms.BooleanField(required=False, label='RDI Diamonds')
     rditrading = forms.BooleanField(required=False, label='RDI Trading')
     rditrading_advanced = forms.BooleanField(required=False, label='RDI Trading (Advanced)')
@@ -110,7 +111,8 @@ class GemstonePreferences(AppPreferences):
             'fields': (
                 'amipi', 'brilliantediamond', 'gndiamond', 'hasenfeld', 'leibish',
                 'mdl', 'mgeller', 'mid', 'ofermizrahi', 'premiergem', 'puregrowndiamonds',
-                'rdi', 'rditrading', 'rditrading_advanced', 'stuller', 'vantyghem',
+                'purestone', 'rdi', 'rditrading', 'rditrading_advanced', 'stuller',
+                'vantyghem',
             ),
         }),
         (_('Rapaport'), {

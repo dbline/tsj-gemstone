@@ -1,5 +1,5 @@
 from django import forms
-from django.db.models import Min, Max, Q
+from django.db.models import FieldDoesNotExist, Min, Max, Q
 
 from tsj_gemstone.models import Certifier, Clarity, Color, Cut, Diamond, FancyColorIntensity, Fluorescence, Grading
 
@@ -37,12 +37,19 @@ class RangeChoiceFilter(django_filters.RangeFilter):
 
     def filter(self, qs, value):
         if value.start and value.stop:
-            start = value.start
-            stop = value.stop
-            if start.id > stop.id:
-                start = value.stop
-                stop = value.start
-            lookup = '%s__range' % self.name
+            rel_model = qs.model._meta.get_field(self.name).related_model
+            try:
+                rel_model._meta.get_field('order')
+                lookup_field = 'order'
+            except FieldDoesNotExist:
+                lookup_field = 'abbr'
+
+            start = getattr(value.start, lookup_field)
+            stop = getattr(value.stop, lookup_field)
+            if start > stop:
+                start, stop = stop, start
+
+            lookup = '%s__%s__range' % (self.name, lookup_field)
             null = '%s__isnull' % self.name
             q = (Q(**{lookup: (start, stop)}) | Q(**{null: True}))
             return qs.filter(q)

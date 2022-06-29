@@ -147,7 +147,7 @@ class Backend(CSVBackend):
         stock_number = clean(stock_number, upper=True)
         owner = 'GN'
         manmade  = 't' if manmade == 'LGD' else 'f'
-        
+
         if manmade == 'f' and not include_mined:
                 raise SkipDiamond("Don't include mined")
         if manmade == 't' and not include_lab_grown:
@@ -274,16 +274,26 @@ class Backend(CSVBackend):
             raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
 
         price = None
-        for markup in self.markup_list:
-            if prefs.get('markup') == 'carat_weight':
-                if markup[0] <= carat_weight and markup[1] >= carat_weight:
-                    price = (price_before_markup * (1 + markup[2]/100))
-                    break
-            else:
-                if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
-                    price = (price_before_markup * (1 + markup[2]/100))
-                    break
-
+        if manmade == 'f' or not self.lab_markup_list:
+            for markup in self.markup_list:
+                if prefs.get('markup') == 'carat_weight':
+                    if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+                else:
+                    if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+        else:
+            for markup in self.lab_markup_list:
+                if prefs.get('markup') == 'carat_weight':
+                    if markup[0] <= carat_weight and markup[1] >= carat_weight:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
+                else:
+                    if markup[0] <= price_before_markup and markup[1] >= price_before_markup:
+                        price = (price_before_markup * (1 + markup[2]/100))
+                        break
         if not price:
             if prefs.get('markup') == 'carat_weight':
                 raise SkipDiamond("A diamond markup doesn't exist for a diamond with carat weight of %s." % carat_weight)
@@ -304,7 +314,7 @@ class Backend(CSVBackend):
         if gemprint_id:
             data['gemprint_id'] = gemprint_id
 
-        
+
         # Order must match struture of tsj_gemstone_diamond table
         ret = self.Row(
             self.added_date,

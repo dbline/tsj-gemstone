@@ -36,6 +36,7 @@ __all__ = (
     'sahar_atid',
     'spicer',
     'star_solitaire',
+    'simran_collection',
     'stuller',
     'unique',
     'vantyghem',

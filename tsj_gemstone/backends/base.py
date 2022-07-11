@@ -303,6 +303,7 @@ class CSVBackend(BaseBackend):
         fp = self.get_fp()
         reader = self._get_reader(fp)
         headers = self._get_headers(reader)
+        # print headers
 
         blank_columns = 0
         # Count empty columns on the end
@@ -335,6 +336,7 @@ class CSVBackend(BaseBackend):
                     line.extend([''] * col_diff)
 
                 self.try_write_row(writer, line, blank_columns=blank_columns)
+                # print line
         except csv.Error as e:
             raise ImportSourceError(str(e))
 

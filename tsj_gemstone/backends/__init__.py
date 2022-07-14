@@ -19,6 +19,8 @@ __all__ = (
     'leibish',
     'mdl',
     'mgeller',
+    'mgeller_lab',
+    'mgeller_mined',
     'mid',
     'neil_treasure',
     'ofermizrahi',

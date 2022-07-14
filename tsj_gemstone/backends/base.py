@@ -122,7 +122,10 @@ class BaseBackend(object):
         try:
             return prefs.get(self.backend_module)
         except KeyError:
-            return False
+            try:
+                return self.backend_module in prefs.get('backend')
+            except TypeError:
+                return False
 
     def get_default_filename(self):
         return self.default_filename

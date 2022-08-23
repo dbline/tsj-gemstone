@@ -18,6 +18,14 @@ from .. import models
 from ..prefs import prefs
 from ..utils import moneyfmt
 
+"""
+This diamond backend is for LAB-GROWN diamonds ONLY!
+
+It forces the manmade field to 't'   manmade = 't'
+It uses the LAB-GROWN markups from the local sites admin   (self.lab_markup_list)
+    
+"""
+
 logger = logging.getLogger(__name__)
 
 CLEAN_RE = re.compile('[%s%s%s%s]' % (punctuation, whitespace, ascii_letters, digits))
@@ -253,7 +261,7 @@ class Backend(CSVBackend):
             raise SkipDiamond('Price before markup is greater than the maximum of %s.' % maximum_price)
 
         price = None
-        for markup in self.markup_list:
+        for markup in self.lab_markup_list:    # This importer is ONLY for Lab grown Diamonds
             if prefs.get('markup') == 'carat_weight':
                 if markup[0] <= carat_weight and markup[1] >= carat_weight:
                     price = (price_before_markup * (1 + markup[2]/100))
